@@ -1,0 +1,657 @@
+{
+  "schemaVersion": "0.1",
+  "adapter": "gitea-full-name",
+  "at": "2026-11-05T10:34:10.374Z",
+  "results": [
+    {
+      "fixtureId": "control.latin-basic.001",
+      "authored": "Ayse Kaya",
+      "injected": "Ayse Kaya",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "Ayse Kaya",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "tr.dotted-capital-i.001",
+      "authored": "İpek Çağlar",
+      "injected": "İpek Çağlar",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "İpek Çağlar",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "tr.dotless-i.001",
+      "authored": "Ilık Işık",
+      "injected": "Ilık Işık",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "Ilık Işık",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "tr.full-alphabet.001",
+      "authored": "Şükrü Öztürk Ğül Çiçek",
+      "injected": "Şükrü Öztürk Ğül Çiçek",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "Şükrü Öztürk Ğül Çiçek",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "combining.precomposed.001",
+      "authored": "José Muñoz",
+      "injected": "José Muñoz",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "José Muñoz",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "combining.decomposed.001",
+      "authored": "José Muñoz",
+      "injected": "José Muñoz",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "José Muñoz",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "combining.stacked.001",
+      "authored": "Nguyễn Thị Thủy",
+      "injected": "Nguyễn Thị Thủy",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "Nguyễn Thị Thủy",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "punct.ascii-apostrophe.001",
+      "authored": "O'Brien",
+      "injected": "O'Brien",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "O'Brien",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "punct.typographic-apostrophe.001",
+      "authored": "O’Brien",
+      "injected": "O’Brien",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "O’Brien",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "punct.hyphen-name.001",
+      "authored": "Jean-Luc Picard-Smith",
+      "injected": "Jean-Luc Picard-Smith",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "Jean-Luc Picard-Smith",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "space.leading-trailing.001",
+      "authored": " Ali Veli ",
+      "injected": " Ali Veli ",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": " Ali Veli ",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "space.nbsp.001",
+      "authored": "Ali Veli",
+      "injected": "Ali Veli",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "Ali Veli",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "space.double.001",
+      "authored": "Ali  Veli",
+      "injected": "Ali  Veli",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "Ali  Veli",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "script.arabic.001",
+      "authored": "محمد علي",
+      "injected": "محمد علي",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "محمد علي",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "script.hebrew.001",
+      "authored": "דוד כהן",
+      "injected": "דוד כהן",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "דוד כהן",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "script.persian-zwnj.001",
+      "authored": "می‌رزا",
+      "injected": "می‌رزا",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "می‌رزا",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "script.cjk.001",
+      "authored": "山田太郎",
+      "injected": "山田太郎",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "山田太郎",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "script.cjk-astral.001",
+      "authored": "𠜎吉",
+      "injected": "𠜎吉",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "𠜎吉",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "script.devanagari.001",
+      "authored": "अनुष्का",
+      "injected": "अनुष्का",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "अनुष्का",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "script.greek-final-sigma.001",
+      "authored": "Σίσυφος",
+      "injected": "Σίσυφος",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "Σίσυφος",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "script.german-sharp-s.001",
+      "authored": "Straße",
+      "injected": "Straße",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "Straße",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "emoji.basic.001",
+      "authored": "Zoë 🌸",
+      "injected": "Zoë 🌸",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "Zoë 🌸",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "emoji.zwj-sequence.001",
+      "authored": "Dev 👩‍💻",
+      "injected": "Dev 👩‍💻",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "Dev 👩‍💻",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "emoji.skin-tone.001",
+      "authored": "OK 👍🏽",
+      "injected": "OK 👍🏽",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "OK 👍🏽",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "length.long-name.001",
+      "authored": "Wolfeschlegelsteinhausenbergerdorff Adolph Blaine Charles David Earl Frederick Gerald Hubert Irvin John Kenneth Lloyd Martin Nero Oliver Paul Quincy Randolph Sherman Thomas Uncas Victor William Xerxes Yancy Zeus",
+      "injected": "Wolfeschlegelsteinhausenbergerdorff Adolph Blaine Charles David Earl Frederick Gerald Hubert Irvin J",
+      "applicationOutcome": "accepted",
+      "recordId": "hdladmin",
+      "readback": "Wolfeschlegelsteinhausenbergerdorff Adolph Blaine Charles David Earl Frederick Gerald Hubert Irvin J",
+      "execution": "completed",
+      "inputChangedBeforeSubmit": true,
+      "assertions": [
+        {
+          "status": "failed",
+          "rule": "text.exact.v1",
+          "rawEqual": false,
+          "difference": "truncated",
+          "firstDifferenceAt": 100
+        },
+        {
+          "status": "failed",
+          "rule": "text.nfc.v1",
+          "rawEqual": false,
+          "difference": "truncated",
+          "firstDifferenceAt": 100
+        }
+      ]
+    }
+  ]
+}

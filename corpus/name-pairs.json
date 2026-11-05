@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "0.1",
+  "id": "name-pairs",
+  "description": "Benzersiz ad taşıyan kayıtlar (wiki sayfası, etiket, kategori, grup...) için ad çiftleri. A ile kayıt, sonra B ile kayıt; ikisi ayrı kalmalı mı? expect: distinct = ayrı kayıt olmalı (karışırsa hata); policy = birleşmesi ürün kararı olabilir (gözlem); control = hiçbir uygulamada karışmamalı (adapter sağlaması).",
+  "pairs": [
+    { "id": "control.unrelated", "a": "Elma", "b": "Armut", "expect": "control", "note": "ilgisiz iki ad; karışırsa adapter bozuk" },
+    { "id": "tr.cedilla-c", "a": "Çam", "b": "Cam", "expect": "distinct", "note": "çam (ağaç) / cam (malzeme)" },
+    { "id": "tr.cedilla-s", "a": "Şiş", "b": "Sis", "expect": "distinct", "note": "şiş / sis" },
+    { "id": "tr.umlaut-u", "a": "Kül", "b": "Kul", "expect": "distinct", "note": "kül / kul" },
+    { "id": "tr.umlaut-o", "a": "Göl", "b": "Gol", "expect": "distinct", "note": "göl / gol" },
+    { "id": "tr.dotless-i", "a": "Kır", "b": "Kir", "expect": "distinct", "note": "MySQL 0900_ai_ci bunları ayırır; kontrol niteliğinde" },
+    { "id": "es.tilde-n", "a": "Año", "b": "Ano", "expect": "distinct", "note": "año (yıl) / ano" },
+    { "id": "de.sharp-s", "a": "Straße", "b": "Strasse", "expect": "distinct", "note": "yazım varyantı ama farklı dize" },
+    { "id": "fr.acute", "a": "Résumé", "b": "Resume", "expect": "distinct", "note": "özgeçmiş / devam" },
+    { "id": "punct.cpp", "a": "C++", "b": "C", "expect": "distinct", "note": "slug üretiminde noktalama düşer" },
+    { "id": "punct.csharp", "a": "C#", "b": "C", "expect": "distinct", "note": "slug üretiminde noktalama düşer" },
+    { "id": "case.only", "a": "Ankara", "b": "ANKARA", "expect": "policy", "note": "yalnız harf büyüklüğü; birleşmesi çoğu üründe beklenir" },
+    { "id": "width.fullwidth", "a": "Cam", "b": "Ｃａｍ", "expect": "policy", "note": "tam genişlik; NFKC eşdeğeri" }
+  ]
+}

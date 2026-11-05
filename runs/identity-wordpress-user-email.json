@@ -1,0 +1,231 @@
+{
+  "schemaVersion": "0.1",
+  "kind": "identity",
+  "adapter": "wordpress-user-email",
+  "at": "2026-11-05T23:17:52.332Z",
+  "results": [
+    {
+      "id": "case-full",
+      "sameMailbox": true,
+      "a": {
+        "email": "hdl618gz0@example.com",
+        "login": "hdlidmw4619j80",
+        "outcome": "accepted",
+        "recordId": "130",
+        "stored": "hdl618gz0@example.com"
+      },
+      "b": {
+        "email": "HDL618gz0@EXAMPLE.COM",
+        "login": "hdlidmw461ais1",
+        "outcome": "rejected",
+        "reason": "Error: This email is already registered. Please choose another one."
+      },
+      "flags": []
+    },
+    {
+      "id": "case-domain",
+      "sameMailbox": true,
+      "a": {
+        "email": "hdl61b6f2@example.com",
+        "login": "hdlidmw461b7u2",
+        "outcome": "accepted",
+        "recordId": "131",
+        "stored": "hdl61b6f2@example.com"
+      },
+      "b": {
+        "email": "hdl61b6f2@Example.COM",
+        "login": "hdlidmw461cbs3",
+        "outcome": "rejected",
+        "reason": "Error: This email is already registered. Please choose another one."
+      },
+      "flags": []
+    },
+    {
+      "id": "trailing-space",
+      "sameMailbox": true,
+      "a": {
+        "email": "hdl61cwm4@example.com",
+        "login": "hdlidmw461cy14",
+        "outcome": "accepted",
+        "recordId": "132",
+        "stored": "hdl61cwm4@example.com"
+      },
+      "b": {
+        "email": " hdl61cwm4@example.com ",
+        "login": "hdlidmw461dz35",
+        "outcome": "rejected",
+        "reason": "Error: The email address is not correct. Error: Please enter an email address."
+      },
+      "flags": []
+    },
+    {
+      "id": "idn-punycode",
+      "sameMailbox": true,
+      "a": {
+        "email": "hdl61ek16@örnek.com.tr",
+        "login": "hdlidmw461eli6",
+        "outcome": "rejected",
+        "reason": "Error: The email address is not correct. Error: Please enter an email address."
+      },
+      "b": {
+        "email": "hdl61ek16@xn--rnek-4qa.com.tr",
+        "login": "hdlidmw461f897",
+        "outcome": "accepted",
+        "recordId": "133",
+        "stored": "hdl61ek16@xn--rnek-4qa.com.tr"
+      },
+      "flags": []
+    },
+    {
+      "id": "idn-case",
+      "sameMailbox": true,
+      "a": {
+        "email": "hdl61g4l8@örnek.com.tr",
+        "login": "hdlidmw461g5x8",
+        "outcome": "rejected",
+        "reason": "Error: The email address is not correct. Error: Please enter an email address."
+      },
+      "b": {
+        "email": "hdl61g4l8@ÖRNEK.com.tr",
+        "login": "hdlidmw461gsk9",
+        "outcome": "rejected",
+        "reason": "Error: The email address is not correct. Error: Please enter an email address."
+      },
+      "flags": []
+    },
+    {
+      "id": "nfd-local",
+      "sameMailbox": true,
+      "a": {
+        "email": "josé61he510@example.com",
+        "login": "hdlidmw461hfq10",
+        "outcome": "rejected",
+        "reason": "Error: The email address is not correct. Error: Please enter an email address."
+      },
+      "b": {
+        "email": "josé61he510@example.com",
+        "login": "hdlidmw461i3a11",
+        "outcome": "rejected",
+        "reason": "Error: The email address is not correct. Error: Please enter an email address."
+      },
+      "flags": []
+    },
+    {
+      "id": "fullwidth",
+      "sameMailbox": false,
+      "a": {
+        "email": "hdl61ipk12@example.com",
+        "login": "hdlidmw461ir312",
+        "outcome": "accepted",
+        "recordId": "134",
+        "stored": "hdl61ipk12@example.com"
+      },
+      "b": {
+        "email": "ｈｄｌ61ipk12@example.com",
+        "login": "hdlidmw461jtk13",
+        "outcome": "rejected",
+        "reason": "Error: The email address is not correct. Error: Please enter an email address."
+      },
+      "flags": [
+        "b-rejected (çakışma mı geçersiz mi: reason)"
+      ]
+    },
+    {
+      "id": "tr-dotless-i",
+      "sameMailbox": false,
+      "a": {
+        "email": "admin61kf114@example.com",
+        "login": "hdlidmw461kge14",
+        "outcome": "accepted",
+        "recordId": "135",
+        "stored": "admin61kf114@example.com"
+      },
+      "b": {
+        "email": "admın61kf114@example.com",
+        "login": "hdlidmw461lnp15",
+        "outcome": "rejected",
+        "reason": "Error: The email address is not correct. Error: Please enter an email address."
+      },
+      "flags": [
+        "b-rejected (çakışma mı geçersiz mi: reason)"
+      ]
+    },
+    {
+      "id": "tr-dotted-I",
+      "sameMailbox": false,
+      "a": {
+        "email": "ilk61mbj16@example.com",
+        "login": "hdlidmw461md016",
+        "outcome": "accepted",
+        "recordId": "136",
+        "stored": "ilk61mbj16@example.com"
+      },
+      "b": {
+        "email": "İLK61mbj16@example.com",
+        "login": "hdlidmw461nix17",
+        "outcome": "rejected",
+        "reason": "Error: The email address is not correct. Error: Please enter an email address."
+      },
+      "flags": [
+        "b-rejected (çakışma mı geçersiz mi: reason)"
+      ]
+    },
+    {
+      "id": "kelvin-sign",
+      "sameMailbox": false,
+      "a": {
+        "email": "kim61o6o18@example.com",
+        "login": "hdlidmw461o8718",
+        "outcome": "accepted",
+        "recordId": "137",
+        "stored": "kim61o6o18@example.com"
+      },
+      "b": {
+        "email": "Kim61o6o18@example.com",
+        "login": "hdlidmw461phm19",
+        "outcome": "rejected",
+        "reason": "Error: The email address is not correct. Error: Please enter an email address."
+      },
+      "flags": [
+        "b-rejected (çakışma mı geçersiz mi: reason)"
+      ]
+    },
+    {
+      "id": "long-s",
+      "sameMailbox": false,
+      "a": {
+        "email": "sam61q5n20@example.com",
+        "login": "hdlidmw461q7920",
+        "outcome": "accepted",
+        "recordId": "138",
+        "stored": "sam61q5n20@example.com"
+      },
+      "b": {
+        "email": "ſam61q5n20@example.com",
+        "login": "hdlidmw461re421",
+        "outcome": "rejected",
+        "reason": "Error: The email address is not correct. Error: Please enter an email address."
+      },
+      "flags": [
+        "b-rejected (çakışma mı geçersiz mi: reason)"
+      ]
+    },
+    {
+      "id": "eai-turkish",
+      "sameMailbox": false,
+      "a": {
+        "email": "işık61s1722@example.com",
+        "login": "hdlidmw461s2r22",
+        "outcome": "rejected",
+        "reason": "Error: The email address is not correct. Error: Please enter an email address."
+      },
+      "b": {
+        "email": "IŞIK61s1722@example.com",
+        "login": "hdlidmw461srl23",
+        "outcome": "rejected",
+        "reason": "Error: The email address is not correct. Error: Please enter an email address."
+      },
+      "flags": []
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="1200" height="420" role="img" aria-labelledby="t d">
+  <title id="t">Aksan çakışması: iki gerçek hata</title>
+  <desc id="d">Redmine'de "Cam" wiki sayfasını kaydetmek "Çam" sayfasının üzerine yazar. WordPress Hızlı Düzenle'de "Sis" etiketi yazmak yazıya "Şiş" etiketini bağlar.</desc>
+  <style>
+    .sans{font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace}
+    .panel{fill:#0f1a2e;stroke:#1f2a44}
+    .cover{animation:type 9s steps(4,end) infinite}
+    @keyframes type{0%{transform:translateX(0)}12%,100%{transform:translateX(70px)}}
+    .card{animation:card 9s infinite both}
+    @keyframes card{0%,16%{opacity:0;transform:translateY(10px)}22%,94%{opacity:1;transform:none}100%{opacity:0}}
+    .old{animation:old 9s infinite both;opacity:0}
+    @keyframes old{0%,20%{opacity:0}24%,40%{opacity:1}44%,100%{opacity:0}}
+    .new{animation:new 9s infinite both}
+    @keyframes new{0%,42%{opacity:0}46%,94%{opacity:1}100%{opacity:0}}
+    .flash{animation:flash 9s infinite both;opacity:0}
+    @keyframes flash{0%,43%{opacity:0}45%{opacity:.55}52%,100%{opacity:0}}
+    .badge{animation:badge 9s infinite both}
+    @keyframes badge{0%,48%{opacity:0;transform:scale(.9)}53%,94%{opacity:1;transform:none}100%{opacity:0}}
+    .badge,.card{transform-box:fill-box;transform-origin:center}
+    .caret{animation:blink 1s steps(1) infinite}
+    @keyframes blink{50%{opacity:0}}
+    @media (prefers-reduced-motion:reduce){*{animation:none!important}.old,.flash{opacity:0}.cover{transform:translateX(70px)}}
+  </style>
+  <rect width="1200" height="420" rx="20" fill="#0b1220"/>
+  <rect x=".5" y=".5" width="1199" height="419" rx="20" fill="none" stroke="#1f2a44"/>
+
+  <!-- SOL: Redmine -->
+  <g>
+    <rect class="panel" x="30" y="30" width="555" height="360" rx="16"/>
+    <text x="56" y="68" class="sans" font-size="13" letter-spacing=".14em" fill="#94a3b8">REDMINE 7.0.3 · WİKİ · MYSQL</text>
+    <rect x="56" y="86" width="503" height="40" rx="10" fill="#0b1220" stroke="#334155"/>
+    <text x="74" y="112" class="mono" font-size="16" fill="#64748b">/projects/demo/wiki/<tspan fill="#e2e8f0">Cam</tspan><tspan class="caret" fill="#2dd4bf">▍</tspan></text>
+    <rect class="cover" x="264" y="92" width="70" height="28" fill="#0b1220"/>
+
+    <g class="card">
+      <rect x="56" y="148" width="503" height="160" rx="12" fill="#132036" stroke="#334155"/>
+      <rect class="flash" x="56" y="148" width="503" height="160" rx="12" fill="#fb7185"/>
+      <text x="80" y="186" class="sans" font-size="13" fill="#64748b">Düzenle: açılan sayfa</text>
+      <text x="80" y="222" class="sans" font-size="30" font-weight="700" fill="#f8fafc">Çam</text>
+      <text class="old mono" x="80" y="272" font-size="18" fill="#cbd5e1">çam ağacı hakkında notlar…</text>
+      <text class="new mono" x="80" y="272" font-size="18" fill="#fb7185">cam şişe hakkında notlar…</text>
+    </g>
+    <g class="badge sans">
+      <rect x="56" y="326" width="503" height="42" rx="21" fill="#2a1220" stroke="#fb7185" stroke-opacity=".6"/>
+      <text x="307" y="353" text-anchor="middle" font-size="15" fill="#fecdd3">"Cam" kaydedildi → <tspan fill="#fb7185" font-weight="700">Çam'ın üzerine yazıldı</tspan></text>
+    </g>
+  </g>
+
+  <!-- SAĞ: WordPress -->
+  <g>
+    <rect class="panel" x="615" y="30" width="555" height="360" rx="16"/>
+    <text x="641" y="68" class="sans" font-size="13" letter-spacing=".14em" fill="#94a3b8">WORDPRESS 7.1.4 · HIZLI DÜZENLE · ETİKETLER</text>
+    <text x="641" y="104" class="sans" font-size="13" fill="#64748b">Var olan etiketler</text>
+    <g class="mono" font-size="15">
+      <rect x="641" y="114" width="78" height="30" rx="15" fill="#132036" stroke="#334155"/><text x="680" y="134" text-anchor="middle" fill="#cbd5e1">Şiş</text>
+      <rect x="729" y="114" width="78" height="30" rx="15" fill="#132036" stroke="#334155"/><text x="768" y="134" text-anchor="middle" fill="#cbd5e1">Sis</text>
+      <text x="822" y="134" fill="#475569">slug: sis · sis-2</text>
+    </g>
+    <rect x="641" y="160" width="503" height="40" rx="10" fill="#0b1220" stroke="#334155"/>
+    <text x="659" y="186" class="mono" font-size="16" fill="#64748b">tax_input[post_tag] = <tspan fill="#e2e8f0">Sis</tspan><tspan class="caret" fill="#2dd4bf">▍</tspan></text>
+    <rect class="cover" x="868" y="166" width="70" height="28" fill="#0b1220"/>
+
+    <g class="card">
+      <rect x="641" y="222" width="503" height="86" rx="12" fill="#132036" stroke="#334155"/>
+      <rect class="flash" x="641" y="222" width="503" height="86" rx="12" fill="#fb7185"/>
+      <text x="665" y="256" class="sans" font-size="13" fill="#64748b">Yazılar listesi (taze yükleme) · Etiketler</text>
+      <g class="new"><rect x="665" y="268" width="78" height="30" rx="15" fill="#2a1220" stroke="#fb7185"/><text x="704" y="288" class="mono" font-size="15" text-anchor="middle" fill="#fb7185">Şiş</text></g>
+      <g class="old"><rect x="665" y="268" width="78" height="30" rx="15" fill="#0f2a28" stroke="#2dd4bf"/><text x="704" y="288" class="mono" font-size="15" text-anchor="middle" fill="#2dd4bf">…</text></g>
+    </g>
+    <g class="badge sans">
+      <rect x="641" y="326" width="503" height="42" rx="21" fill="#2a1220" stroke="#fb7185" stroke-opacity=".6"/>
+      <text x="892" y="353" text-anchor="middle" font-size="15" fill="#fecdd3">"Sis" yazıldı → <tspan fill="#fb7185" font-weight="700">"Şiş" bağlandı</tspan> · ano → año · Kul → Kül</text>
+    </g>
+  </g>
+</svg>

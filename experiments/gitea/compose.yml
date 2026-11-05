@@ -1,0 +1,17 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment: { POSTGRES_USER: gitea, POSTGRES_PASSWORD: gitea, POSTGRES_DB: gitea }
+  gitea:
+    image: gitea/gitea:latest
+    depends_on: [db]
+    ports: ["8082:3000"]
+    environment:
+      GITEA__security__INSTALL_LOCK: "true"
+      GITEA__database__DB_TYPE: postgres
+      GITEA__database__HOST: db:5432
+      GITEA__database__NAME: gitea
+      GITEA__database__USER: gitea
+      GITEA__database__PASSWD: gitea
+      GITEA__server__ROOT_URL: http://localhost:8082/
+      GITEA__security__LOGIN_REMEMBER_DAYS: "1"

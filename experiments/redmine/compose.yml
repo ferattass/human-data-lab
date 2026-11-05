@@ -1,0 +1,14 @@
+services:
+  db:
+    image: mysql:8.4
+    environment: { MYSQL_ROOT_PASSWORD: root, MYSQL_DATABASE: redmine, MYSQL_USER: redmine, MYSQL_PASSWORD: redmine }
+  redmine:
+    image: redmine:latest
+    depends_on: [db]
+    ports: ["8083:3000"]
+    environment:
+      REDMINE_DB_MYSQL: db
+      REDMINE_DB_DATABASE: redmine
+      REDMINE_DB_USERNAME: redmine
+      REDMINE_DB_PASSWORD: redmine
+      REDMINE_SECRET_KEY_BASE: hdltestsecretkeybasehdltestsecretkeybase

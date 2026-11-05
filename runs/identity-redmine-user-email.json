@@ -1,0 +1,236 @@
+{
+  "schemaVersion": "0.1",
+  "kind": "identity",
+  "adapter": "redmine-user-email",
+  "at": "2026-11-05T23:19:23.174Z",
+  "results": [
+    {
+      "id": "case-full",
+      "sameMailbox": true,
+      "a": {
+        "email": "hdl63hh40@example.com",
+        "login": "hdlidmw463hwp0",
+        "outcome": "accepted",
+        "recordId": "53",
+        "stored": "hdl63hh40@example.com"
+      },
+      "b": {
+        "email": "HDL63hh40@EXAMPLE.COM",
+        "login": "hdlidmw463ihn1",
+        "outcome": "rejected",
+        "reason": "E-Posta hali hazırda kullanılmakta"
+      },
+      "flags": []
+    },
+    {
+      "id": "case-domain",
+      "sameMailbox": true,
+      "a": {
+        "email": "hdl63ira2@example.com",
+        "login": "hdlidmw463isc2",
+        "outcome": "accepted",
+        "recordId": "54",
+        "stored": "hdl63ira2@example.com"
+      },
+      "b": {
+        "email": "hdl63ira2@Example.COM",
+        "login": "hdlidmw463j8q3",
+        "outcome": "rejected",
+        "reason": "E-Posta hali hazırda kullanılmakta"
+      },
+      "flags": []
+    },
+    {
+      "id": "trailing-space",
+      "sameMailbox": true,
+      "a": {
+        "email": "hdl63ji04@example.com",
+        "login": "hdlidmw463jj34",
+        "outcome": "accepted",
+        "recordId": "55",
+        "stored": "hdl63ji04@example.com"
+      },
+      "b": {
+        "email": " hdl63ji04@example.com ",
+        "login": "hdlidmw463k035",
+        "outcome": "rejected",
+        "reason": "E-Posta hali hazırda kullanılmakta"
+      },
+      "flags": []
+    },
+    {
+      "id": "idn-punycode",
+      "sameMailbox": true,
+      "a": {
+        "email": "hdl63kar6@örnek.com.tr",
+        "login": "hdlidmw463kbz6",
+        "outcome": "accepted",
+        "recordId": "56",
+        "stored": "hdl63kar6@xn--rnek-4qa.com.tr"
+      },
+      "b": {
+        "email": "hdl63kar6@xn--rnek-4qa.com.tr",
+        "login": "hdlidmw463ktw7",
+        "outcome": "rejected",
+        "reason": "E-Posta hali hazırda kullanılmakta"
+      },
+      "flags": [
+        "a-mutated"
+      ]
+    },
+    {
+      "id": "idn-case",
+      "sameMailbox": true,
+      "a": {
+        "email": "hdl63l538@örnek.com.tr",
+        "login": "hdlidmw463l6e8",
+        "outcome": "accepted",
+        "recordId": "57",
+        "stored": "hdl63l538@xn--rnek-4qa.com.tr"
+      },
+      "b": {
+        "email": "hdl63l538@ÖRNEK.com.tr",
+        "login": "hdlidmw463lq59",
+        "outcome": "rejected",
+        "reason": "E-Posta hali hazırda kullanılmakta"
+      },
+      "flags": [
+        "a-mutated"
+      ]
+    },
+    {
+      "id": "nfd-local",
+      "sameMailbox": true,
+      "a": {
+        "email": "josé63m1110@example.com",
+        "login": "hdlidmw463m2910",
+        "outcome": "rejected",
+        "reason": "E-Posta geçersiz"
+      },
+      "b": {
+        "email": "josé63m1110@example.com",
+        "login": "hdlidmw463mez11",
+        "outcome": "rejected",
+        "reason": "E-Posta geçersiz"
+      },
+      "flags": []
+    },
+    {
+      "id": "fullwidth",
+      "sameMailbox": false,
+      "a": {
+        "email": "hdl63mqj12@example.com",
+        "login": "hdlidmw463mrr12",
+        "outcome": "accepted",
+        "recordId": "58",
+        "stored": "hdl63mqj12@example.com"
+      },
+      "b": {
+        "email": "ｈｄｌ63mqj12@example.com",
+        "login": "hdlidmw463nb213",
+        "outcome": "rejected",
+        "reason": "E-Posta geçersiz E-Posta hali hazırda kullanılmakta"
+      },
+      "flags": [
+        "b-rejected (çakışma mı geçersiz mi: reason)"
+      ]
+    },
+    {
+      "id": "tr-dotless-i",
+      "sameMailbox": false,
+      "a": {
+        "email": "admin63nlk14@example.com",
+        "login": "hdlidmw463nmr14",
+        "outcome": "accepted",
+        "recordId": "59",
+        "stored": "admin63nlk14@example.com"
+      },
+      "b": {
+        "email": "admın63nlk14@example.com",
+        "login": "hdlidmw463o6c15",
+        "outcome": "rejected",
+        "reason": "E-Posta geçersiz"
+      },
+      "flags": [
+        "b-rejected (çakışma mı geçersiz mi: reason)"
+      ]
+    },
+    {
+      "id": "tr-dotted-I",
+      "sameMailbox": false,
+      "a": {
+        "email": "ilk63oh316@example.com",
+        "login": "hdlidmw463oic16",
+        "outcome": "accepted",
+        "recordId": "60",
+        "stored": "ilk63oh316@example.com"
+      },
+      "b": {
+        "email": "İLK63oh316@example.com",
+        "login": "hdlidmw463p2h17",
+        "outcome": "rejected",
+        "reason": "E-Posta geçersiz E-Posta hali hazırda kullanılmakta"
+      },
+      "flags": [
+        "b-rejected (çakışma mı geçersiz mi: reason)"
+      ]
+    },
+    {
+      "id": "kelvin-sign",
+      "sameMailbox": false,
+      "a": {
+        "email": "kim63pcs18@example.com",
+        "login": "hdlidmw463pe418",
+        "outcome": "accepted",
+        "recordId": "61",
+        "stored": "kim63pcs18@example.com"
+      },
+      "b": {
+        "email": "Kim63pcs18@example.com",
+        "login": "hdlidmw463pwb19",
+        "outcome": "rejected",
+        "reason": "E-Posta geçersiz E-Posta hali hazırda kullanılmakta"
+      },
+      "flags": [
+        "b-rejected (çakışma mı geçersiz mi: reason)"
+      ]
+    },
+    {
+      "id": "long-s",
+      "sameMailbox": false,
+      "a": {
+        "email": "sam63q6c20@example.com",
+        "login": "hdlidmw463q7h20",
+        "outcome": "accepted",
+        "recordId": "62",
+        "stored": "sam63q6c20@example.com"
+      },
+      "b": {
+        "email": "ſam63q6c20@example.com",
+        "login": "hdlidmw463qqq21",
+        "outcome": "rejected",
+        "reason": "E-Posta geçersiz E-Posta hali hazırda kullanılmakta"
+      },
+      "flags": [
+        "b-rejected (çakışma mı geçersiz mi: reason)"
+      ]
+    },
+    {
+      "id": "eai-turkish",
+      "sameMailbox": false,
+      "a": {
+        "email": "işık63r0y22@example.com",
+        "login": "hdlidmw463r2922",
+        "outcome": "rejected",
+        "reason": "E-Posta geçersiz"
+      },
+      "b": {
+        "email": "IŞIK63r0y22@example.com",
+        "login": "hdlidmw463rel23",
+        "outcome": "rejected",
+        "reason": "E-Posta geçersiz"
+      },
+      "flags": []
+    }
+  ]
+}

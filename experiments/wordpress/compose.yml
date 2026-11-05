@@ -1,0 +1,18 @@
+services:
+  db:
+    image: mysql:8.4
+    environment: { MYSQL_ROOT_PASSWORD: root, MYSQL_DATABASE: wp, MYSQL_USER: wp, MYSQL_PASSWORD: wp }
+  wp:
+    image: wordpress:latest
+    depends_on: [db]
+    ports: ["8081:80"]
+    environment: { WORDPRESS_DB_HOST: db, WORDPRESS_DB_USER: wp, WORDPRESS_DB_PASSWORD: wp, WORDPRESS_DB_NAME: wp }
+    volumes: [wpdata:/var/www/html]
+  cli:
+    image: wordpress:cli
+    depends_on: [wp]
+    user: "33:33"
+    environment: { WORDPRESS_DB_HOST: db, WORDPRESS_DB_USER: wp, WORDPRESS_DB_PASSWORD: wp, WORDPRESS_DB_NAME: wp }
+    volumes: [wpdata:/var/www/html]
+    profiles: [tools]
+volumes: { wpdata: {} }

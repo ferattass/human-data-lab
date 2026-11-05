@@ -1,0 +1,281 @@
+{
+  "schemaVersion": "0.1",
+  "kind": "collision",
+  "adapter": "wp-tag-quickedit",
+  "at": "2026-11-05T23:34:10.199Z",
+  "results": [
+    {
+      "id": "control.unrelated",
+      "expect": "control",
+      "note": "ilgisiz iki ad; karışırsa adapter bozuk",
+      "a": {
+        "name": "Elma-mw46m15v0",
+        "recordId": "18",
+        "read": {
+          "name": "Elma-mw46m15v0"
+        }
+      },
+      "b": {
+        "name": "Armut-mw46m15v0",
+        "recordId": "19",
+        "read": {
+          "name": "Armut-mw46m15v0"
+        }
+      },
+      "outcome": "distinct",
+      "verdict": "pass"
+    },
+    {
+      "id": "tr.cedilla-c",
+      "expect": "distinct",
+      "note": "çam (ağaç) / cam (malzeme)",
+      "a": {
+        "name": "Çam-mw46m15v1",
+        "recordId": "20",
+        "read": {
+          "name": "Çam-mw46m15v1"
+        }
+      },
+      "b": {
+        "name": "Cam-mw46m15v1",
+        "recordId": "20",
+        "read": {
+          "name": "Çam-mw46m15v1"
+        }
+      },
+      "outcome": "merged",
+      "verdict": "fail"
+    },
+    {
+      "id": "tr.cedilla-s",
+      "expect": "distinct",
+      "note": "şiş / sis",
+      "a": {
+        "name": "Şiş-mw46m15v2",
+        "recordId": "21",
+        "read": {
+          "name": "Şiş-mw46m15v2"
+        }
+      },
+      "b": {
+        "name": "Sis-mw46m15v2",
+        "recordId": "21",
+        "read": {
+          "name": "Şiş-mw46m15v2"
+        }
+      },
+      "outcome": "merged",
+      "verdict": "fail"
+    },
+    {
+      "id": "tr.umlaut-u",
+      "expect": "distinct",
+      "note": "kül / kul",
+      "a": {
+        "name": "Kül-mw46m15v3",
+        "recordId": "22",
+        "read": {
+          "name": "Kül-mw46m15v3"
+        }
+      },
+      "b": {
+        "name": "Kul-mw46m15v3",
+        "recordId": "22",
+        "read": {
+          "name": "Kül-mw46m15v3"
+        }
+      },
+      "outcome": "merged",
+      "verdict": "fail"
+    },
+    {
+      "id": "tr.umlaut-o",
+      "expect": "distinct",
+      "note": "göl / gol",
+      "a": {
+        "name": "Göl-mw46m15v4",
+        "recordId": "23",
+        "read": {
+          "name": "Göl-mw46m15v4"
+        }
+      },
+      "b": {
+        "name": "Gol-mw46m15v4",
+        "recordId": "23",
+        "read": {
+          "name": "Göl-mw46m15v4"
+        }
+      },
+      "outcome": "merged",
+      "verdict": "fail"
+    },
+    {
+      "id": "tr.dotless-i",
+      "expect": "distinct",
+      "note": "MySQL 0900_ai_ci bunları ayırır; kontrol niteliğinde",
+      "a": {
+        "name": "Kır-mw46m15v5",
+        "recordId": "24",
+        "read": {
+          "name": "Kır-mw46m15v5"
+        }
+      },
+      "b": {
+        "name": "Kir-mw46m15v5",
+        "recordId": "24",
+        "read": {
+          "name": "Kır-mw46m15v5"
+        }
+      },
+      "outcome": "merged",
+      "verdict": "fail"
+    },
+    {
+      "id": "es.tilde-n",
+      "expect": "distinct",
+      "note": "año (yıl) / ano",
+      "a": {
+        "name": "Año-mw46m15v6",
+        "recordId": "25",
+        "read": {
+          "name": "Año-mw46m15v6"
+        }
+      },
+      "b": {
+        "name": "Ano-mw46m15v6",
+        "recordId": "25",
+        "read": {
+          "name": "Año-mw46m15v6"
+        }
+      },
+      "outcome": "merged",
+      "verdict": "fail"
+    },
+    {
+      "id": "de.sharp-s",
+      "expect": "distinct",
+      "note": "yazım varyantı ama farklı dize",
+      "a": {
+        "name": "Straße-mw46m15v7",
+        "recordId": "26",
+        "read": {
+          "name": "Straße-mw46m15v7"
+        }
+      },
+      "b": {
+        "name": "Strasse-mw46m15v7",
+        "recordId": "26",
+        "read": {
+          "name": "Straße-mw46m15v7"
+        }
+      },
+      "outcome": "merged",
+      "verdict": "fail"
+    },
+    {
+      "id": "fr.acute",
+      "expect": "distinct",
+      "note": "özgeçmiş / devam",
+      "a": {
+        "name": "Résumé-mw46m15v8",
+        "recordId": "27",
+        "read": {
+          "name": "Résumé-mw46m15v8"
+        }
+      },
+      "b": {
+        "name": "Resume-mw46m15v8",
+        "recordId": "27",
+        "read": {
+          "name": "Résumé-mw46m15v8"
+        }
+      },
+      "outcome": "merged",
+      "verdict": "fail"
+    },
+    {
+      "id": "punct.cpp",
+      "expect": "distinct",
+      "note": "slug üretiminde noktalama düşer",
+      "a": {
+        "name": "C++-mw46m15v9",
+        "recordId": "28",
+        "read": {
+          "name": "C++-mw46m15v9"
+        }
+      },
+      "b": {
+        "name": "C-mw46m15v9",
+        "recordId": "28",
+        "read": {
+          "name": "C++-mw46m15v9"
+        }
+      },
+      "outcome": "merged",
+      "verdict": "fail"
+    },
+    {
+      "id": "punct.csharp",
+      "expect": "distinct",
+      "note": "slug üretiminde noktalama düşer",
+      "a": {
+        "name": "C#-mw46m15v10",
+        "recordId": "29",
+        "read": {
+          "name": "C#-mw46m15v10"
+        }
+      },
+      "b": {
+        "name": "C-mw46m15v10",
+        "recordId": "29",
+        "read": {
+          "name": "C#-mw46m15v10"
+        }
+      },
+      "outcome": "merged",
+      "verdict": "fail"
+    },
+    {
+      "id": "case.only",
+      "expect": "policy",
+      "note": "yalnız harf büyüklüğü; birleşmesi çoğu üründe beklenir",
+      "a": {
+        "name": "Ankara-mw46m15v11",
+        "recordId": "30",
+        "read": {
+          "name": "Ankara-mw46m15v11"
+        }
+      },
+      "b": {
+        "name": "ANKARA-mw46m15v11",
+        "recordId": "30",
+        "read": {
+          "name": "Ankara-mw46m15v11"
+        }
+      },
+      "outcome": "merged",
+      "verdict": "observed"
+    },
+    {
+      "id": "width.fullwidth",
+      "expect": "policy",
+      "note": "tam genişlik; NFKC eşdeğeri",
+      "a": {
+        "name": "Cam-mw46m15v12",
+        "recordId": "31",
+        "read": {
+          "name": "Cam-mw46m15v12"
+        }
+      },
+      "b": {
+        "name": "Ｃａｍ-mw46m15v12",
+        "recordId": "31",
+        "read": {
+          "name": "Cam-mw46m15v12"
+        }
+      },
+      "outcome": "merged",
+      "verdict": "observed"
+    }
+  ]
+}

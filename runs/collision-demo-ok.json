@@ -1,0 +1,333 @@
+{
+  "schemaVersion": "0.1",
+  "kind": "collision",
+  "adapter": "demo-pages",
+  "at": "2026-11-05T23:33:00.404Z",
+  "results": [
+    {
+      "id": "control.unrelated",
+      "expect": "control",
+      "note": "ilgisiz iki ad; karışırsa adapter bozuk",
+      "a": {
+        "name": "Elma-mw46l6g10",
+        "body": "A gövdesi: Elma",
+        "recordId": "1",
+        "read": {
+          "name": "Elma-mw46l6g10",
+          "body": "A gövdesi: Elma"
+        }
+      },
+      "b": {
+        "name": "Armut-mw46l6g10",
+        "body": "B gövdesi: Armut",
+        "recordId": "2",
+        "read": {
+          "name": "Armut-mw46l6g10",
+          "body": "B gövdesi: Armut"
+        }
+      },
+      "outcome": "distinct",
+      "verdict": "pass"
+    },
+    {
+      "id": "tr.cedilla-c",
+      "expect": "distinct",
+      "note": "çam (ağaç) / cam (malzeme)",
+      "a": {
+        "name": "Çam-mw46l6g11",
+        "body": "A gövdesi: Çam",
+        "recordId": "3",
+        "read": {
+          "name": "Çam-mw46l6g11",
+          "body": "A gövdesi: Çam"
+        }
+      },
+      "b": {
+        "name": "Cam-mw46l6g11",
+        "body": "B gövdesi: Cam",
+        "recordId": "4",
+        "read": {
+          "name": "Cam-mw46l6g11",
+          "body": "B gövdesi: Cam"
+        }
+      },
+      "outcome": "distinct",
+      "verdict": "pass"
+    },
+    {
+      "id": "tr.cedilla-s",
+      "expect": "distinct",
+      "note": "şiş / sis",
+      "a": {
+        "name": "Şiş-mw46l6g12",
+        "body": "A gövdesi: Şiş",
+        "recordId": "5",
+        "read": {
+          "name": "Şiş-mw46l6g12",
+          "body": "A gövdesi: Şiş"
+        }
+      },
+      "b": {
+        "name": "Sis-mw46l6g12",
+        "body": "B gövdesi: Sis",
+        "recordId": "6",
+        "read": {
+          "name": "Sis-mw46l6g12",
+          "body": "B gövdesi: Sis"
+        }
+      },
+      "outcome": "distinct",
+      "verdict": "pass"
+    },
+    {
+      "id": "tr.umlaut-u",
+      "expect": "distinct",
+      "note": "kül / kul",
+      "a": {
+        "name": "Kül-mw46l6g13",
+        "body": "A gövdesi: Kül",
+        "recordId": "7",
+        "read": {
+          "name": "Kül-mw46l6g13",
+          "body": "A gövdesi: Kül"
+        }
+      },
+      "b": {
+        "name": "Kul-mw46l6g13",
+        "body": "B gövdesi: Kul",
+        "recordId": "8",
+        "read": {
+          "name": "Kul-mw46l6g13",
+          "body": "B gövdesi: Kul"
+        }
+      },
+      "outcome": "distinct",
+      "verdict": "pass"
+    },
+    {
+      "id": "tr.umlaut-o",
+      "expect": "distinct",
+      "note": "göl / gol",
+      "a": {
+        "name": "Göl-mw46l6g14",
+        "body": "A gövdesi: Göl",
+        "recordId": "9",
+        "read": {
+          "name": "Göl-mw46l6g14",
+          "body": "A gövdesi: Göl"
+        }
+      },
+      "b": {
+        "name": "Gol-mw46l6g14",
+        "body": "B gövdesi: Gol",
+        "recordId": "10",
+        "read": {
+          "name": "Gol-mw46l6g14",
+          "body": "B gövdesi: Gol"
+        }
+      },
+      "outcome": "distinct",
+      "verdict": "pass"
+    },
+    {
+      "id": "tr.dotless-i",
+      "expect": "distinct",
+      "note": "MySQL 0900_ai_ci bunları ayırır; kontrol niteliğinde",
+      "a": {
+        "name": "Kır-mw46l6g15",
+        "body": "A gövdesi: Kır",
+        "recordId": "11",
+        "read": {
+          "name": "Kır-mw46l6g15",
+          "body": "A gövdesi: Kır"
+        }
+      },
+      "b": {
+        "name": "Kir-mw46l6g15",
+        "body": "B gövdesi: Kir",
+        "recordId": "12",
+        "read": {
+          "name": "Kir-mw46l6g15",
+          "body": "B gövdesi: Kir"
+        }
+      },
+      "outcome": "distinct",
+      "verdict": "pass"
+    },
+    {
+      "id": "es.tilde-n",
+      "expect": "distinct",
+      "note": "año (yıl) / ano",
+      "a": {
+        "name": "Año-mw46l6g16",
+        "body": "A gövdesi: Año",
+        "recordId": "13",
+        "read": {
+          "name": "Año-mw46l6g16",
+          "body": "A gövdesi: Año"
+        }
+      },
+      "b": {
+        "name": "Ano-mw46l6g16",
+        "body": "B gövdesi: Ano",
+        "recordId": "14",
+        "read": {
+          "name": "Ano-mw46l6g16",
+          "body": "B gövdesi: Ano"
+        }
+      },
+      "outcome": "distinct",
+      "verdict": "pass"
+    },
+    {
+      "id": "de.sharp-s",
+      "expect": "distinct",
+      "note": "yazım varyantı ama farklı dize",
+      "a": {
+        "name": "Straße-mw46l6g17",
+        "body": "A gövdesi: Straße",
+        "recordId": "15",
+        "read": {
+          "name": "Straße-mw46l6g17",
+          "body": "A gövdesi: Straße"
+        }
+      },
+      "b": {
+        "name": "Strasse-mw46l6g17",
+        "body": "B gövdesi: Strasse",
+        "recordId": "16",
+        "read": {
+          "name": "Strasse-mw46l6g17",
+          "body": "B gövdesi: Strasse"
+        }
+      },
+      "outcome": "distinct",
+      "verdict": "pass"
+    },
+    {
+      "id": "fr.acute",
+      "expect": "distinct",
+      "note": "özgeçmiş / devam",
+      "a": {
+        "name": "Résumé-mw46l6g18",
+        "body": "A gövdesi: Résumé",
+        "recordId": "17",
+        "read": {
+          "name": "Résumé-mw46l6g18",
+          "body": "A gövdesi: Résumé"
+        }
+      },
+      "b": {
+        "name": "Resume-mw46l6g18",
+        "body": "B gövdesi: Resume",
+        "recordId": "18",
+        "read": {
+          "name": "Resume-mw46l6g18",
+          "body": "B gövdesi: Resume"
+        }
+      },
+      "outcome": "distinct",
+      "verdict": "pass"
+    },
+    {
+      "id": "punct.cpp",
+      "expect": "distinct",
+      "note": "slug üretiminde noktalama düşer",
+      "a": {
+        "name": "C++-mw46l6g19",
+        "body": "A gövdesi: C++",
+        "recordId": "19",
+        "read": {
+          "name": "C++-mw46l6g19",
+          "body": "A gövdesi: C++"
+        }
+      },
+      "b": {
+        "name": "C-mw46l6g19",
+        "body": "B gövdesi: C",
+        "recordId": "20",
+        "read": {
+          "name": "C-mw46l6g19",
+          "body": "B gövdesi: C"
+        }
+      },
+      "outcome": "distinct",
+      "verdict": "pass"
+    },
+    {
+      "id": "punct.csharp",
+      "expect": "distinct",
+      "note": "slug üretiminde noktalama düşer",
+      "a": {
+        "name": "C#-mw46l6g110",
+        "body": "A gövdesi: C#",
+        "recordId": "21",
+        "read": {
+          "name": "C#-mw46l6g110",
+          "body": "A gövdesi: C#"
+        }
+      },
+      "b": {
+        "name": "C-mw46l6g110",
+        "body": "B gövdesi: C",
+        "recordId": "22",
+        "read": {
+          "name": "C-mw46l6g110",
+          "body": "B gövdesi: C"
+        }
+      },
+      "outcome": "distinct",
+      "verdict": "pass"
+    },
+    {
+      "id": "case.only",
+      "expect": "policy",
+      "note": "yalnız harf büyüklüğü; birleşmesi çoğu üründe beklenir",
+      "a": {
+        "name": "Ankara-mw46l6g111",
+        "body": "A gövdesi: Ankara",
+        "recordId": "23",
+        "read": {
+          "name": "Ankara-mw46l6g111",
+          "body": "A gövdesi: Ankara"
+        }
+      },
+      "b": {
+        "name": "ANKARA-mw46l6g111",
+        "body": "B gövdesi: ANKARA",
+        "recordId": "24",
+        "read": {
+          "name": "ANKARA-mw46l6g111",
+          "body": "B gövdesi: ANKARA"
+        }
+      },
+      "outcome": "distinct",
+      "verdict": "pass"
+    },
+    {
+      "id": "width.fullwidth",
+      "expect": "policy",
+      "note": "tam genişlik; NFKC eşdeğeri",
+      "a": {
+        "name": "Cam-mw46l6g112",
+        "body": "A gövdesi: Cam",
+        "recordId": "25",
+        "read": {
+          "name": "Cam-mw46l6g112",
+          "body": "A gövdesi: Cam"
+        }
+      },
+      "b": {
+        "name": "Ｃａｍ-mw46l6g112",
+        "body": "B gövdesi: Ｃａｍ",
+        "recordId": "26",
+        "read": {
+          "name": "Ｃａｍ-mw46l6g112",
+          "body": "B gövdesi: Ｃａｍ"
+        }
+      },
+      "outcome": "distinct",
+      "verdict": "pass"
+    }
+  ]
+}
