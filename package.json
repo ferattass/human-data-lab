@@ -5,8 +5,12 @@
   "type": "module",
   "private": true,
   "license": "MIT",
-  "bin": { "hdl": "bin/hdl.mjs" },
-  "engines": { "node": ">=20" },
+  "bin": {
+    "hdl": "bin/hdl.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "test": "node --test test/unit.test.mjs",
     "test:e2e": "node --test test/e2e-demo.test.mjs",
@@ -15,8 +19,18 @@
     "assets": "node scripts/build-assets.mjs",
     "repro:round3": "node experiments/repro-round3.mjs"
   },
-  "keywords": ["unicode", "i18n", "testing", "playwright", "turkish", "collation", "data-integrity"],
+  "keywords": [
+    "unicode",
+    "i18n",
+    "testing",
+    "playwright",
+    "turkish",
+    "collation",
+    "data-integrity"
+  ],
   "devDependencies": {
-    "@playwright/test": "^1.64.1"
+    "@playwright/test": "^1.64.1",
+    "@types/node": "24.19.2",
+    "typescript": "7.0.2"
   }
 }

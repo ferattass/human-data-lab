@@ -2,7 +2,7 @@
 // human-data-lab tek giriş noktası.
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-const root = fileURLToPath(new URL('../', import.meta.url));
+const root = fileURLToPath(new URL('./', import.meta.url));
 const commands = {
   roundtrip: ['src/run.mjs', 'form → kaydet → taze okuma; metin aynen korunuyor mu', '<adapter> [--corpus text-smoke] [--exclude emoji,…] [--out f.json]'],
   search: ['src/search-run.mjs', 'kaydı kullanıcının yazabileceği biçimlerle ara (negatif kontrollü)', '<adapter> [--only id,…] [--out f.json]'],
