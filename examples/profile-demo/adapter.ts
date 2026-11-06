@@ -33,6 +33,8 @@ export function profileDemoAdapter(o: ProfileDemoAdapterOptions): RoundtripAdapt
       readiness: true,
     },
 
+    secrets: () => [o.testToken, o.password],
+
     async authenticate(browser, baseURL) {
       const ctx = await browser.newContext({ baseURL });
       const page = await ctx.newPage();

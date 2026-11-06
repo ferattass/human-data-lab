@@ -122,7 +122,7 @@ export function renderReport(run: LoadedRun): string {
   const complete = run.complete;
   const findings = [...run.findings].sort((a, b) => a.id.localeCompare(b.id, 'en', { numeric: true }));
   const pv = m?.provenance;
-  const rules = ((run.contract as { contract?: { preservation?: Array<{ rule: string }> } })?.contract?.preservation ?? []).map((p) => p.rule).join(' + ');
+  const rules = ((run.contract as { contract?: { preservation?: Array<{ id: string; rule: string; required: boolean }> } })?.contract?.preservation ?? []).map((p) => `${p.id}=${p.rule}${p.required ? '' : ' (tanısal)'}`).join(' · ');
   const contractId = (run.contract as { contract?: { id?: string } })?.contract?.id ?? '?';
   const exitMeaning: Record<number, string> = { 0: 'gerekli kontroller tamamlandı; ihlal veya çözümsüz durum yok', 1: 'en az bir required ihlal', 2: 'yapılandırma, yürütme, eksik kanıt veya belirsiz sonuç', 3: 'cleanup doğrulanamadı', 130: 'kullanıcı iptali' };
   const card = (n: number | string, label: string, tone = '') => `<div class="card ${tone}"><div class="n">${esc(n)}</div><div class="l">${esc(label)}</div></div>`;

@@ -88,6 +88,8 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
   const problems: string[] = [];
   const adapter = config.adapter;
   const runSignal = opts.signal ?? new AbortController().signal;
+  const secrets = (() => { try { return (adapter?.secrets?.() ?? []).filter((x) => typeof x === 'string' && x.length >= 4); } catch { return []; } })();
+  const redact = (e: unknown, o: { multiline?: boolean } = {}) => redactMessage(e, secrets, o);
 
   // ---------- Preflight: şema hatasında browser mutasyonu başlamaz (§22, A14) ----------
   let fixtures: Array<{ fixture: Fixture; value: string; origin: string }> = [];
@@ -129,14 +131,14 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
       fixtures = c.fixtures.map((f) => ({ fixture: f, value: f.value, origin: 'corpus' }));
     }
   } catch (e) {
-    problems.push(`preflight: ${(e as Error).message}`);
+    problems.push(`preflight: ${redact(e, { multiline: true })}`);
     run.writeJsonAtomic('contract.json', { contract: config.contract ?? null, preflightFailed: true });
     const m = manifestBase();
     m.finishedAt = now();
     m.exitCode = 2;
     m.summary = summarize({ selected: 0, outOfScope: [], trials: [], findings: 0 });
     run.writeManifest(m);
-    log(`preflight başarısız — tarayıcı başlatılmadı:\n${(e as Error).message}`);
+    log(`preflight başarısız — tarayıcı başlatılmadı:\n${redact(e, { multiline: true })}`);
     return { runDir: run.root, exitCode: 2, manifest: m, trials: [], findings: [] };
   }
 
@@ -176,11 +178,12 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
       get(t, prop, recv) {
         const v = Reflect.get(t, prop, recv);
         if (typeof v !== 'function' || !['get', 'post', 'put', 'patch', 'delete', 'head', 'fetch'].includes(String(prop))) return typeof v === 'function' ? v.bind(t) : v;
-        return (url: string | { url(): string }, ...rest: unknown[]) => {
+        return (url: string | { url(): string }, options?: Record<string, unknown>) => {
           const href = typeof url === 'string' ? url : url.url();
           const origin = new URL(href, config.target.baseURL).origin;
           if (!allowed.has(origin)) throw new ScopeError(`izinli olmayan origin'e istek engellendi: ${origin}`);
-          return (v as (...a: unknown[]) => unknown).call(t, url, ...rest);
+          // Yönlendirme izlenmez: izinli sunucunun 3xx'i sırlı başlıkları başka origin'e taşımasın (§30).
+          return (v as (...a: unknown[]) => unknown).call(t, url, { ...(options ?? {}), maxRedirects: 0 });
         };
       },
     });
@@ -191,11 +194,11 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
     if (adapter.targetBuild) {
       const apis: APIRequestContext[] = [];
       try { targetBuild = await adapter.targetBuild(cleanupCtxFor({ runId, caseId: '-', candidateId: '-', attemptId: '-', fixtureKey: '-' }, new AbortController().signal, apis)); }
-      catch (e) { problems.push(`targetBuild okunamadı: ${(e as Error).message}`); }
+      catch (e) { problems.push(`targetBuild okunamadı: ${redact(e)}`); }
       finally { for (const a of apis) await a.dispose().catch(() => {}); }
     }
   } catch (e) {
-    problems.push(`authenticate: ${(e as Error).message}`);
+    problems.push(`authenticate: ${redact(e)}`);
     stopRun = 'authenticate başarısız';
   }
 
@@ -299,7 +302,7 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
         return v;
       } catch (e) {
         const cls = classifyError(e);
-        events.push({ phase: name, event: 'error', at: now(), errorClass: cls, message: String((e as Error)?.message ?? e).split('\n')[0] });
+        events.push({ phase: name, event: 'error', at: now(), errorClass: cls, message: redact(e) });
         throw e;
       } finally { timings[name] = (timings[name] ?? 0) + Date.now() - t0; }
     }
@@ -350,7 +353,7 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
         const err = scopeViolation ? new ScopeError(`izinli olmayan origin: ${scopeViolation}`) : e;
         const cls = classifyError(err);
         const lastPhase = [...events].reverse().find((ev) => ev.event === 'error')?.phase ?? 'prepare';
-        errors.push({ class: cls, phase: lastPhase, message: String((err as Error)?.message ?? err).split('\n')[0] });
+        errors.push({ class: cls, phase: lastPhase, message: redact(err) });
         if (err instanceof ScopeError) stopRun = `kapsam hatası: ${(err as Error).message}`;
       }
     } finally {
@@ -381,12 +384,12 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
       try {
         const r: CleanupResult = await raceSignal(adapter.cleanup(cleanupCtxFor(identity, cAc.signal, apis), ownForCleanup), cAc.signal);
         cleanup = r.status;
-        events.push({ phase: 'cleanup', event: 'end', at: now(), message: r.detail });
-        if (r.status === 'failed' || r.status === 'pending') errors.push({ class: 'cleanup', phase: 'cleanup', message: r.detail ?? r.status });
+        events.push({ phase: 'cleanup', event: 'end', at: now(), message: r.detail === undefined ? undefined : redact(r.detail) });
+        if (r.status === 'failed' || r.status === 'pending') errors.push({ class: 'cleanup', phase: 'cleanup', message: redact(r.detail ?? r.status) });
       } catch (e) {
         cleanup = e instanceof PhaseTimeout ? 'pending' : 'failed';
-        events.push({ phase: 'cleanup', event: 'error', at: now(), errorClass: 'cleanup', message: String((e as Error).message) });
-        errors.push({ class: 'cleanup', phase: 'cleanup', message: String((e as Error).message) });
+        events.push({ phase: 'cleanup', event: 'error', at: now(), errorClass: 'cleanup', message: redact(e) });
+        errors.push({ class: 'cleanup', phase: 'cleanup', message: redact(e) });
       } finally { clearTimeout(cTimer); timings.cleanup = Date.now() - c0; }
       run.appendJsonl('allocations.jsonl', { at: now(), attemptId, event: 'cleanup', namespace: ownForCleanup.namespace, status: cleanup });
     }
@@ -564,6 +567,21 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
   run.writeManifest(m);
   log(`\nexit ${code} · ${s.executed} deneme · ${s.requiredFailed} required ihlal · ${s.requiredNotRun} çalışmayan required · cleanup ${JSON.stringify(s.cleanup)} · rapor: ${relative(process.cwd(), run.path('report.html'))}`);
   return { runDir: run.root, exitCode: code, manifest: m, trials, findings };
+}
+
+/**
+ * Artifact'a yazılan her hata/ayrıntı mesajı buradan geçer (§30). Playwright "Call log" bölümleri istek
+ * başlıklarını içerebilir: ilk satır alınır, bilinen sırlı başlıklar ve adapter'ın bildirdiği sır değerleri maskelenir.
+ * Redaction kusursuz gizlilik garantisi değildir.
+ */
+export function redactMessage(e: unknown, secrets: string[] = [], o: { multiline?: boolean } = {}): string {
+  let m = String((e as Error)?.message ?? e ?? '');
+  m = m.split(/\n\s*Call log:/i)[0];
+  if (!o.multiline) m = m.split('\n')[0];
+  m = m.replace(/\b(x-[a-z0-9-]*token|authorization|proxy-authorization|cookie|set-cookie|x-api-key)(["']?\s*[:=]\s*["']?)[^\s"',;}]+/gi, '$1$2[REDACTED]');
+  m = m.replace(/\b(Bearer|Basic)\s+[A-Za-z0-9._~+/=-]+/g, '$1 [REDACTED]');
+  for (const sec of secrets) m = m.split(sec).join('[REDACTED]');
+  return m.slice(0, 2000);
 }
 
 function safeDigest(v: unknown) { try { return digestOf(v ?? null); } catch { return ''; } }

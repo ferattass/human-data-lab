@@ -69,6 +69,8 @@ export interface RoundtripAdapter {
   capabilities: AdapterCapabilities;
   /** Koşu başında bir kez: ör. test kullanıcısı oturumu. Dönen storageState rapora/artifact'a YAZILMAZ (§30). */
   authenticate?(browser: Browser, baseURL: string): Promise<Awaited<ReturnType<BrowserContext['storageState']>> | undefined>;
+  /** Artifact'a yazılmadan önce hata mesajlarından silinecek sır değerleri (test token, parola). */
+  secrets?(): string[];
   /** Hedef uygulama sürümü/build kimliği; tekrar üretim bağlamı (§24). */
   targetBuild?(ctx: CleanupContext): Promise<string | undefined>;
   prepare(ctx: TrialContext): Promise<OwnedFixture>;
