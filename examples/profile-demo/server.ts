@@ -6,7 +6,8 @@
 //   nfc | nfkc             sunucu kaydetmeden önce normalleştirir (Demo B: nfc)
 //   trim | nbsp-to-space   sunucu boşlukları dönüştürür
 //   latin1                 Latin-1 dışını "?" yapar
-//   flaky-strip            her ikinci kayıtta işaret atar (kararsız bulgu)
+//   flaky-strip            tek sıralı kayıtlarda (1., 3., …) işaret atar: ilk deneme bozulur, tekrar geçer (kararsız)
+//   min-length:N           N kod noktasından kısa adı reddeder (422)
 //   client-sanitize        tarayıcı JS'i yazarken Latin-1 dışını siler (authored → injected)
 //   serializer             gönderimde JS değeri trim+NFKC yapar (injected → submitted)
 //   toast-no-id            "Kaydedildi" toast'ı, ama yanıt kayıt kimliği içermez
@@ -52,6 +53,7 @@ export async function startDemo(opts: DemoOptions = {}) {
   const records = new Map<string, Rec>();
   let nextId = 1;
   let saveCount = 0;
+  const stats = { creates: 0 };
   const build = `profile-demo@0.1.0${bugs.size ? '+' + [...bugs].sort().join('+') : ''}`;
 
   const store = (raw: string) => {
@@ -62,7 +64,7 @@ export async function startDemo(opts: DemoOptions = {}) {
     if (bugs.has('nfc')) v = v.normalize('NFC');
     if (bugs.has('nfkc')) v = v.normalize('NFKC');
     if (bugs.has('strip-marks') || bugs.has('stale-spa')) v = stripMarks(v);
-    if (bugs.has('flaky-strip') && saveCount % 2 === 0) v = stripMarks(v);
+    if (bugs.has('flaky-strip') && saveCount % 2 === 1) v = stripMarks(v);
     if (bugs.has('drop-dotted-capital-i')) v = v.replace(/\u0130/g, '');
     if (bugs.has('latin1')) v = [...v].map((c) => (c.codePointAt(0)! > 0xff ? '?' : c)).join('');
     return v;
@@ -185,6 +187,9 @@ f.addEventListener('submit', async (e) => {
       if (typeof v !== 'string' || !v.trim()) return json(422, { error: 'Görünen ad boş olamaz' });
       if (INVALID.test(v)) return json(422, { error: 'Görünen ad kontrol karakteri içeremez' });
       if ([...v].length > 200) return json(422, { error: 'Görünen ad en fazla 200 karakter (kod noktası) olabilir' });
+      const minLen = Number([...bugs].find((b) => b.startsWith('min-length:'))?.split(':')[1] ?? 0);
+      if ([...v].length < minLen) return json(422, { error: `Görünen ad en az ${minLen} karakter olmalı` });
+      stats.creates++;
       const id = addRecord(payload.namespace, store(v));
       session!.creations++;
       if (bugs.has('drop-connection')) { req.socket.destroy(); return; }
@@ -211,6 +216,9 @@ f.addEventListener('submit', async (e) => {
     token,
     credentials: { user, password },
     state: { records, namespaces, sessions },
+    /** Testler için: oluşturma sayısı ve canlı değiştirilebilir hata modu kümesi. */
+    stats,
+    bugs,
     close: () => new Promise<void>((r) => { server.closeAllConnections?.(); server.close(() => r()); }),
   };
 }

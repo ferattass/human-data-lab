@@ -59,6 +59,8 @@ function originsOf(list: string[]) {
 
 /** Sonucu bir abort sinyaline bağlı yarışa sokar; Playwright çağrıları signal'ı kendileri dinlemez. */
 function raceSignal<T>(p: Promise<T>, signal: AbortSignal): Promise<T> {
+  // Sinyal kazanırsa terk edilen işlemin geç gelen hatası işlenmemiş reddetmeye dönüşmesin.
+  p.catch(() => {});
   if (signal.aborted) return Promise.reject(signal.reason);
   return new Promise<T>((res, rej) => {
     const onAbort = () => rej(signal.reason);
@@ -218,6 +220,7 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
     const pages: Page[] = [];
     const apis: APIRequestContext[] = [];
     let scopeViolation: string | null = null;
+    let trialClosed = false;
     let applicationOutcome: TrialResult['applicationOutcome'] = 'indeterminate';
     let acceptanceEvidence: TrialResult['acceptanceEvidence'];
     let execution: TrialResult['execution'] = 'completed';
@@ -265,14 +268,22 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
     const tctx: TrialContext = {
       identity, baseURL: config.target.baseURL, signal: trialAc.signal,
       async newPage() {
+        if (trialClosed) throw new Cancelled('deneme kapandı; yeni sayfa açılmaz');
         const ctx = await browser.newContext({ baseURL: config.target.baseURL, storageState });
+        // Deneme bu arada kapandıysa (iptal/timeout), geç gelen context de kapatılır: cleanup'tan sonra mutasyon yok.
+        if (trialClosed) { await ctx.close().catch(() => {}); throw new Cancelled('deneme kapandı; yeni sayfa açılmaz'); }
         contexts.push(ctx);
         await guardContext(ctx);
         const p = await ctx.newPage();
         pages.push(p);
         return p;
       },
-      async request() { const a = await guardedApi(); apis.push(a); return a; },
+      async request() {
+        if (trialClosed) throw new Cancelled('deneme kapandı; yeni istek bağlamı açılmaz');
+        const a = await guardedApi();
+        if (trialClosed) { await a.dispose().catch(() => {}); throw new Cancelled('deneme kapandı; yeni istek bağlamı açılmaz'); }
+        apis.push(a); return a;
+      },
       observe(boundary, obs) { observations[boundary] = { boundary, at: now(), ...obs } as Observation; },
       allocations,
       async evidence(name, page) { return captureEvidence(page, `${attemptId}-${name}`); },
@@ -373,6 +384,13 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
       if (last) evidenceRef = await captureEvidence(last, attemptId);
     }
 
+    // Denemenin browser context'leri cleanup'tan ÖNCE kapatılır: iptal/timeout sonrası arkada süren adapter
+    // işlemleri (ör. yarım kalmış gönderim) temizlikten sonra yeni kayıt yaratamasın (B11).
+    trialClosed = true;
+    for (const c of contexts) await c.close().catch(() => {});
+    // Denemenin kendi API bağlamları da kapanır; cleanup kendi bağlamlarını açar.
+    for (const a of apis.splice(0)) await a.dispose().catch(() => {});
+
     // ---------- Cleanup: ana signal'dan bağımsız, ayrı bütçe (§22, B11) ----------
     let cleanup: CleanupStatus = 'not-needed';
     const ownForCleanup: OwnedFixture | undefined = own ?? (allocNamespaces.length ? { namespace: allocNamespaces[0], resourceIds: allocResources, allocationLogRef: 'allocations.jsonl' } : undefined);
@@ -395,7 +413,6 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
       run.appendJsonl('allocations.jsonl', { at: now(), attemptId, event: 'cleanup', namespace: ownForCleanup.namespace, status: cleanup });
     }
     // Auth/API bağlamı temizlik tamamlanmadan kapatılmaz.
-    for (const c of contexts) await c.close().catch(() => {});
     for (const a of apis) await a.dispose().catch(() => {});
 
     const trial: TrialResult = {
