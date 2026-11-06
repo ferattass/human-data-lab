@@ -11,7 +11,7 @@
 //   repro/<finding>.spec.ts
 //   evidence/                seçili screenshot
 //   report.html
-import { appendFileSync, copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, renameSync, statSync, writeFileSync } from 'node:fs';
+import { appendFileSync, copyFileSync, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync, renameSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { SCHEMA_VERSION, checkSchemaVersion, sha256 } from '../../core/src/index.ts';
 import type { ExitCode, Finding, RunStatus, RunSummary, TrialResult } from '../../core/src/index.ts';
@@ -195,7 +195,12 @@ export function planShare(run: RunDir | string, { includeEvidence = false } = {}
     for (const name of readdirSync(dir)) {
       const abs = join(dir, name);
       const rel = relative(root, abs).split(sep).join('/');
-      if (statSync(abs).isDirectory()) { walk(abs); continue; }
+      // lstat: sembolik bağlantı/junction izlenmez. Başkasından gelen bir koşu dizinindeki bağlantı
+      // (ör. report.html → ~/.ssh/id_rsa) paylaşım paketine hedefin içeriğini taşıyamaz.
+      const st = lstatSync(abs);
+      if (st.isSymbolicLink()) { excluded.push({ file: rel, reason: 'sembolik bağlantı; izlenmez' }); continue; }
+      if (st.isDirectory()) { walk(abs); continue; }
+      if (!st.isFile()) { excluded.push({ file: rel, reason: 'normal dosya değil' }); continue; }
       const deny = SHARE_DENY.find((r) => r.test(rel));
       if (deny) { excluded.push({ file: rel, reason: `hassas olabilir (${deny})` }); continue; }
       if (SHARE_ALLOWLIST.some((r) => r.test(rel)) || (includeEvidence && /^evidence\//.test(rel))) included.push(rel);
@@ -209,10 +214,16 @@ export function planShare(run: RunDir | string, { includeEvidence = false } = {}
 export function writeShare(runDir: string, outDir: string, opts: { includeEvidence?: boolean } = {}) {
   const plan = planShare(runDir, opts);
   if (existsSync(outDir)) throw new ArtifactError(`paylaşım dizini zaten var: ${outDir}`);
+  const realRoot = realpathSync(plan.root);
   for (const rel of plan.included) {
+    const src = safeResolve(plan.root, rel);
+    // Plan ile kopya arasında değişmiş olabilir (TOCTOU): kopyalamadan hemen önce yeniden denetle.
+    const st = lstatSync(src);
+    const r = relative(realRoot, realpathSync(src));
+    if (st.isSymbolicLink() || !st.isFile() || r.startsWith('..') || isAbsolute(r)) throw new ArtifactError(`paylaşım: ${rel} koşu dizini dışına işaret ediyor veya normal dosya değil`);
     const dst = safeResolve(outDir, rel);
     mkdirSync(dirname(dst), { recursive: true });
-    copyFileSync(safeResolve(plan.root, rel), dst);
+    copyFileSync(src, dst);
   }
   writeFileSync(join(outDir, 'CONTENTS.txt'), ['Dahil edilen dosyalar:', ...plan.included.map((f) => '  + ' + f), '', 'Dışarıda bırakılan dosyalar:', ...plan.excluded.map((e) => `  - ${e.file}  (${e.reason})`), ''].join('\n'));
   return plan;

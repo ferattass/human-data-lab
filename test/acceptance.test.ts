@@ -1,7 +1,7 @@
 // Kabul matrisleri B (yürütme) ve C (kanıt/replay) + A14'ün runner tarafı — gerçek Chromium, demo uygulaması (§33, §34).
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync, rmSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync, writeFileSync, mkdirSync, readdirSync, symlinkSync, lstatSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import type { Browser } from '@playwright/test';
@@ -404,6 +404,22 @@ test('C10 export paketi auth sırları içeriyor → varsayılan allowlist bu do
   for (const f of written.included) assert.ok(existsSync(join(out, f)), `kopyalandı: ${f}`);
   for (const f of ['storage-state.json', 'evidence/auth.json', 'trace.zip']) assert.ok(!existsSync(join(out, f)), `${f} pakete girmedi`);
   assert.match(readFileSync(join(out, 'CONTENTS.txt'), 'utf8'), /Dışarıda bırakılan dosyalar/);
+
+  // Koşu dizinindeki bağlantı, dışarıdaki bir sırrı paylaşım paketine taşıyamaz.
+  const outside = tmp('hdl-secret-');
+  writeFileSync(join(outside, 'id_rsa'), 'GIZLI-ANAHTAR');
+  const dir2 = await copyRun();
+  symlinkSync(outside, join(dir2, 'findings', 'linked-dir'), 'junction'); // yönetici yetkisi gerektirmez
+  let fileLink = false;
+  try { rmSync(join(dir2, 'report.html')); symlinkSync(join(outside, 'id_rsa'), join(dir2, 'report.html'), 'file'); fileLink = true; } catch { /* Windows: ayrıcalık yoksa yalnız junction sınanır */ }
+  const plan2 = planShare(dir2);
+  assert.ok(plan2.excluded.some((e) => e.file === 'findings/linked-dir' && /bağlantı/.test(e.reason)));
+  if (fileLink) assert.ok(!plan2.included.includes('report.html') && plan2.excluded.some((e) => e.file === 'report.html'));
+  const out2 = join(tmp(), 'paylaşım-2');
+  writeShare(dir2, out2);
+  const copied = readdirSync(out2, { recursive: true }).map(String);
+  assert.ok(!copied.some((f) => f.includes('id_rsa')), 'dışarıdaki dosya kopyalanmadı');
+  for (const f of copied) if (lstatSync(join(out2, f)).isFile()) assert.ok(!readFileSync(join(out2, f)).toString().includes('GIZLI-ANAHTAR'), f);
   // Koşu artifact'larında test token'ı ve parola geçmez.
   const all = ['contract.json', 'attempts.jsonl', 'manifest.json', 'report.html'].map((f) => readFileSync(join(dir, f), 'utf8')).join('\n');
   assert.ok(!all.includes('demo-test-token') && !all.includes('demo-password'));
