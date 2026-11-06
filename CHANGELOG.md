@@ -2,6 +2,14 @@
 
 Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Sürümleme: [SemVer](https://semver.org/lang/tr/); 1.0 öncesinde küçük sürümler kırıcı değişiklik içerebilir.
 
+## [Yayımlanmamış]
+
+### Güvenlik
+- `hdl export` sembolik bağlantıları ve junction'ları izlemez. Başkasından gelen bir koşu dizinindeki bağlantı
+  (ör. `report.html → ~/.ssh/id_rsa`) hedefin içeriğini paylaşım paketine taşıyamaz.
+- Paylaşım kopyası doğrulanmış dosya tanımlayıcısından yapılır: POSIX'te `O_NOFOLLOW` ile açılır, `dev/ino` denetimden
+  sonra değişmişse reddedilir. Hedef dosyaların üzerine yazılmaz.
+
 ## [0.5.0] — 2026-11-06
 
 ### Eklendi
