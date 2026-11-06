@@ -1,5 +1,5 @@
 // TASLAK — hdl init tarafından üretildi.
-import { defineConfig } from '{{HDL}}/packages/playwright/src/index.ts';
+import { defineConfig } from '{{PW}}';
 import adapter from './adapter.ts';
 
 const baseURL = process.env.MY_APP_URL ?? 'http://localhost:3000'; // TODO: yerel veya izinli staging

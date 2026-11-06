@@ -6,3 +6,4 @@ playwright-report/
 runs/
 runs-dev/
 .smoke.ts
+dist/

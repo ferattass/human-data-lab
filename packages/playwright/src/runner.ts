@@ -21,7 +21,7 @@ import { AdapterError, ScopeError } from './adapter.ts';
 import type { CleanupContext, CleanupResult, ReadObservation, RoundtripAdapter, TrialContext } from './adapter.ts';
 import type { FixtureOverride, RoundtripConfig } from './config.ts';
 
-export const TOOL = { name: 'human-data-lab', version: '0.4.0' };
+export const TOOL = { name: 'human-data-lab', version: '0.5.0' };
 
 export interface RunOptions {
   config: RoundtripConfig;
@@ -608,7 +608,7 @@ function safeDigest(v: unknown) { try { return digestOf(v ?? null); } catch { re
 function reproSpec(f: Finding, runRoot: string, configPath?: string): string {
   const value = f.shrink?.best.value ?? f.original.value;
   const lit = JSON.stringify(value).replace(/[\u007f-\uffff]/g, (c) => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0'));
-  const pkg = relative(resolve(runRoot, 'repro'), resolve(dirname(fileURLToPath(import.meta.url)), 'index.ts')).split('\\').join('/');
+  const pkg = relative(resolve(runRoot, 'repro'), resolve(dirname(fileURLToPath(import.meta.url)), import.meta.url.endsWith('.ts') ? 'index.ts' : 'index.js')).split('\\').join('/');
   const cfg = configPath ? relative(resolve(runRoot, 'repro'), resolve(configPath)).split('\\').join('/') : null;
   return `// Human Data Lab — bulgu ${f.id} için regresyon testi.
 // BAĞIMLILIK: bu test adapter'a ve çalışan hedef ortama bağlıdır; tek başına her bilgisayarda hatayı çalıştırmaz (§9).

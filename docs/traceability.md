@@ -58,13 +58,13 @@ Durum: **✓ uygulandı ve test edildi** · **◐ kısmen / bilinçli sapma** ·
 | Teslim | Durum |
 |---|---|
 | Kaynak ve bağımlılıklar | ✓ Çalışan çekirdek, `package-lock.json`, lisans/köken kayıtları |
-| Demo | ◐ Doğru/bozuk modlar, sentetik etiketli. "Yayımlanan paket üzerinden" henüz değil (paket yayımlanmadı) |
+| Demo | ✓ Doğru/bozuk modlar, sentetik etiketli. `npm pack` paketi boş projeye kurulup demo kaynak kod olmadan çalıştırılıyor (`test/package.test.ts`) |
 | Testler | ✓ 42/42 A/B/C, gerçek browser yaşam döngüsü |
 | Replay | ✓ Orijinal somut fixture ve sürümlü sözleşmeyle |
 | Küçültme | ✓ Aynı imza, yeni fixture, bütçe, kararsızlık koruması |
 | Artifact | ✓ Eksik koşu, bozuk dosya, hassas içerik davranışları sınandı |
-| Platform | ◐ Windows 11 yerel + Ubuntu CI. macOS ve Chromium dışı yok |
+| Platform | ✓ CI: Linux, Windows, macOS × Node 22/24, Chromium. Firefox/WebKit kapsam dışı |
 | Dokümantasyon | ✓ API, sınırlar, güvenlik, adapter rehberi, hata şablonu |
 | Pilot | ○ Yöntem var, gözlem yok |
 
-Beta yayımlanmadan önce: npm paketi (derlenmiş çıktı), paket üzerinden demo testi, macOS denemesi, pilot.
+Beta yayımlanmadan önce kalan: npm paket adı ve yayın kararı, pilot.

@@ -1,7 +1,7 @@
 // TASLAK — hdl init tarafından üretildi. İncelemeden çalıştırmayın.
 // Bu dosya hedef uygulamanızı keşfetmez; aşağıdaki TODO'ları kendi test ortamınıza göre doldurun.
-// Rehber: {{HDL}}/docs/adapter-guide.md   Örnek: {{HDL}}/examples/profile-demo/adapter.ts
-import { AdapterError, defineAdapter } from '{{HDL}}/packages/playwright/src/index.ts';
+// Rehber: {{DOCS}}/adapter-guide.md   Örnek: {{EXAMPLES}}/profile-demo/adapter.ts
+import { AdapterError, defineAdapter } from '{{PW}}';
 
 export default defineAdapter({
   id: 'my-app',            // TODO

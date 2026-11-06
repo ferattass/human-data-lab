@@ -9,7 +9,7 @@
 ![node](https://img.shields.io/badge/node-%E2%89%A522.18-202A27?style=flat-square)
 ![browser](https://img.shields.io/badge/browser-Chromium-202A27?style=flat-square)
 ![kabul](https://img.shields.io/badge/kabul%20senaryosu-42%2F42-47705C?style=flat-square)
-![durum](https://img.shields.io/badge/durum-v0.4%20prototip-65706B?style=flat-square)
+![durum](https://img.shields.io/badge/durum-v0.5%20beta%20aday%C4%B1-65706B?style=flat-square)
 
 **Bir formun "Kaydedildi" demesi yeterli değil.**<br>
 Uygulamanızın kabul ettiği insan metninin (Türkçe ı/İ, birleşik aksan, emoji, sağdan sola yazı) kaydet → taze okuma yolculuğunda<br>
@@ -97,6 +97,11 @@ npx hdl init --adapter playwright        # hdl/adapter.ts + hdl/roundtrip.config
 npx hdl run hdl/roundtrip.config.ts --corpus smoke
 ```
 
+**Paket olarak (beta).** npm kayıt defterinde henüz yok. Kendi projenize kurmak için depoda `npm pack` çalıştırın
+(derlenmiş `dist/` üretir), sonra projenizde `npm install /yol/human-data-lab-0.5.0.tgz @playwright/test`.
+Dışa aktarımlar: `human-data-lab`, `human-data-lab/playwright/test`, `human-data-lab/core`, `human-data-lab/corpus`.
+Bu yol `test/package.test.ts` ile Linux, Windows ve macOS'ta sınanıyor.
+
 Önkoşullar: yerel veya izinli staging ortamı, test kullanıcısı, kaydı kimliğiyle yeniden bulma yolu, deneme başına ayrı namespace ve doğrulanabilir temizlik. Rehber: [`docs/adapter-guide.md`](docs/adapter-guide.md). Çalışan örnek: [`examples/profile-demo`](examples/profile-demo).
 
 ```bash
@@ -113,7 +118,7 @@ npx hdl export runs/run-<id> --out share/                                    # a
 Ayrı bir CLI veya auth düzeni kopyalamadan:
 
 ```ts
-import { test, expect, expectTextPreserved } from 'human-data-lab/packages/playwright/src/test.ts';
+import { test, expect, expectTextPreserved } from 'human-data-lab/playwright/test';
 
 test('profil adı korunur', async ({ humanData }) => {
   const r = await humanData.trial({ config, fixtureId: 'tr-i.dotted-capital.002', value: 'İpek Çağlar' });
@@ -152,7 +157,7 @@ Latin pozitif kontrol · Türkçe I ailesi · önceden birleşmiş/ayrık aksan 
 
 ```bash
 npm run typecheck    # TypeScript 7, build adımı yok
-npm test             # 57 test: 42 kabul senaryosu (A01–C14) + mimari + şema + Playwright entegrasyonu
+npm test             # 59 test: 42 kabul senaryosu (A01–C14) + mimari + şema + Playwright entegrasyonu + kurulu paket
 ```
 
 Raporun 42 çekirdek kabul senaryosu test adlarıyla izlenir; `test/matrix.test.ts` bir senaryonun testi kaybolursa kırılır. Testlerin çoğu **gerçek Chromium** ve kasıtlı hata modlu demo uygulamasıyla koşar. Bu testler geliştirme sırasında üç gerçek motor hatasını yakaladı:

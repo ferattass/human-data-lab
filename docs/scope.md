@@ -30,4 +30,5 @@ kritik testler gerçekten çalıştığında verilir; yol haritası bugünün ö
 - **Kök neden:** "İlk gözlenen sapma" gözlem sınırları içindeki aşamadır; backend kök nedeni bu kanıttan çıkmaz.
 - **Redaction** kusursuz gizlilik garantisi değildir.
 - **Lone surrogate** ve bozuk kodlama ayrı dayanıklılık sınıfıdır; temel corpus'ta yoktur.
-- **Platform matrisi:** Geliştirme Windows 11 + Node 24.14, CI Ubuntu + Node 24. macOS denenmedi.
+- **Platform matrisi:** CI'da Linux, Windows ve macOS × Node 22/24 (Chromium). Firefox/WebKit desteklenmez.
+- **Bilinen Node hatası:** Node 24.14 / Windows'ta `fs.cpSync`, yolda ASCII dışı karakter (ör. `Yayında`) varken hiçbir hata basmadan 127 koduyla çöküyor. Araç bu yüzden `cpSync` kullanmaz.
