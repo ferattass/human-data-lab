@@ -1,7 +1,7 @@
 # Teknik review: rapor §45 soruları, kod ve testle
 
 "Testler geçti" tek başına cevap değildir. Her soru için davranışı belirleyen kod ve onu doğrulayan test kimliği.
-Doğrulama komutu: `npm test` (57 test; 6 Kasım 2026 itibarıyla hepsi geçiyor, Windows 11 + Node 24.14 + Chromium 156).
+Doğrulama komutu: `npm test` (59 test; 6 Kasım 2026 itibarıyla hepsi geçiyor: yerelde Windows 11 + Node 24.14 + Chromium 156, Linux konteynerinde ve CI'da Linux/Windows/macOS × Node 22/24).
 
 | Soru | Cevap | Kod | Test |
 |---|---|---|---|
@@ -39,5 +39,5 @@ Doğrulama komutu: `npm test` (57 test; 6 Kasım 2026 itibarıyla hepsi geçiyor
 - Kullanıcı pilotu yok; kurulum süresi ve tekrar kullanım ölçülmedi ([`pilot.md`](pilot.md)).
 - Rakip karşılaştırması yapılmadı ([`benchmark.md`](benchmark.md)).
 - macOS ve Firefox/WebKit denenmedi.
-- npm paketi olarak yayımlanmadı; Node `node_modules` içinde tip silmeyi desteklemediği için derlenmiş çıktı gerekecek ([ADR 0007](adr/0007-typescript-no-build.md)).
+- npm kayıt defterine yayımlanmadı (paket adı ve yayın kararı bekliyor). Derlenmiş paket `npm pack` ile üretilip boş projeye kuruluyor ve demo oradan çalıştırılıyor (`test/package.test.ts`).
 - Redaction bilinen kalıplara dayanır; kusursuz değildir.

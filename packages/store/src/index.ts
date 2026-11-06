@@ -11,7 +11,7 @@
 //   repro/<finding>.spec.ts
 //   evidence/                seçili screenshot
 //   report.html
-import { appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync, renameSync, statSync, writeFileSync, cpSync } from 'node:fs';
+import { appendFileSync, copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, renameSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { SCHEMA_VERSION, checkSchemaVersion, sha256 } from '../../core/src/index.ts';
 import type { ExitCode, Finding, RunStatus, RunSummary, TrialResult } from '../../core/src/index.ts';
@@ -212,10 +212,24 @@ export function writeShare(runDir: string, outDir: string, opts: { includeEviden
   for (const rel of plan.included) {
     const dst = safeResolve(outDir, rel);
     mkdirSync(dirname(dst), { recursive: true });
-    cpSync(safeResolve(plan.root, rel), dst);
+    copyFileSync(safeResolve(plan.root, rel), dst);
   }
   writeFileSync(join(outDir, 'CONTENTS.txt'), ['Dahil edilen dosyalar:', ...plan.included.map((f) => '  + ' + f), '', 'Dışarıda bırakılan dosyalar:', ...plan.excluded.map((e) => `  - ${e.file}  (${e.reason})`), ''].join('\n'));
   return plan;
+}
+
+/**
+ * Özyinelemeli kopya. `fs.cpSync` kullanılmaz: Node 24.14 / Windows'ta yolda ASCII dışı karakter (ör. "Yayında",
+ * "C:\Users\Işıl") varsa süreç hiçbir hata basmadan 127 koduyla sonlanıyor. copyFileSync + mkdirSync etkilenmiyor.
+ */
+export function copyTree(src: string, dst: string): void {
+  if (!statSync(src).isDirectory()) { mkdirSync(dirname(dst), { recursive: true }); copyFileSync(src, dst); return; }
+  mkdirSync(dst, { recursive: true });
+  for (const e of readdirSync(src, { withFileTypes: true })) {
+    const s = join(src, e.name), d = join(dst, e.name);
+    if (e.isDirectory()) copyTree(s, d);
+    else if (e.isFile()) copyFileSync(s, d);
+  }
 }
 
 export const STORE_SCHEMA_VERSION = SCHEMA_VERSION;

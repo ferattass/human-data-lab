@@ -13,6 +13,8 @@ import { runRoundtrip, TOOL } from '../../playwright/src/index.ts';
 import type { RoundtripConfig } from '../../playwright/src/index.ts';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
+/** Derlenmiş paketten mi (dist/*.js) yoksa depodaki TypeScript kaynağından mı çalışıyoruz? */
+const COMPILED = import.meta.url.endsWith('.js');
 
 const HELP = `human-data-lab ${TOOL.version} — kabul edilen insan metninin kaydet → taze okuma yolculuğunda korunduğunu sınar
 
@@ -207,10 +209,14 @@ function cmdInit(a: Args): ExitCode {
     'adapter.ts': readFileSync(join(ROOT, 'packages/cli/templates/adapter.ts.txt'), 'utf8'),
     'roundtrip.config.ts': readFileSync(join(ROOT, 'packages/cli/templates/roundtrip.config.ts.txt'), 'utf8'),
   };
+  // Kurulu pakette (derlenmiş .js) paket adıyla, depoda kaynak yoluyla import edilir.
   const rel = relative(dir, ROOT).split('\\').join('/') || '.';
+  const vars: Record<string, string> = COMPILED
+    ? { PW: 'human-data-lab/playwright', DOCS: 'https://github.com/ferattass/human-data-lab/blob/main/docs', EXAMPLES: 'https://github.com/ferattass/human-data-lab/blob/main/examples' }
+    : { PW: `${rel}/packages/playwright/src/index.ts`, DOCS: `${rel}/docs`, EXAMPLES: `${rel}/examples` };
   for (const name of Object.keys(files)) if (existsSync(join(dir, name))) throw new UsageError(`${join(dir, name)} zaten var; üzerine yazılmaz`);
   mkdirSync(dir, { recursive: true });
-  for (const [name, text] of Object.entries(files)) writeFileSync(join(dir, name), text.replaceAll('{{HDL}}', rel));
+  for (const [name, text] of Object.entries(files)) writeFileSync(join(dir, name), text.replace(/\{\{(\w+)\}\}/g, (_, k) => vars[k] ?? `{{${k}}}`));
   console.log(`Taslak dosyalar yazıldı (incelenmeden çalıştırmayın):\n  ${join(dir, 'adapter.ts')}\n  ${join(dir, 'roundtrip.config.ts')}\nHedef site keşfedilmedi; seçicileri, test fixture API'sini ve temizlik yolunu siz bağlarsınız.\nSonra: hdl run ${relative(process.cwd(), join(dir, 'roundtrip.config.ts'))} --corpus smoke`);
   return 0;
 }
@@ -221,13 +227,14 @@ async function cmdDemo(a: Args): Promise<ExitCode> {
 }
 
 function cmdLab(a: Args): ExitCode {
+  if (!existsSync(join(ROOT, 'research/hdl-research.mjs'))) throw new UsageError('hdl lab araştırma araçları pakete dahil değildir; depodan çalıştırın: https://github.com/ferattass/human-data-lab/tree/main/research');
   const r = spawnSync(process.execPath, [join(ROOT, 'research/hdl-research.mjs'), ...a._.slice(1), ...Object.entries(a.flags).flatMap(([k, v]) => (v === true ? [`--${k}`] : [`--${k}`, String(v)]))], { stdio: 'inherit' });
   return (r.status ?? 2) as ExitCode;
 }
 
 export async function main(argv = process.argv.slice(2)): Promise<number> {
   const a = parse(argv);
-  const cmd = a._[0];
+  const cmd = a._[0] ?? (a.flags.version ? 'version' : a.flags.help ? 'help' : undefined);
   try {
     switch (cmd) {
       case 'run': return await cmdRun(a);

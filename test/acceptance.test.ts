@@ -1,16 +1,17 @@
 // Kabul matrisleri B (yürütme) ve C (kanıt/replay) + A14'ün runner tarafı — gerçek Chromium, demo uygulaması (§33, §34).
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync, rmSync, writeFileSync, mkdirSync, cpSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import type { Browser } from '@playwright/test';
 import { browser, closeBrowser, config, fixture, inline, run, tmp, withDemo } from './helpers.ts';
 import { runRoundtrip, ScopeError } from '../packages/playwright/src/index.ts';
 import type { RoundtripAdapter } from '../packages/playwright/src/index.ts';
-import { readRun, planShare, safeResolve, ArtifactError } from '../packages/store/src/index.ts';
+import { readRun, planShare, writeShare, copyTree, safeResolve, ArtifactError } from '../packages/store/src/index.ts';
 import { renderReport } from '../packages/reporter/src/index.ts';
 import { main } from '../packages/cli/src/main.ts';
+import { displayNameContract } from '../examples/profile-demo/contract.ts';
 
 after(closeBrowser);
 
@@ -350,7 +351,7 @@ async function completedRun() {
   });
   return goodRun!;
 }
-const copyRun = async () => { const dst = join(tmp(), 'run-copy'); cpSync(await completedRun(), dst, { recursive: true }); return dst; };
+const copyRun = async () => { const dst = join(tmp(), 'run-copy'); copyTree(await completedRun(), dst); return dst; };
 
 test('C07 herhangi bir kanıt dosyası eksik → manifestte incomplete / eksik kanıt', async () => {
   const dir = await copyRun();
@@ -397,6 +398,12 @@ test('C10 export paketi auth sırları içeriyor → varsayılan allowlist bu do
     assert.ok(plan.excluded.some((e) => e.file === f));
   }
   assert.ok(plan.included.includes('manifest.json') && plan.included.includes('report.html'));
+  // Gerçek kopya, ASCII dışı yolda (Node 24 / Windows'ta fs.cpSync burada sessizce 127 ile çöküyordu).
+  const out = join(tmp(), 'paylaşım-İpek-ğış');
+  const written = writeShare(dir, out);
+  for (const f of written.included) assert.ok(existsSync(join(out, f)), `kopyalandı: ${f}`);
+  for (const f of ['storage-state.json', 'evidence/auth.json', 'trace.zip']) assert.ok(!existsSync(join(out, f)), `${f} pakete girmedi`);
+  assert.match(readFileSync(join(out, 'CONTENTS.txt'), 'utf8'), /Dışarıda bırakılan dosyalar/);
   // Koşu artifact'larında test token'ı ve parola geçmez.
   const all = ['contract.json', 'attempts.jsonl', 'manifest.json', 'report.html'].map((f) => readFileSync(join(dir, f), 'utf8')).join('\n');
   assert.ok(!all.includes('demo-test-token') && !all.includes('demo-password'));
@@ -459,5 +466,23 @@ test('hdl run yapılandırma dosyasıyla uçtan uca + repro spec adapter bağım
     assert.match(spec, /BAĞIMLILIK/);
     assert.match(spec, /runSingleTrial/);
     assert.ok(existsSync(join(dir, 'report.html')));
+  });
+});
+
+// ---------------- çok satırlı metin: textarea (§15 "Satır sonu" ailesi) ----------------
+
+test('textarea: LF ve boş satır korunur; CR/CRLF farkı tarayıcıda (injected) başlar, uygulamaya yüklenmez', async () => {
+  await withDemo([], async (d) => {
+    const cfg = config(d, { adapter: { control: 'textarea' }, contract: displayNameContract({ control: 'textarea' }) });
+    const r = await run(cfg, ['newline.lf.001', 'newline.trailing.001', 'newline.blank-line.001', 'newline.crlf.001', 'newline.cr.001'].map(fixture));
+    const byFixture = Object.fromEntries(r.trials.map((t) => [t.fixtureId, t]));
+    for (const id of ['newline.lf.001', 'newline.trailing.001', 'newline.blank-line.001']) assert.equal(req(byFixture[id]).status, 'passed', id);
+    for (const id of ['newline.crlf.001', 'newline.cr.001']) {
+      const t = byFixture[id];
+      assert.equal(byId(t, 'input-preserved').status, 'failed', `${id}: textarea.value satır sonunu normalleştirir`);
+      assert.equal(byId(t, 'submit-preserved').status, 'passed', `${id}: gönderim değiştirmedi`);
+      assert.equal(observationsFile(r.runDir, t.identity.attemptId).firstObservedDivergence.at, 'injected', `${id}: ilk sapma tarayıcıda`);
+      assert.equal(t.observations.readback?.value, t.observations.injected?.value, `${id}: uygulama, aldığını aynen sakladı`);
+    }
   });
 });

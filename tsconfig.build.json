@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "rootDir": ".",
+    "outDir": "dist",
+    "declaration": true,
+    "sourceMap": false,
+    "rewriteRelativeImportExtensions": true
+  },
+  "include": ["packages/*/src/**/*.ts", "examples/profile-demo/*.ts"],
+  "exclude": ["**/*.test.ts", "packages/corpus/scripts/**"]
+}
