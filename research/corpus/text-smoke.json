@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "0.1",
+  "id": "text-smoke",
+  "description": "Sentetik insan metni fixture'ları. Her örnek tek bir özelliği hedefler; bir ülkeyi veya kültürü temsil etme iddiası yoktur.",
+  "fixtures": [
+    { "id": "control.latin-basic.001", "value": "Ayse Kaya", "properties": ["control", "ascii"] },
+    { "id": "tr.dotted-capital-i.001", "value": "İpek Çağlar", "properties": ["latin-extended", "tr-i-family"] },
+    { "id": "tr.dotless-i.001", "value": "Ilık Işık", "properties": ["latin-extended", "tr-i-family"] },
+    { "id": "tr.full-alphabet.001", "value": "Şükrü Öztürk Ğül Çiçek", "properties": ["latin-extended"] },
+    { "id": "combining.precomposed.001", "value": "José Muñoz", "properties": ["latin-1", "precomposed"] },
+    { "id": "combining.decomposed.001", "value": "José Muñoz", "properties": ["combining-mark", "nfd"], "notes": "NFC uygulayan sistemlerde exact fark, NFC eşdeğer." },
+    { "id": "combining.stacked.001", "value": "Nguyễn Thị Thủy", "properties": ["latin-extended", "stacked-diacritics"] },
+    { "id": "punct.ascii-apostrophe.001", "value": "O'Brien", "properties": ["ascii", "apostrophe"] },
+    { "id": "punct.typographic-apostrophe.001", "value": "O’Brien", "properties": ["apostrophe", "typographic"] },
+    { "id": "punct.hyphen-name.001", "value": "Jean-Luc Picard-Smith", "properties": ["ascii", "hyphen"] },
+    { "id": "space.leading-trailing.001", "value": " Ali Veli ", "properties": ["whitespace", "edge-space"], "notes": "Trim eden alanlar exact altında ihlal üretir; alan politikası trim'i kabul edebilir." },
+    { "id": "space.nbsp.001", "value": "Ali Veli", "properties": ["whitespace", "nbsp"] },
+    { "id": "space.double.001", "value": "Ali  Veli", "properties": ["whitespace", "internal-double"] },
+    { "id": "script.arabic.001", "value": "محمد علي", "properties": ["rtl", "arabic"] },
+    { "id": "script.hebrew.001", "value": "דוד כהן", "properties": ["rtl", "hebrew"] },
+    { "id": "script.persian-zwnj.001", "value": "می‌رزا", "properties": ["rtl", "zwnj", "invisible"] },
+    { "id": "script.cjk.001", "value": "山田太郎", "properties": ["cjk", "bmp"] },
+    { "id": "script.cjk-astral.001", "value": "𠜎吉", "properties": ["cjk", "astral", "4-byte-utf8"], "notes": "U+2070E; utf8mb3 / UCS-2 sistemlerde kaybolur." },
+    { "id": "script.devanagari.001", "value": "अनुष्का", "properties": ["indic", "combining-mark", "virama"] },
+    { "id": "script.greek-final-sigma.001", "value": "Σίσυφος", "properties": ["greek", "case-sensitive"] },
+    { "id": "script.german-sharp-s.001", "value": "Straße", "properties": ["latin-1", "case-expansion"] },
+    { "id": "emoji.basic.001", "value": "Zoë 🌸", "properties": ["emoji", "astral", "4-byte-utf8"] },
+    { "id": "emoji.zwj-sequence.001", "value": "Dev 👩‍💻", "properties": ["emoji", "zwj", "multi-codepoint-grapheme"] },
+    { "id": "emoji.skin-tone.001", "value": "OK 👍🏽", "properties": ["emoji", "modifier"] },
+    { "id": "length.long-name.001", "value": "Wolfeschlegelsteinhausenbergerdorff Adolph Blaine Charles David Earl Frederick Gerald Hubert Irvin John Kenneth Lloyd Martin Nero Oliver Paul Quincy Randolph Sherman Thomas Uncas Victor William Xerxes Yancy Zeus", "properties": ["length", "ascii"], "notes": "~200 karakter; sessiz kesme (truncation) arar." }
+  ]
+}

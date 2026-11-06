@@ -1,0 +1,33 @@
+name: ci
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Tip denetimi
+        run: npm run typecheck
+      - name: Kabul matrisi (A/B/C), mimari, şema, Playwright entegrasyonu
+        run: npm test
+      - name: Araştırma araçları (deneysel)
+        run: npm run test:research
+      - name: Demo (dört senaryo beklenen çıkış kodlarını vermeli)
+        run: npm run demo
+      - name: Demo raporlarını sakla
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo-reports
+          path: runs/demo/**/report.html
+          if-no-files-found: ignore

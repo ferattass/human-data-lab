@@ -1,0 +1,45 @@
+name: Hata bildirimi
+description: Araçta yanlış sonuç, çökme veya eksik kanıt. Gerçek müşteri verisi GÖNDERMEYİN.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Lütfen sorunu **sentetik, küçük** bir örneğe çevirin. Gerçek kişi bilgisi, müşteri dosyası, auth state, cookie veya trace eklemeyin.
+        Güvenlik açığı ise bu formu değil **Security → Report a vulnerability** yolunu kullanın.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Ne tür bir sorun?
+      options:
+        - Yanlış yeşil (çalışmayan/yanlış kontrol "geçti" göründü)
+        - Yanlış kırmızı (veri korunduğu halde ihlal raporlandı)
+        - Yürütme hatası veri ihlali gibi sınıflandırıldı (veya tersi)
+        - Cleanup / sahiplik sorunu
+        - Rapor / artifact / replay sorunu
+        - Diğer
+    validations: { required: true }
+  - type: input
+    id: value
+    attributes:
+      label: Sentetik girdi (kaçışlı)
+      description: Örn. "İpek" — görünmez karakterler kaybolmasın diye kaçışlı yazın.
+    validations: { required: true }
+  - type: textarea
+    id: contract
+    attributes:
+      label: Sözleşme ve kural
+      description: Alan, kontrol türü, kabul beklentisi, kural (text.exact.v1 / text.nfc.v1) ve sınır (ör. authored → readback).
+    validations: { required: true }
+  - type: textarea
+    id: observed
+    attributes:
+      label: Beklenen ve görülen
+      description: Rapordaki aşama tablosu (authored / injected / submitted / readback) ve çıkış kodu.
+    validations: { required: true }
+  - type: textarea
+    id: env
+    attributes:
+      label: Ortam
+      description: hdl sürümü, Node, Chromium sürümü, işletim sistemi, adapter id@sürüm (manifest.json → provenance).
+    validations: { required: true }

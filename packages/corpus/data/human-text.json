@@ -1,0 +1,2142 @@
+{
+  "schemaVersion": "0.1",
+  "id": "human-text",
+  "version": "1.1.0",
+  "description": "Sentetik insan metni fixture'ları. Her fixture ülke veya kişi değil, sınanan bir metin davranışını (normalleştirme, boşluk, yön, uzunluk birimi, görünmez karakter vb.) hedefler. Tümü sentetiktir, gerçek kişi verisi ve saldırı yükü içermez. Kabul/ret kararı akış sözleşmesine aittir; fixture'lar politika belirlemez (defaultExpectation her yerde unspecified). Görünmez karakterler incelenebilsin diye value alanlarında ASCII dışı her karakter \\u kaçışıyla yazılmıştır.",
+  "sets": {
+    "smoke": [
+      "latin.basic.001",
+      "tr-i.dotted-capital.001",
+      "tr-i.dotless-lower.001",
+      "tr-i.all-caps.001",
+      "combining.nfc-acute.001",
+      "combining.nfd-acute.001",
+      "combining.hangul-jamo-nfd.001",
+      "compat.fullwidth-latin.001",
+      "compat.kelvin.001",
+      "punct.ascii-apostrophe.001",
+      "punct.typographic-apostrophe.001",
+      "space.leading-trailing.001",
+      "space.nbsp.001",
+      "space.zwsp.001",
+      "length.long-name.001",
+      "length.ascii-51.001",
+      "script.arabic.001",
+      "script.hebrew.001",
+      "script.greek-final-sigma.001",
+      "script.devanagari-conjunct.001",
+      "script.cjk-astral.001",
+      "emoji.zwj-family.001",
+      "emoji.flag.001",
+      "control.nul.001"
+    ],
+    "demo-a": [
+      "latin.basic.001",
+      "tr-i.dotted-capital.002",
+      "combining.nfc-acute.001"
+    ],
+    "demo-b": [
+      "latin.basic.001",
+      "combining.nfc-acute.001",
+      "combining.nfd-acute.001",
+      "combining.nfd-turkish.001"
+    ],
+    "demo-c": [
+      "control.nul.001",
+      "latin.basic.001",
+      "tr-i.dotted-capital.002"
+    ]
+  },
+  "fixtures": [
+    {
+      "schemaVersion": "0.1",
+      "id": "latin.basic.001",
+      "value": "Ayse Kaya",
+      "properties": [
+        "ascii",
+        "positive-control",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Düz ASCII ad-soyad pozitif kontrolü; bu da korunmuyorsa sorun Unicode değil akışın kendisidir, hiçbir Unicode davranışı hakkında iddia taşımaz."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "latin.basic.002",
+      "value": "Elif Arslan",
+      "properties": [
+        "ascii",
+        "positive-control",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "İkinci düz ASCII ad-soyad pozitif kontrolü; yalnız temel kaydet-oku turunun çalıştığını gösterir."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "latin.basic.003",
+      "value": "Mert Ozkan",
+      "properties": [
+        "ascii",
+        "positive-control",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Aksan işaretleri bilinçli olarak çıkarılmış ASCII ad; Türkçe karakter desteği hakkında bir şey söylemez."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "latin.basic.004",
+      "value": "Nora Lind",
+      "properties": [
+        "ascii",
+        "positive-control",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Kısa ASCII ad-soyad pozitif kontrolü; uzunluk veya boşluk davranışını sınamaz."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "latin.single-word.001",
+      "value": "Deniz",
+      "properties": [
+        "ascii",
+        "positive-control",
+        "name-like",
+        "single-token"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Boşluksuz tek kelimelik ad; ad-soyad bölme mantığını yalnız tetikler, doğru bölmeyi iddia etmez."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "latin.phrase.001",
+      "value": "Kat 3 Daire 12",
+      "properties": [
+        "ascii",
+        "positive-control",
+        "digits"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Rakam ve boşluk içeren kısa ASCII ifade; sayısal alan doğrulaması hakkında iddia taşımaz."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "latin.mixed-case.001",
+      "value": "deNiz AksOY",
+      "properties": [
+        "ascii",
+        "positive-control",
+        "mixed-case"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Düzensiz büyük-küçük harf içeren ASCII ad; uygulamanın harf düzeltmesi yapıp yapmadığını gösterir, hangisinin doğru olduğuna karar vermez."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "latin.single-letter.001",
+      "value": "A",
+      "properties": [
+        "ascii",
+        "positive-control",
+        "min-length"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Tek ASCII harf; en kısa boş olmayan değerin saklanmasını sınar, asgari uzunluk politikasını belirlemez."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "tr-i.dotted-capital.001",
+      "value": "\u0130pek",
+      "properties": [
+        "latin-extended",
+        "turkish-i",
+        "dotted-capital-i",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Baştaki noktalı büyük İ (U+0130) korunuyor mu; büyük-küçük harf dönüşümü yerele bağlıdır ama birebir korumada bu önemsizdir."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "tr-i.dotted-capital.002",
+      "value": "\u0130pek \u00c7a\u011flar",
+      "properties": [
+        "latin-extended",
+        "turkish-i",
+        "dotted-capital-i",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "İ ile birlikte Ç ve ğ içeren ad-soyad; harflerin tek tek doğru yazımını değil, dizginin aynen geri gelmesini sınar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "tr-i.dotless-lower.001",
+      "value": "I\u015f\u0131k Y\u0131ld\u0131z",
+      "properties": [
+        "latin-extended",
+        "turkish-i",
+        "dotless-i",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Noktasız küçük ı (U+0131) ve ş; ı harfinin i ye düşürülmesini yakalar, yerel duyarlı küçük harf dönüşümünü doğrulamaz."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "tr-i.all-caps.001",
+      "value": "I\u015eIK YILDIZ",
+      "properties": [
+        "latin-extended",
+        "turkish-i",
+        "dotless-i",
+        "all-caps"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Tamamen büyük harfli IŞIK YILDIZ; I nın İ ye ya da küçük harfe çevrilmesini yakalar, büyük harf yazımının uygunluğunu tartışmaz."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "tr-i.all-caps.002",
+      "value": "\u0130PEK \u00c7A\u011eLAR",
+      "properties": [
+        "latin-extended",
+        "turkish-i",
+        "dotted-capital-i",
+        "all-caps"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Tamamen büyük harfli, İ ve Ğ içeren ad; büyük harfte noktanın kaybolmamasını sınar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "tr-i.alphabet-lower.001",
+      "value": "abc\u00e7defg\u011fh\u0131ijklmno\u00f6prs\u015ftu\u00fcvyz",
+      "properties": [
+        "latin-extended",
+        "turkish-i",
+        "alphabet"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Türk alfabesinin 29 küçük harfi sırayla; harf repertuvarının saklanmasını sınar, sıralama veya harmanlamayı sınamaz."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "tr-i.alphabet-upper.001",
+      "value": "ABC\u00c7DEFG\u011eHI\u0130JKLMNO\u00d6PRS\u015eTU\u00dcVYZ",
+      "properties": [
+        "latin-extended",
+        "turkish-i",
+        "alphabet",
+        "all-caps"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Türk alfabesinin 29 büyük harfi sırayla; I ve İ nin ayrı harfler olarak korunmasını sınar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "tr-i.four-forms.001",
+      "value": "I\u0131\u0130i",
+      "properties": [
+        "latin-extended",
+        "turkish-i",
+        "dotted-capital-i",
+        "dotless-i"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "I ı İ i dört biçimi yan yana; birbirine katlanıp katlanmadığını gösterir, hangisinin hangisine eşlendiği politikası değildir."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "tr-i.dotless-combining.001",
+      "value": "K\u0131\u0307r",
+      "properties": [
+        "latin-extended",
+        "turkish-i",
+        "dotless-i",
+        "combining-mark"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Noktasız ı ardından birleşen üst nokta (U+0307); bu çift için hazır karakter olmadığından değer NFC biçimindedir, yalnız işaretin düşürülmemesini sınar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "tr-i.dotted-capital-nfd.001",
+      "value": "I\u0307pek",
+      "properties": [
+        "latin-extended",
+        "turkish-i",
+        "dotted-capital-i",
+        "combining-mark",
+        "nfd",
+        "nfc-sensitive"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "I + birleşen üst nokta (U+0307) ayrışık biçim; NFC bunu tek İ (U+0130) yapar, bu yüzden NFC uygulayan sistem birebir korumada fark gösterir."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "combining.nfc-acute.001",
+      "value": "Jos\u00e9",
+      "properties": [
+        "latin-1",
+        "precomposed",
+        "nfc"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Hazır é (U+00E9) içeren NFC biçimli ad; nfd-acute.001 ile çift oluşturur, tek başına normalleştirme iddiası taşımaz."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "combining.nfd-acute.001",
+      "value": "Jose\u0301",
+      "properties": [
+        "combining-mark",
+        "nfd",
+        "nfc-sensitive"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "e + birleşen akut (U+0301) ayrışık biçim; NFC uygulayan sistem bunu é ye çevirir ve birebir eşitlik bozulur, NFC eşitliği korunur."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "combining.nfc-a-ring.001",
+      "value": "\u00c5sa",
+      "properties": [
+        "latin-1",
+        "precomposed",
+        "nfc"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Hazır Å (U+00C5) ile başlayan NFC biçimli ad; nfd-a-ring.001 in eşidir."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "combining.nfd-a-ring.001",
+      "value": "A\u030asa",
+      "properties": [
+        "combining-mark",
+        "nfd",
+        "nfc-sensitive"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "A + birleşen halka (U+030A) ayrışık biçim; NFC bunu Å (U+00C5) yapar, Angstrom işareti (U+212B) ile ilgisi yoktur."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "combining.nfd-turkish.001",
+      "value": "C\u0327ag\u0306lar O\u0308zu\u0308n",
+      "properties": [
+        "combining-mark",
+        "nfd",
+        "nfc-sensitive",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Ç ğ Ö ü harflerinin ayrışık (NFD) yazımı; NFC bunları hazır harflere çevirir, Türkçe metnin NFD gelmesinin yaygınlığı hakkında iddia taşımaz."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "combining.nfc-vietnamese.001",
+      "value": "Tr\u1ea7n Th\u1ecb H\u01b0\u01a1ng",
+      "properties": [
+        "latin-extended",
+        "precomposed",
+        "nfc",
+        "stacked-diacritics",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Çoklu aksanlı hazır harflerle NFC biçimli ad; nfd-vietnamese.001 in eşidir, dil desteğini değil kod noktası korumasını sınar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "combining.nfd-vietnamese.001",
+      "value": "Tra\u0302\u0300n Thi\u0323 Hu\u031bo\u031bng",
+      "properties": [
+        "combining-mark",
+        "nfd",
+        "nfc-sensitive",
+        "stacked-diacritics",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Aynı adın tamamen ayrışık biçimi, harf başına iki işarete kadar; NFC sonucu nfc-vietnamese.001 değerine eşittir."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "combining.stacked.001",
+      "value": "a\u0301\u0302\u0303",
+      "properties": [
+        "combining-mark",
+        "stacked-diacritics",
+        "nfc-sensitive"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Tek tabana üç üst işaret; NFC yalnız ilkini birleştirip á + iki işaret bırakır, okunabilirlik veya yazı tipi davranışı iddiası yoktur."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "combining.mark-at-start.001",
+      "value": "\u0301Ada",
+      "properties": [
+        "combining-mark",
+        "leading-mark"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Dizginin başında tabansız birleşen akut; NFC bunu değiştirmez, kırpma veya geçersiz sayma davranışını görünür kılar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "combining.mark-order.001",
+      "value": "Ta\u0302\u0323p",
+      "properties": [
+        "combining-mark",
+        "canonical-order",
+        "nfc-sensitive"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "İşaretler kanonik olmayan sırada (üst işaret alt noktadan önce); NFC yeniden sıralayıp ậ (U+1EAD) yapar, sıra bilgisinin anlamlı olduğunu iddia etmez."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "combining.hangul-precomposed.001",
+      "value": "\ud55c\uae00",
+      "properties": [
+        "hangul",
+        "precomposed",
+        "nfc"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Hazır Hangul heceleri (U+D55C U+AE00); hangul-jamo-nfd.001 in NFC eşidir."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "combining.hangul-jamo-nfd.001",
+      "value": "\u1112\u1161\u11ab\u1100\u1173\u11af",
+      "properties": [
+        "hangul",
+        "conjoining-jamo",
+        "nfd",
+        "nfc-sensitive"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Aynı iki hecenin birleşen jamo (NFD) dizisi; NFC bunları hazır hecelere çevirir, görüntüleme farkı iddiası taşımaz."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "compat.fullwidth-latin.001",
+      "value": "\uff21\uff59\uff53\uff45 \uff2b\uff41\uff59\uff41",
+      "properties": [
+        "compatibility",
+        "nfkc-sensitive",
+        "fullwidth"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Tam genişlik Latin harfleri; NFC değiştirmez, NFKC düz ASCII ye katlar, yani yalnız uyumluluk katlaması yapan sistem farkı gösterir."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "compat.ligature-fi.001",
+      "value": "\ufb01kret",
+      "properties": [
+        "compatibility",
+        "nfkc-sensitive",
+        "ligature"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "fi bağ harfi (U+FB01) ile başlayan kelime; NFC değiştirmez, NFKC iki harfe ayırır, bağ harfinin kullanıcıdan gelme sıklığını iddia etmez."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "compat.superscript.001",
+      "value": "Blok A\u00b2",
+      "properties": [
+        "compatibility",
+        "nfkc-sensitive",
+        "superscript"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Üst simge iki (U+00B2); NFC değiştirmez, NFKC düz 2 yapar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "compat.circled-digit.001",
+      "value": "Daire \u2462",
+      "properties": [
+        "compatibility",
+        "nfkc-sensitive",
+        "enclosed"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Daire içinde üç (U+2462); NFC değiştirmez, NFKC düz 3 yapar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "compat.roman-numeral.001",
+      "value": "Kerem \u216b",
+      "properties": [
+        "compatibility",
+        "nfkc-sensitive",
+        "number-form"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Tek karakterlik Roma rakamı XII (U+216B); NFC değiştirmez, NFKC üç harfli XII dizisine açar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "compat.kelvin.001",
+      "value": "\u212aerem",
+      "properties": [
+        "compatibility",
+        "nfkc-sensitive",
+        "nfc-sensitive",
+        "canonical-singleton"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Kelvin işareti (U+212A) harf yerine; NFC ve NFKC ikisi de bunu düz K yapar, yani NFKC nin NFC den ek farkı yoktur, NFC uygulayan sistem bile değeri değiştirir."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "compat.ohm.001",
+      "value": "\u2126mega",
+      "properties": [
+        "compatibility",
+        "nfkc-sensitive",
+        "nfc-sensitive",
+        "canonical-singleton"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Ohm işareti (U+2126) harf yerine; NFC ve NFKC ikisi de bunu Yunanca büyük omega (U+03A9) yapar, NFKC nin NFC den ek farkı yoktur."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "compat.halfwidth-katakana.001",
+      "value": "\uff7b\uff84\uff73",
+      "properties": [
+        "compatibility",
+        "nfkc-sensitive",
+        "halfwidth"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Yarım genişlik katakana; NFC değiştirmez, NFKC tam genişlik katakanaya çevirir, Japonca giriş yöntemlerinin bunu üretip üretmediği iddiası yoktur."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "punct.ascii-apostrophe.001",
+      "value": "Nora O'Brien",
+      "properties": [
+        "ascii",
+        "apostrophe",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "ASCII kesme işareti (U+0027) içeren soyad; kaçışlama veya silme hatasını görünür kılar, saldırı yükü değildir."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "punct.typographic-apostrophe.001",
+      "value": "Nora O\u2019Brien",
+      "properties": [
+        "apostrophe",
+        "typographic",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Tipografik kesme işareti (U+2019); ASCII kesmeye çevrilmesini yakalar, hangisinin tercih edileceğine karar vermez."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "punct.modifier-apostrophe.001",
+      "value": "Nora O\u02bcBrien",
+      "properties": [
+        "apostrophe",
+        "modifier-letter",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Değiştirici harf kesmesi (U+02BC), harf kategorisindedir; NFC ve NFKC değiştirmez, başka kesme biçimine dönüştürülmesini yakalar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "punct.hyphen-name.001",
+      "value": "Ay\u015fe Kaya-Demir",
+      "properties": [
+        "hyphen",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "ASCII tire ile birleşik soyad; tirenin boşluğa çevrilmesini veya bölünmesini yakalar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "punct.en-dash.001",
+      "value": "Kaya \u2013 Demir",
+      "properties": [
+        "dash",
+        "typographic"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Boşluklu en tire (U+2013); ASCII tireye çevrilmesini yakalar, ad alanında uygunluğunu tartışmaz."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "punct.em-dash.001",
+      "value": "Kaya\u2014Demir",
+      "properties": [
+        "dash",
+        "typographic"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Boşluksuz em tire (U+2014); başka bir tire veya iki tireye dönüştürülmesini yakalar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "punct.non-breaking-hyphen.001",
+      "value": "Kaya\u2011Demir",
+      "properties": [
+        "hyphen",
+        "non-breaking",
+        "nfkc-sensitive"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Bölünmez tire (U+2011); NFC değiştirmez, NFKC bunu U+2010 tireye katlar, ASCII tire ile karıştırılmasını da görünür kılar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "punct.guillemets.001",
+      "value": "\u00abDeniz\u00bb Kaya",
+      "properties": [
+        "quotes",
+        "typographic"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Köşeli tırnak (U+00AB U+00BB) içinde lakap; tırnağın silinmesini veya ASCII tırnağa çevrilmesini yakalar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "punct.low-high-quotes.001",
+      "value": "\u201eDeniz\u201c Kaya",
+      "properties": [
+        "quotes",
+        "typographic"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Alt-üst tırnak çifti (U+201E U+201C); tırnak normalleştirmesini yakalar, hangi tırnak üslubunun doğru olduğunu söylemez."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "punct.middle-dot.001",
+      "value": "Marcel\u00b7la Puig",
+      "properties": [
+        "middle-dot",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "l·l dizisinde orta nokta (U+00B7); noktanın silinmesini veya noktaya çevrilmesini yakalar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "punct.backslash.001",
+      "value": "Kaya\\Demir",
+      "properties": [
+        "ascii",
+        "backslash"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Ad içinde ters eğik çizgi; kaçış dizisi olarak yorumlanıp ikilenmesini veya silinmesini yakalar, saldırı yükü değildir."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "space.leading.001",
+      "value": " Ayse Kaya",
+      "properties": [
+        "whitespace",
+        "leading-trailing-space"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Başta tek ASCII boşluk; kırpma davranışını görünür kılar, kırpmanın yanlış olduğunu iddia etmez."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "space.trailing.001",
+      "value": "Ayse Kaya ",
+      "properties": [
+        "whitespace",
+        "leading-trailing-space"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Sonda tek ASCII boşluk; görünmeyen son boşluğun kırpılmasını yakalar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "space.leading-trailing.001",
+      "value": " Ayse Kaya ",
+      "properties": [
+        "whitespace",
+        "leading-trailing-space"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Başta ve sonda ASCII boşluk; iki uçtan kırpmayı görünür kılar, kabul politikasını sözleşmeye bırakır."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "space.double-inner.001",
+      "value": "Ayse  Kaya",
+      "properties": [
+        "whitespace",
+        "inner-space"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Arada iki ASCII boşluk; boşluk daraltmasını yakalar, uçlarda boşluk yoktur."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "space.nbsp.001",
+      "value": "Ayse\u00a0Kaya",
+      "properties": [
+        "whitespace",
+        "nbsp",
+        "nfkc-sensitive"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Bölünmez boşluk (U+00A0); NFC değiştirmez, NFKC düz boşluğa katlar, HTML de nbsp varlığına dönüşme ihtimalini de görünür kılar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "space.narrow-nbsp.001",
+      "value": "Ayse\u202fKaya",
+      "properties": [
+        "whitespace",
+        "nbsp",
+        "nfkc-sensitive"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Dar bölünmez boşluk (U+202F); NFKC düz boşluğa katlar, görsel olarak ayırt edilmesi zordur."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "space.ideographic.001",
+      "value": "Ayse\u3000Kaya",
+      "properties": [
+        "whitespace",
+        "ideographic-space",
+        "nfkc-sensitive"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "İdeografik boşluk (U+3000); NFKC düz boşluğa katlar, bazı kırpma işlevleri bunu boşluk sayar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "space.tab-inner.001",
+      "value": "Ayse\tKaya",
+      "properties": [
+        "whitespace",
+        "tab"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Arada sekme karakteri (U+0009); fill ile doğrudan yazılır, klavyede odak değiştirme davranışını sınamaz."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "space.zwsp.001",
+      "value": "Ayse\u200bKaya",
+      "properties": [
+        "invisible",
+        "zero-width"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Sıfır genişlikli boşluk (U+200B); görünmez karakterin silinmesini yakalar, NFC ve NFKC değiştirmez."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "space.zwj-latin.001",
+      "value": "Ay\u200dse",
+      "properties": [
+        "invisible",
+        "zero-width",
+        "zwj"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "İki Latin harfi arasında yalnız birleştirici (U+200D); görsel etkisi yoktur, sessizce silinmesini yakalar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "length.long-name.001",
+      "value": "Ay\u015fe Nur \u00c7a\u011flar \u0130pek G\u00fcl Y\u0131ld\u0131z \u00d6zt\u00fcrk Kaya Demir \u015eahin Ay\u015fe Nur \u00c7a\u011flar \u0130pek G\u00fcl Y\u0131ld\u0131z \u00d6zt\u00fcrk Kaya Demir \u015eahin Ay\u015fe Nur",
+      "properties": [
+        "length",
+        "long-name",
+        "latin-extended",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Tam 120 grafem kümesi (NFC, tümü BMP, 120 UTF-16 birimi ama UTF-8 de daha fazla bayt) uzunluğunda ad; burada önemli birim grafem ve bayt farkıdır, kesmenin hangi birimle yapıldığını görünür kılar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "length.ascii-50.001",
+      "value": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwx",
+      "properties": [
+        "length",
+        "ascii",
+        "boundary"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Tam 50 ASCII karakter; ASCII de karakter, UTF-16 birimi ve bayt aynıdır, 50 sınırının hemen içinde kalır."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "length.ascii-51.001",
+      "value": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxy",
+      "properties": [
+        "length",
+        "ascii",
+        "boundary"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Tam 51 ASCII karakter; 50 sınırını bir aşar, sessiz kesmeyi reddetmekten ayırır, sınırın doğru değeri iddiası yoktur."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "length.ascii-100.001",
+      "value": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuv",
+      "properties": [
+        "length",
+        "ascii",
+        "boundary"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Tam 100 ASCII karakter; tüm uzunluk birimleri eşittir, 100 sınırının hemen içinde kalır."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "length.ascii-101.001",
+      "value": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvw",
+      "properties": [
+        "length",
+        "ascii",
+        "boundary"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Tam 101 ASCII karakter; 100 sınırını bir aşar, sessiz kesmeyi görünür kılar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "length.astral-mixed.001",
+      "value": "\ud842\udfb7\u91ce \ud842\udfb7\u7530 \u82b1\u5b50 Kaya \ud842\udfb7\u91ce \ud842\udfb7\u7530 \u82b1\u5b50 Kaya \ud842\udfb7\u91ce \ud842\udfb7\u7530 \u82b1\u5b50 Kaya \ud842\udfb7\u91ce \ud842\udfb7\u7530 \u82b1\u5b50 Kaya",
+      "properties": [
+        "length",
+        "long-name",
+        "astral",
+        "cjk"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "BMP dışı U+20BB7 içeren uzun ad: 55 grafem, 55 kod noktası, 63 UTF-16 birimi, 111 UTF-8 baytı; burada önemli olan birimlerin ayrışmasıdır, UTF-16 birimiyle kesme vekil çifti bölebilir."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "script.arabic.001",
+      "value": "\u0633\u0627\u0631\u0629 \u0623\u062d\u0645\u062f",
+      "properties": [
+        "arabic",
+        "rtl",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Arapça yazıyla ad-soyad, sağdan sola; harf bağlanması ve yön karakteri eklenmeden aynen geri gelmesini sınar, görüntü düzenini sınamaz."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "script.hebrew.001",
+      "value": "\u05e0\u05d5\u05e2\u05d4 \u05dc\u05d5\u05d9",
+      "properties": [
+        "hebrew",
+        "rtl",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "İbrani yazısıyla ad-soyad, sağdan sola; yön işareti (LRM/RLM) eklenmesini yakalar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "script.persian-zwnj.001",
+      "value": "\u0633\u0627\u0631\u0627 \u0646\u06cc\u06a9\u200c\u0646\u0627\u0645",
+      "properties": [
+        "persian",
+        "rtl",
+        "zwnj",
+        "invisible",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Farsça soyad içinde sıfır genişlikli birleştirmeyen (U+200C); görünmez ama anlamlı karakterin silinmesini yakalar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "script.urdu.001",
+      "value": "\u0639\u0627\u0626\u0634\u06c1 \u062e\u0627\u0646",
+      "properties": [
+        "urdu",
+        "rtl",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Urduca harflerle (U+06C1 dahil) ad; Arapça harflere eşleme yapılmasını yakalar, yazı tipi desteğini sınamaz."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "script.greek-final-sigma.001",
+      "value": "\u039d\u03af\u03ba\u03bf\u03c2 \u03a0\u03b1\u03c0\u03c0\u03ac\u03c2",
+      "properties": [
+        "greek",
+        "final-sigma",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Kelime sonu sigma (U+03C2) ve tonos içeren Yunanca ad; sigmanın σ ya çevrilmesini yakalar, harf dönüşümü doğruluğunu sınamaz."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "script.cyrillic.001",
+      "value": "\u0410\u043b\u0451\u043d\u0430 \u0417\u0443\u0435\u0432\u0430",
+      "properties": [
+        "cyrillic",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "ё (U+0451) içeren Kiril ad; е ye indirgenmesini yakalar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "script.armenian.001",
+      "value": "\u0531\u0576\u056b \u054d\u0561\u0580\u0563\u057d\u0575\u0561\u0576",
+      "properties": [
+        "armenian",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Ermeni yazısıyla ad-soyad; temel BMP repertuvarının saklanmasını sınar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "script.georgian.001",
+      "value": "\u10dc\u10d8\u10dc\u10dd \u10d1\u10d4\u10e0\u10d8\u10eb\u10d4",
+      "properties": [
+        "georgian",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Gürcü Mkhedruli yazısıyla ad-soyad; büyük-küçük harf eşlemesi olmayan bir yazının saklanmasını sınar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "script.devanagari-conjunct.001",
+      "value": "\u092a\u094d\u0930\u093f\u092f\u093e \u0936\u0930\u094d\u092e\u093e",
+      "properties": [
+        "devanagari",
+        "conjunct",
+        "virama",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Virama (U+094D) ile bitişik ünsüz içeren Devanagari ad; viramanın silinmesini yakalar, görsel birleşimi sınamaz."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "script.bengali.001",
+      "value": "\u0985\u09b0\u09cd\u09aa\u09bf\u09a4\u09be \u09a6\u09a4\u09cd\u09a4",
+      "properties": [
+        "bengali",
+        "conjunct",
+        "virama",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Bitişik ünsüzlü Bengal yazısıyla ad; işaret ve virama sırasının korunmasını sınar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "script.tamil.001",
+      "value": "\u0b95\u0bb5\u0bbf\u0ba4\u0bbe \u0b9a\u0bc6\u0bb2\u0bcd\u0bb5\u0bae\u0bcd",
+      "properties": [
+        "tamil",
+        "virama",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Önde yazılan ünlü işareti (U+0BC6) ve pulli içeren Tamil ad; mantıksal sıra ile görsel sıranın karışmasını yakalar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "script.thai.001",
+      "value": "\u0e2a\u0e21\u0e0a\u0e32\u0e22\u0e43\u0e08\u0e14\u0e35",
+      "properties": [
+        "thai",
+        "no-word-spaces"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Kelime arası boşluk olmayan Tay yazısı; boşluk eklenmesini veya üst ünlü işaretinin düşmesini yakalar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "script.cjk-bmp.001",
+      "value": "\u738b\u5c0f\u660e",
+      "properties": [
+        "cjk",
+        "han",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "BMP içindeki üç Han karakteri; her biri UTF-8 de üç bayttır, astral karakter içermez."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "script.cjk-astral.001",
+      "value": "\ud842\udfb7\u7530\u82b1\u5b50",
+      "properties": [
+        "cjk",
+        "han",
+        "astral",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "BMP dışı Han karakteri (U+20BB7, Uzantı B) ile başlayan ad; vekil çiftin bölünmesini veya ? ile değişmesini yakalar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "script.japanese-mixed.001",
+      "value": "\u4f50\u85e4\u306f\u306a\u3053 \u30b5\u30c8\u30a6",
+      "properties": [
+        "japanese",
+        "kanji",
+        "hiragana",
+        "katakana"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Kanji, hiragana ve katakana karışımı; yazılar arası geçişin saklanmasını sınar, giriş yöntemi (IME) davranışını sınamaz."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "script.korean.001",
+      "value": "\uae40\ubbfc\uc9c0",
+      "properties": [
+        "hangul",
+        "precomposed",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Hazır Hangul hecelerinden ad; NFC biçimindedir, jamo ayrışması combining.hangul-jamo-nfd.001 de sınanır."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "script.mixed-bidi.001",
+      "value": "Noa \u05dc\u05d5\u05d9 Kaya",
+      "properties": [
+        "bidi",
+        "rtl",
+        "mixed-direction",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Soldan sağa ve sağdan sola parçaları karışık ad; mantıksal sıranın ve yön işareti eklenmemesinin korunmasını sınar, görsel düzeni değil."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "emoji.basic.001",
+      "value": "\ud83d\ude42",
+      "properties": [
+        "emoji",
+        "astral"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Tek BMP dışı emoji (U+1F642); vekil çiftin korunmasını sınar, ad alanında emojinin kabul edilmesi gerektiğini iddia etmez."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "emoji.skin-tone.001",
+      "value": "\ud83d\udc4b\ud83c\udffd",
+      "properties": [
+        "emoji",
+        "astral",
+        "emoji-modifier",
+        "multi-codepoint-grapheme"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Ten rengi değiştiricili el sallama emojisi; iki kod noktalı tek grafemden değiştiricinin düşmesini yakalar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "emoji.zwj-family.001",
+      "value": "\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc67",
+      "properties": [
+        "emoji",
+        "astral",
+        "zwj",
+        "multi-codepoint-grapheme"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "ZWJ ile bağlı aile dizisi (5 kod noktası, 8 UTF-16 birimi, tek grafem); ZWJ silinip ayrı emojilere bölünmesini yakalar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "emoji.flag.001",
+      "value": "\ud83c\uddf9\ud83c\uddf7",
+      "properties": [
+        "emoji",
+        "astral",
+        "regional-indicator",
+        "multi-codepoint-grapheme"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "İki bölgesel gösterge harfinden bayrak; çiftin bölünmesini yakalar, herhangi bir ülke hakkında anlam taşımaz."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "emoji.keycap.001",
+      "value": "1\ufe0f\u20e3",
+      "properties": [
+        "emoji",
+        "keycap",
+        "variation-selector",
+        "multi-codepoint-grapheme"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Tuş başlığı dizisi (1 + VS16 + U+20E3), tümü BMP; seçici veya çerçeve işaretinin düşüp düz 1 kalmasını yakalar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "emoji.vs16.001",
+      "value": "\u2764\ufe0f",
+      "properties": [
+        "emoji",
+        "variation-selector",
+        "multi-codepoint-grapheme"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Emoji sunumu seçicili (U+FE0F) kalp, BMP; görünmez seçicinin silinmesini yakalar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "emoji.name-suffix.001",
+      "value": "Ayse Kaya \ud83c\udf3b",
+      "properties": [
+        "emoji",
+        "astral",
+        "name-like"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Adın sonuna eklenmiş emoji; emoji kısmının sessizce kırpılmasını yakalar, kabul politikasını sözleşmeye bırakır."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "emoji.tag-sequence.001",
+      "value": "\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f",
+      "properties": [
+        "emoji",
+        "astral",
+        "tag-sequence",
+        "invisible",
+        "multi-codepoint-grapheme"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Etiket karakterli alt bölge bayrağı (7 kod noktası, 14 UTF-16 birimi); görünmez etiketlerin silinip yalnız siyah bayrağın kalmasını yakalar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "newline.lf.001",
+      "value": "Birinci satir\nIkinci satir",
+      "properties": [
+        "line-ending",
+        "multiline",
+        "lf"
+      ],
+      "applicableControls": [
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "LF (U+000A) ile iki satır; textarea gönderiminde CRLF ye çevrilmesi tarayıcı standardıdır, bu fixture yalnız farkı görünür kılar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "newline.crlf.001",
+      "value": "Birinci satir\r\nIkinci satir",
+      "properties": [
+        "line-ending",
+        "multiline",
+        "crlf"
+      ],
+      "applicableControls": [
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "CRLF ile iki satır; textarea değerinde LF ye normalleştirilmesini görünür kılar, hangisinin doğru olduğuna sözleşme karar verir."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "newline.cr.001",
+      "value": "Birinci satir\rIkinci satir",
+      "properties": [
+        "line-ending",
+        "multiline",
+        "cr"
+      ],
+      "applicableControls": [
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Tek başına CR (U+000D); LF ye çevrilmesini veya silinmesini yakalar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "newline.trailing.001",
+      "value": "Tek satir\n",
+      "properties": [
+        "line-ending",
+        "multiline",
+        "lf",
+        "trailing-newline"
+      ],
+      "applicableControls": [
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Sonda LF; sondaki satır sonunun kırpılmasını yakalar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "newline.blank-line.001",
+      "value": "Paragraf bir\n\nParagraf iki",
+      "properties": [
+        "line-ending",
+        "multiline",
+        "lf",
+        "blank-line"
+      ],
+      "applicableControls": [
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "İki paragraf arasında boş satır; ardışık satır sonlarının daraltılmasını yakalar."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "control.nul.001",
+      "value": "Ayse\u0000Kaya",
+      "properties": [
+        "technical-control",
+        "c0-control",
+        "nul"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "İçinde NUL (U+0000) olan değer; tipik ad alanının reddetmesi beklenen must-reject politikaları içindir, saldırı yükü değildir."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "control.bel.001",
+      "value": "Ayse\u0007Kaya",
+      "properties": [
+        "technical-control",
+        "c0-control"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "İçinde BEL (U+0007) olan değer; must-reject politikasının uygulanıp uygulanmadığını gösterir, saldırı yükü değildir."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "control.esc.001",
+      "value": "Ayse\u001bKaya",
+      "properties": [
+        "technical-control",
+        "c0-control"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "İçinde ESC (U+001B) olan değer; terminal kaçış dizisi içermez, yalnız must-reject politikası içindir, saldırı yükü değildir."
+    },
+    {
+      "schemaVersion": "0.1",
+      "id": "control.ascii-1000.001",
+      "value": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl",
+      "properties": [
+        "technical-control",
+        "length",
+        "ascii"
+      ],
+      "applicableControls": [
+        "input-text",
+        "textarea"
+      ],
+      "inputMethod": "fill",
+      "defaultExpectation": "unspecified",
+      "provenance": {
+        "kind": "synthetic",
+        "license": "Apache-2.0"
+      },
+      "notes": "Tam 1000 ASCII karakter; tipik ad alanının reddetmesi beklenen aşırı uzunluk kontrolüdür (must-reject), saldırı yükü değildir."
+    }
+  ]
+}

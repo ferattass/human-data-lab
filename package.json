@@ -1,0 +1,47 @@
+{
+  "name": "human-data-lab",
+  "version": "0.4.0",
+  "description": "Checks that human text your app accepts survives the save → fresh re-read journey, in a real browser.",
+  "type": "module",
+  "private": true,
+  "license": "Apache-2.0",
+  "bin": {
+    "hdl": "bin/hdl.mjs"
+  },
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "test": "node --test --test-concurrency=1 \"test/*.test.ts\"",
+    "test:unit": "node --test test/core.test.ts test/matrix.test.ts test/architecture.test.ts",
+    "test:research": "node --test research/test/unit.test.mjs",
+    "demo": "node bin/hdl.mjs demo",
+    "demo:server": "node examples/profile-demo/server.ts",
+    "test:browser": "node --test --test-concurrency=1 test/acceptance.test.ts test/playwright-integration.test.ts"
+  },
+  "keywords": [
+    "unicode",
+    "i18n",
+    "testing",
+    "playwright",
+    "turkish",
+    "collation",
+    "data-integrity"
+  ],
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@types/node": "24.19.2",
+    "typescript": "7.0.2"
+  },
+  "files": [
+    "bin",
+    "packages",
+    "examples",
+    "schema",
+    "docs",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ]
+}

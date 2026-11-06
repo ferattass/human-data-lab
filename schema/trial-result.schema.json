@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ferattass/human-data-lab/schema/trial-result.schema.json",
+  "title": "TrialResult",
+  "description": "attempts.jsonl satırı (§12, §23). Yürütme, uygulama kararı, assertion ve cleanup birbirinden bağımsızdır: tek yeşil yok.",
+  "type": "object",
+  "required": ["schemaVersion", "identity", "fixtureId", "expectation", "execution", "applicationOutcome", "observations", "assertions", "cleanup", "errors", "events", "timings"],
+  "properties": {
+    "schemaVersion": { "type": "string" },
+    "identity": { "type": "object", "required": ["runId", "caseId", "candidateId", "attemptId", "fixtureKey"] },
+    "fixtureId": { "type": "string" },
+    "expectation": { "enum": ["must-accept", "must-reject"] },
+    "execution": { "enum": ["completed", "error", "cancelled"] },
+    "applicationOutcome": { "enum": ["accepted", "rejected", "indeterminate"] },
+    "acceptanceEvidence": {
+      "type": "object",
+      "properties": { "recordId": { "type": "string" }, "reason": { "type": "string" }, "evidenceRef": { "type": "string" } }
+    },
+    "observations": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["boundary", "status"],
+        "properties": {
+          "boundary": { "enum": ["authored", "injected", "submitted", "readback"] },
+          "status": { "enum": ["observed", "not-observed", "not-supported"] },
+          "value": { "type": "string" },
+          "source": { "type": "string" },
+          "note": { "type": "string" }
+        }
+      }
+    },
+    "readbackSamples": { "type": "array" },
+    "assertions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "rule", "status", "required"],
+        "properties": {
+          "status": { "enum": ["passed", "failed", "not-run", "indeterminate"] },
+          "rawEqual": { "type": "boolean", "description": "NFC geçse bile ham fark saklanır (A04)" },
+          "difference": { "type": "string" },
+          "firstDifferenceAt": { "type": "integer" }
+        }
+      }
+    },
+    "cleanup": { "enum": ["verified", "failed", "pending", "not-needed"] },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["class", "phase", "message"],
+        "properties": { "class": { "enum": ["configuration", "adapter", "target", "observation", "assertion", "cleanup", "artifact"] } }
+      }
+    },
+    "events": { "type": "array" },
+    "timings": { "type": "object" }
+  }
+}

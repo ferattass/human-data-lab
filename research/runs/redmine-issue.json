@@ -1,0 +1,1332 @@
+{
+  "schemaVersion": "0.1",
+  "adapter": "redmine-issue-subject",
+  "at": "2026-11-05T11:57:03.734Z",
+  "results": [
+    {
+      "fixtureId": "control.latin-basic.001",
+      "authored": "Ayse Kaya",
+      "injected": "Ayse Kaya",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "1",
+      "readback": "Ayse Kaya",
+      "exported": "Ayse Kaya",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "tr.dotted-capital-i.001",
+      "authored": "İpek Çağlar",
+      "injected": "İpek Çağlar",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "2",
+      "readback": "İpek Çağlar",
+      "exported": "İpek Çağlar",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "tr.dotless-i.001",
+      "authored": "Ilık Işık",
+      "injected": "Ilık Işık",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "3",
+      "readback": "Ilık Işık",
+      "exported": "Ilık Işık",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "tr.full-alphabet.001",
+      "authored": "Şükrü Öztürk Ğül Çiçek",
+      "injected": "Şükrü Öztürk Ğül Çiçek",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "4",
+      "readback": "Şükrü Öztürk Ğül Çiçek",
+      "exported": "Şükrü Öztürk Ğül Çiçek",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "combining.precomposed.001",
+      "authored": "José Muñoz",
+      "injected": "José Muñoz",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "5",
+      "readback": "José Muñoz",
+      "exported": "José Muñoz",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "combining.decomposed.001",
+      "authored": "José Muñoz",
+      "injected": "José Muñoz",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "6",
+      "readback": "José Muñoz",
+      "exported": "José Muñoz",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "combining.stacked.001",
+      "authored": "Nguyễn Thị Thủy",
+      "injected": "Nguyễn Thị Thủy",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "7",
+      "readback": "Nguyễn Thị Thủy",
+      "exported": "Nguyễn Thị Thủy",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "punct.ascii-apostrophe.001",
+      "authored": "O'Brien",
+      "injected": "O'Brien",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "8",
+      "readback": "O'Brien",
+      "exported": "O'Brien",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "punct.typographic-apostrophe.001",
+      "authored": "O’Brien",
+      "injected": "O’Brien",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "9",
+      "readback": "O’Brien",
+      "exported": "O’Brien",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "punct.hyphen-name.001",
+      "authored": "Jean-Luc Picard-Smith",
+      "injected": "Jean-Luc Picard-Smith",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "10",
+      "readback": "Jean-Luc Picard-Smith",
+      "exported": "Jean-Luc Picard-Smith",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "space.leading-trailing.001",
+      "authored": " Ali Veli ",
+      "injected": " Ali Veli ",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "11",
+      "readback": " Ali Veli ",
+      "exported": " Ali Veli ",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "space.nbsp.001",
+      "authored": "Ali Veli",
+      "injected": "Ali Veli",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "12",
+      "readback": "Ali Veli",
+      "exported": "Ali Veli",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "space.double.001",
+      "authored": "Ali  Veli",
+      "injected": "Ali  Veli",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "13",
+      "readback": "Ali  Veli",
+      "exported": "Ali  Veli",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "script.arabic.001",
+      "authored": "محمد علي",
+      "injected": "محمد علي",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "14",
+      "readback": "محمد علي",
+      "exported": "محمد علي",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "script.hebrew.001",
+      "authored": "דוד כהן",
+      "injected": "דוד כהן",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "15",
+      "readback": "דוד כהן",
+      "exported": "דוד כהן",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "script.persian-zwnj.001",
+      "authored": "می‌رزا",
+      "injected": "می‌رزا",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "16",
+      "readback": "می‌رزا",
+      "exported": "می‌رزا",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "script.cjk.001",
+      "authored": "山田太郎",
+      "injected": "山田太郎",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "17",
+      "readback": "山田太郎",
+      "exported": "山田太郎",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "script.cjk-astral.001",
+      "authored": "𠜎吉",
+      "injected": "𠜎吉",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "18",
+      "readback": "𠜎吉",
+      "exported": "𠜎吉",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "script.devanagari.001",
+      "authored": "अनुष्का",
+      "injected": "अनुष्का",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "19",
+      "readback": "अनुष्का",
+      "exported": "अनुष्का",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "script.greek-final-sigma.001",
+      "authored": "Σίσυφος",
+      "injected": "Σίσυφος",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "20",
+      "readback": "Σίσυφος",
+      "exported": "Σίσυφος",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "script.german-sharp-s.001",
+      "authored": "Straße",
+      "injected": "Straße",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "21",
+      "readback": "Straße",
+      "exported": "Straße",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "emoji.basic.001",
+      "authored": "Zoë 🌸",
+      "injected": "Zoë 🌸",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "22",
+      "readback": "Zoë 🌸",
+      "exported": "Zoë 🌸",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "emoji.zwj-sequence.001",
+      "authored": "Dev 👩‍💻",
+      "injected": "Dev 👩‍💻",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "23",
+      "readback": "Dev 👩‍💻",
+      "exported": "Dev 👩‍💻",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "emoji.skin-tone.001",
+      "authored": "OK 👍🏽",
+      "injected": "OK 👍🏽",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "24",
+      "readback": "OK 👍🏽",
+      "exported": "OK 👍🏽",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    },
+    {
+      "fixtureId": "length.long-name.001",
+      "authored": "Wolfeschlegelsteinhausenbergerdorff Adolph Blaine Charles David Earl Frederick Gerald Hubert Irvin John Kenneth Lloyd Martin Nero Oliver Paul Quincy Randolph Sherman Thomas Uncas Victor William Xerxes Yancy Zeus",
+      "injected": "Wolfeschlegelsteinhausenbergerdorff Adolph Blaine Charles David Earl Frederick Gerald Hubert Irvin John Kenneth Lloyd Martin Nero Oliver Paul Quincy Randolph Sherman Thomas Uncas Victor William Xerxes Yancy Zeus",
+      "writeStatuses": [
+        302
+      ],
+      "applicationOutcome": "accepted",
+      "recordId": "25",
+      "readback": "Wolfeschlegelsteinhausenbergerdorff Adolph Blaine Charles David Earl Frederick Gerald Hubert Irvin John Kenneth Lloyd Martin Nero Oliver Paul Quincy Randolph Sherman Thomas Uncas Victor William Xerxes Yancy Zeus",
+      "exported": "Wolfeschlegelsteinhausenbergerdorff Adolph Blaine Charles David Earl Frederick Gerald Hubert Irvin John Kenneth Lloyd Martin Nero Oliver Paul Quincy Randolph Sherman Thomas Uncas Victor William Xerxes Yancy Zeus",
+      "exportMeta": {
+        "dialogEncoding": "UTF-8",
+        "contentType": "text/csv; header=present",
+        "charset": "utf-8",
+        "hasBom": true
+      },
+      "execution": "completed",
+      "inputChangedBeforeSubmit": false,
+      "firstDivergence": null,
+      "assertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ],
+      "exportAssertions": [
+        {
+          "status": "passed",
+          "rule": "text.exact.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        },
+        {
+          "status": "passed",
+          "rule": "text.nfc.v1",
+          "rawEqual": true,
+          "difference": "none",
+          "firstDifferenceAt": -1
+        }
+      ]
+    }
+  ]
+}

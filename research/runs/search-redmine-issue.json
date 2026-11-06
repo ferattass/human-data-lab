@@ -1,0 +1,1157 @@
+{
+  "schemaVersion": "0.1",
+  "kind": "search",
+  "adapter": "redmine-issue-subject",
+  "at": "2026-11-05T12:00:06.071Z",
+  "results": [
+    {
+      "fixtureId": "control.latin-basic.001",
+      "value": "Ayse Kaya",
+      "queries": [
+        {
+          "query": "Ayse Kaya",
+          "variants": [
+            "exact",
+            "nfd",
+            "nfc",
+            "ascii-fold"
+          ],
+          "required": true,
+          "found": true
+        },
+        {
+          "query": "ayse kaya",
+          "variants": [
+            "lower-root",
+            "lower-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "AYSE KAYA",
+          "variants": [
+            "upper-root",
+            "upper-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "Ayse",
+          "variants": [
+            "first-word"
+          ],
+          "required": false,
+          "found": true
+        }
+      ],
+      "recordId": "51"
+    },
+    {
+      "fixtureId": "tr.dotted-capital-i.001",
+      "value": "İpek Çağlar",
+      "queries": [
+        {
+          "query": "İpek Çağlar",
+          "variants": [
+            "exact",
+            "nfc"
+          ],
+          "required": true,
+          "found": true
+        },
+        {
+          "query": "i̇pek çağlar",
+          "variants": [
+            "lower-root"
+          ],
+          "required": false,
+          "found": false
+        },
+        {
+          "query": "ipek çağlar",
+          "variants": [
+            "lower-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "İPEK ÇAĞLAR",
+          "variants": [
+            "upper-root",
+            "upper-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "İpek Çağlar",
+          "variants": [
+            "nfd"
+          ],
+          "required": false,
+          "found": false
+        },
+        {
+          "query": "Ipek Caglar",
+          "variants": [
+            "ascii-fold"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "İpek",
+          "variants": [
+            "first-word"
+          ],
+          "required": false,
+          "found": true
+        }
+      ],
+      "recordId": "52"
+    },
+    {
+      "fixtureId": "tr.dotless-i.001",
+      "value": "Ilık Işık",
+      "queries": [
+        {
+          "query": "Ilık Işık",
+          "variants": [
+            "exact",
+            "nfc"
+          ],
+          "required": true,
+          "found": true
+        },
+        {
+          "query": "ilık işık",
+          "variants": [
+            "lower-root"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "ılık ışık",
+          "variants": [
+            "lower-tr"
+          ],
+          "required": false,
+          "found": false
+        },
+        {
+          "query": "ILIK IŞIK",
+          "variants": [
+            "upper-root",
+            "upper-tr"
+          ],
+          "required": false,
+          "found": false
+        },
+        {
+          "query": "Ilık Işık",
+          "variants": [
+            "nfd"
+          ],
+          "required": false,
+          "found": false
+        },
+        {
+          "query": "Ilik Isik",
+          "variants": [
+            "ascii-fold"
+          ],
+          "required": false,
+          "found": false
+        },
+        {
+          "query": "Ilık",
+          "variants": [
+            "first-word"
+          ],
+          "required": false,
+          "found": true
+        }
+      ],
+      "recordId": "53"
+    },
+    {
+      "fixtureId": "tr.full-alphabet.001",
+      "value": "Şükrü Öztürk Ğül Çiçek",
+      "queries": [
+        {
+          "query": "Şükrü Öztürk Ğül Çiçek",
+          "variants": [
+            "exact",
+            "nfc"
+          ],
+          "required": true,
+          "found": true
+        },
+        {
+          "query": "şükrü öztürk ğül çiçek",
+          "variants": [
+            "lower-root",
+            "lower-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "ŞÜKRÜ ÖZTÜRK ĞÜL ÇIÇEK",
+          "variants": [
+            "upper-root"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "ŞÜKRÜ ÖZTÜRK ĞÜL ÇİÇEK",
+          "variants": [
+            "upper-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "Şükrü Öztürk Ğül Çiçek",
+          "variants": [
+            "nfd"
+          ],
+          "required": false,
+          "found": false
+        },
+        {
+          "query": "Sukru Ozturk Gul Cicek",
+          "variants": [
+            "ascii-fold"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "Şükrü",
+          "variants": [
+            "first-word"
+          ],
+          "required": false,
+          "found": true
+        }
+      ],
+      "recordId": "54"
+    },
+    {
+      "fixtureId": "combining.precomposed.001",
+      "value": "José Muñoz",
+      "queries": [
+        {
+          "query": "José Muñoz",
+          "variants": [
+            "exact",
+            "nfc"
+          ],
+          "required": true,
+          "found": true
+        },
+        {
+          "query": "josé muñoz",
+          "variants": [
+            "lower-root",
+            "lower-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "JOSÉ MUÑOZ",
+          "variants": [
+            "upper-root",
+            "upper-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "José Muñoz",
+          "variants": [
+            "nfd"
+          ],
+          "required": false,
+          "found": false
+        },
+        {
+          "query": "Jose Munoz",
+          "variants": [
+            "ascii-fold"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "José",
+          "variants": [
+            "first-word"
+          ],
+          "required": false,
+          "found": true
+        }
+      ],
+      "recordId": "55"
+    },
+    {
+      "fixtureId": "combining.decomposed.001",
+      "value": "José Muñoz",
+      "queries": [
+        {
+          "query": "José Muñoz",
+          "variants": [
+            "exact",
+            "nfd"
+          ],
+          "required": true,
+          "found": true
+        },
+        {
+          "query": "josé muñoz",
+          "variants": [
+            "lower-root",
+            "lower-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "JOSÉ MUÑOZ",
+          "variants": [
+            "upper-root",
+            "upper-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "José Muñoz",
+          "variants": [
+            "nfc"
+          ],
+          "required": false,
+          "found": false
+        },
+        {
+          "query": "Jose Munoz",
+          "variants": [
+            "ascii-fold"
+          ],
+          "required": false,
+          "found": false
+        },
+        {
+          "query": "José",
+          "variants": [
+            "first-word"
+          ],
+          "required": false,
+          "found": true
+        }
+      ],
+      "recordId": "56"
+    },
+    {
+      "fixtureId": "combining.stacked.001",
+      "value": "Nguyễn Thị Thủy",
+      "queries": [
+        {
+          "query": "Nguyễn Thị Thủy",
+          "variants": [
+            "exact",
+            "nfc"
+          ],
+          "required": true,
+          "found": true
+        },
+        {
+          "query": "nguyễn thị thủy",
+          "variants": [
+            "lower-root",
+            "lower-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "NGUYỄN THỊ THỦY",
+          "variants": [
+            "upper-root",
+            "upper-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "Nguyễn Thị Thủy",
+          "variants": [
+            "nfd"
+          ],
+          "required": false,
+          "found": false
+        },
+        {
+          "query": "Nguyen Thi Thuy",
+          "variants": [
+            "ascii-fold"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "Nguyễn",
+          "variants": [
+            "first-word"
+          ],
+          "required": false,
+          "found": true
+        }
+      ],
+      "recordId": "57"
+    },
+    {
+      "fixtureId": "punct.ascii-apostrophe.001",
+      "value": "O'Brien",
+      "queries": [
+        {
+          "query": "O'Brien",
+          "variants": [
+            "exact",
+            "nfd",
+            "nfc",
+            "ascii-fold",
+            "first-word"
+          ],
+          "required": true,
+          "found": true
+        },
+        {
+          "query": "o'brien",
+          "variants": [
+            "lower-root",
+            "lower-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "O'BRIEN",
+          "variants": [
+            "upper-root"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "O'BRİEN",
+          "variants": [
+            "upper-tr"
+          ],
+          "required": false,
+          "found": true
+        }
+      ],
+      "recordId": "58"
+    },
+    {
+      "fixtureId": "punct.typographic-apostrophe.001",
+      "value": "O’Brien",
+      "queries": [
+        {
+          "query": "O’Brien",
+          "variants": [
+            "exact",
+            "nfd",
+            "nfc",
+            "ascii-fold",
+            "first-word"
+          ],
+          "required": true,
+          "found": true
+        },
+        {
+          "query": "o’brien",
+          "variants": [
+            "lower-root",
+            "lower-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "O’BRIEN",
+          "variants": [
+            "upper-root"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "O’BRİEN",
+          "variants": [
+            "upper-tr"
+          ],
+          "required": false,
+          "found": true
+        }
+      ],
+      "recordId": "59"
+    },
+    {
+      "fixtureId": "punct.hyphen-name.001",
+      "value": "Jean-Luc Picard-Smith",
+      "queries": [
+        {
+          "query": "Jean-Luc Picard-Smith",
+          "variants": [
+            "exact",
+            "nfd",
+            "nfc",
+            "ascii-fold"
+          ],
+          "required": true,
+          "found": true
+        },
+        {
+          "query": "jean-luc picard-smith",
+          "variants": [
+            "lower-root",
+            "lower-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "JEAN-LUC PICARD-SMITH",
+          "variants": [
+            "upper-root"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "JEAN-LUC PİCARD-SMİTH",
+          "variants": [
+            "upper-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "Jean-Luc",
+          "variants": [
+            "first-word"
+          ],
+          "required": false,
+          "found": true
+        }
+      ],
+      "recordId": "60"
+    },
+    {
+      "fixtureId": "space.leading-trailing.001",
+      "value": " Ali Veli ",
+      "queries": [
+        {
+          "query": " Ali Veli ",
+          "variants": [
+            "exact",
+            "nfd",
+            "nfc",
+            "ascii-fold"
+          ],
+          "required": true,
+          "found": true
+        },
+        {
+          "query": " ali veli ",
+          "variants": [
+            "lower-root",
+            "lower-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": " ALI VELI ",
+          "variants": [
+            "upper-root"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": " ALİ VELİ ",
+          "variants": [
+            "upper-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "Ali",
+          "variants": [
+            "first-word"
+          ],
+          "required": false,
+          "found": true
+        }
+      ],
+      "recordId": "61"
+    },
+    {
+      "fixtureId": "space.nbsp.001",
+      "value": "Ali Veli",
+      "queries": [
+        {
+          "query": "Ali Veli",
+          "variants": [
+            "exact",
+            "nfd",
+            "nfc",
+            "ascii-fold"
+          ],
+          "required": true,
+          "found": true
+        },
+        {
+          "query": "ali veli",
+          "variants": [
+            "lower-root",
+            "lower-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "ALI VELI",
+          "variants": [
+            "upper-root"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "ALİ VELİ",
+          "variants": [
+            "upper-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "Ali",
+          "variants": [
+            "first-word"
+          ],
+          "required": false,
+          "found": true
+        }
+      ],
+      "recordId": "62"
+    },
+    {
+      "fixtureId": "space.double.001",
+      "value": "Ali  Veli",
+      "queries": [
+        {
+          "query": "Ali  Veli",
+          "variants": [
+            "exact",
+            "nfd",
+            "nfc",
+            "ascii-fold"
+          ],
+          "required": true,
+          "found": true
+        },
+        {
+          "query": "ali  veli",
+          "variants": [
+            "lower-root",
+            "lower-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "ALI  VELI",
+          "variants": [
+            "upper-root"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "ALİ  VELİ",
+          "variants": [
+            "upper-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "Ali",
+          "variants": [
+            "first-word"
+          ],
+          "required": false,
+          "found": true
+        }
+      ],
+      "recordId": "63"
+    },
+    {
+      "fixtureId": "script.arabic.001",
+      "value": "محمد علي",
+      "queries": [
+        {
+          "query": "محمد علي",
+          "variants": [
+            "exact",
+            "lower-root",
+            "lower-tr",
+            "upper-root",
+            "upper-tr",
+            "nfd",
+            "nfc",
+            "ascii-fold"
+          ],
+          "required": true,
+          "found": true
+        },
+        {
+          "query": "محمد",
+          "variants": [
+            "first-word"
+          ],
+          "required": false,
+          "found": true
+        }
+      ],
+      "recordId": "64"
+    },
+    {
+      "fixtureId": "script.hebrew.001",
+      "value": "דוד כהן",
+      "queries": [
+        {
+          "query": "דוד כהן",
+          "variants": [
+            "exact",
+            "lower-root",
+            "lower-tr",
+            "upper-root",
+            "upper-tr",
+            "nfd",
+            "nfc",
+            "ascii-fold"
+          ],
+          "required": true,
+          "found": true
+        },
+        {
+          "query": "דוד",
+          "variants": [
+            "first-word"
+          ],
+          "required": false,
+          "found": true
+        }
+      ],
+      "recordId": "65"
+    },
+    {
+      "fixtureId": "script.persian-zwnj.001",
+      "value": "می‌رزا",
+      "queries": [
+        {
+          "query": "می‌رزا",
+          "variants": [
+            "exact",
+            "lower-root",
+            "lower-tr",
+            "upper-root",
+            "upper-tr",
+            "nfd",
+            "nfc",
+            "ascii-fold",
+            "first-word"
+          ],
+          "required": true,
+          "found": true
+        }
+      ],
+      "recordId": "66"
+    },
+    {
+      "fixtureId": "script.cjk.001",
+      "value": "山田太郎",
+      "queries": [
+        {
+          "query": "山田太郎",
+          "variants": [
+            "exact",
+            "lower-root",
+            "lower-tr",
+            "upper-root",
+            "upper-tr",
+            "nfd",
+            "nfc",
+            "ascii-fold",
+            "first-word"
+          ],
+          "required": true,
+          "found": true
+        }
+      ],
+      "recordId": "67"
+    },
+    {
+      "fixtureId": "script.cjk-astral.001",
+      "value": "𠜎吉",
+      "queries": [
+        {
+          "query": "𠜎吉",
+          "variants": [
+            "exact",
+            "lower-root",
+            "lower-tr",
+            "upper-root",
+            "upper-tr",
+            "nfd",
+            "nfc",
+            "ascii-fold",
+            "first-word"
+          ],
+          "required": true,
+          "found": true
+        }
+      ],
+      "recordId": "68"
+    },
+    {
+      "fixtureId": "script.devanagari.001",
+      "value": "अनुष्का",
+      "queries": [
+        {
+          "query": "अनुष्का",
+          "variants": [
+            "exact",
+            "lower-root",
+            "lower-tr",
+            "upper-root",
+            "upper-tr",
+            "nfd",
+            "nfc",
+            "first-word"
+          ],
+          "required": true,
+          "found": true
+        },
+        {
+          "query": "अनषक",
+          "variants": [
+            "ascii-fold"
+          ],
+          "required": false,
+          "found": false
+        }
+      ],
+      "recordId": "69"
+    },
+    {
+      "fixtureId": "script.greek-final-sigma.001",
+      "value": "Σίσυφος",
+      "queries": [
+        {
+          "query": "Σίσυφος",
+          "variants": [
+            "exact",
+            "nfc",
+            "first-word"
+          ],
+          "required": true,
+          "found": true
+        },
+        {
+          "query": "σίσυφος",
+          "variants": [
+            "lower-root",
+            "lower-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "ΣΊΣΥΦΟΣ",
+          "variants": [
+            "upper-root",
+            "upper-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "Σίσυφος",
+          "variants": [
+            "nfd"
+          ],
+          "required": false,
+          "found": false
+        },
+        {
+          "query": "Σισυφος",
+          "variants": [
+            "ascii-fold"
+          ],
+          "required": false,
+          "found": true
+        }
+      ],
+      "recordId": "70"
+    },
+    {
+      "fixtureId": "script.german-sharp-s.001",
+      "value": "Straße",
+      "queries": [
+        {
+          "query": "Straße",
+          "variants": [
+            "exact",
+            "nfd",
+            "nfc",
+            "ascii-fold",
+            "first-word"
+          ],
+          "required": true,
+          "found": true
+        },
+        {
+          "query": "straße",
+          "variants": [
+            "lower-root",
+            "lower-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "STRASSE",
+          "variants": [
+            "upper-root",
+            "upper-tr"
+          ],
+          "required": false,
+          "found": false
+        }
+      ],
+      "recordId": "71"
+    },
+    {
+      "fixtureId": "emoji.basic.001",
+      "value": "Zoë 🌸",
+      "queries": [
+        {
+          "query": "Zoë 🌸",
+          "variants": [
+            "exact",
+            "nfc"
+          ],
+          "required": true,
+          "found": true
+        },
+        {
+          "query": "zoë 🌸",
+          "variants": [
+            "lower-root",
+            "lower-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "ZOË 🌸",
+          "variants": [
+            "upper-root",
+            "upper-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "Zoë 🌸",
+          "variants": [
+            "nfd"
+          ],
+          "required": false,
+          "found": false
+        },
+        {
+          "query": "Zoe 🌸",
+          "variants": [
+            "ascii-fold"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "Zoë",
+          "variants": [
+            "first-word"
+          ],
+          "required": false,
+          "found": true
+        }
+      ],
+      "recordId": "72"
+    },
+    {
+      "fixtureId": "emoji.zwj-sequence.001",
+      "value": "Dev 👩‍💻",
+      "queries": [
+        {
+          "query": "Dev 👩‍💻",
+          "variants": [
+            "exact",
+            "nfd",
+            "nfc",
+            "ascii-fold"
+          ],
+          "required": true,
+          "found": true
+        },
+        {
+          "query": "dev 👩‍💻",
+          "variants": [
+            "lower-root",
+            "lower-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "DEV 👩‍💻",
+          "variants": [
+            "upper-root",
+            "upper-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "Dev",
+          "variants": [
+            "first-word"
+          ],
+          "required": false,
+          "found": true
+        }
+      ],
+      "recordId": "73"
+    },
+    {
+      "fixtureId": "emoji.skin-tone.001",
+      "value": "OK 👍🏽",
+      "queries": [
+        {
+          "query": "OK 👍🏽",
+          "variants": [
+            "exact",
+            "upper-root",
+            "upper-tr",
+            "nfd",
+            "nfc",
+            "ascii-fold"
+          ],
+          "required": true,
+          "found": true
+        },
+        {
+          "query": "ok 👍🏽",
+          "variants": [
+            "lower-root",
+            "lower-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "OK",
+          "variants": [
+            "first-word"
+          ],
+          "required": false,
+          "found": true
+        }
+      ],
+      "recordId": "74"
+    },
+    {
+      "fixtureId": "length.long-name.001",
+      "value": "Wolfeschlegelsteinhausenbergerdorff Adolph Blaine Charles David Earl Frederick Gerald Hubert Irvin John Kenneth Lloyd Martin Nero Oliver Paul Quincy Randolph Sherman Thomas Uncas Victor William Xerxes Yancy Zeus",
+      "queries": [
+        {
+          "query": "Wolfeschlegelsteinhausenbergerdorff Adolph Blaine Charles David Earl Frederick Gerald Hubert Irvin John Kenneth Lloyd Martin Nero Oliver Paul Quincy Randolph Sherman Thomas Uncas Victor William Xerxes Yancy Zeus",
+          "variants": [
+            "exact",
+            "nfd",
+            "nfc",
+            "ascii-fold"
+          ],
+          "required": true,
+          "found": true
+        },
+        {
+          "query": "wolfeschlegelsteinhausenbergerdorff adolph blaine charles david earl frederick gerald hubert irvin john kenneth lloyd martin nero oliver paul quincy randolph sherman thomas uncas victor william xerxes yancy zeus",
+          "variants": [
+            "lower-root"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "wolfeschlegelsteinhausenbergerdorff adolph blaine charles david earl frederick gerald hubert ırvin john kenneth lloyd martin nero oliver paul quincy randolph sherman thomas uncas victor william xerxes yancy zeus",
+          "variants": [
+            "lower-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "WOLFESCHLEGELSTEINHAUSENBERGERDORFF ADOLPH BLAINE CHARLES DAVID EARL FREDERICK GERALD HUBERT IRVIN JOHN KENNETH LLOYD MARTIN NERO OLIVER PAUL QUINCY RANDOLPH SHERMAN THOMAS UNCAS VICTOR WILLIAM XERXES YANCY ZEUS",
+          "variants": [
+            "upper-root"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "WOLFESCHLEGELSTEİNHAUSENBERGERDORFF ADOLPH BLAİNE CHARLES DAVİD EARL FREDERİCK GERALD HUBERT IRVİN JOHN KENNETH LLOYD MARTİN NERO OLİVER PAUL QUİNCY RANDOLPH SHERMAN THOMAS UNCAS VİCTOR WİLLİAM XERXES YANCY ZEUS",
+          "variants": [
+            "upper-tr"
+          ],
+          "required": false,
+          "found": true
+        },
+        {
+          "query": "Wolfeschlegelsteinhausenbergerdorff",
+          "variants": [
+            "first-word"
+          ],
+          "required": false,
+          "found": true
+        }
+      ],
+      "recordId": "75"
+    }
+  ]
+}

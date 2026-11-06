@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ferattass/human-data-lab/schema/fixture.schema.json",
+  "title": "Fixture",
+  "description": "Tek bir sentetik insan metni örneği (§16). Kabul politikasını belirlemez; akış sözleşmesi bağlar.",
+  "type": "object",
+  "required": ["schemaVersion", "id", "value", "properties", "applicableControls", "inputMethod", "defaultExpectation", "provenance"],
+  "properties": {
+    "schemaVersion": { "type": "string", "pattern": "^0\\.\\d+$" },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*\\.\\d{3}$", "description": "aile.ad.NNN; anlamı değişirse yeni kimlik" },
+    "value": { "type": "string", "description": "İyi biçimlenmiş Unicode; corpus dosyasında ASCII dışı karakterler \\uXXXX kaçışlı" },
+    "properties": { "type": "array", "items": { "type": "string" }, "minItems": 1, "description": "Sınanan metin davranışları (ülke/kişi değil)" },
+    "applicableControls": { "type": "array", "items": { "enum": ["input-text", "textarea"] }, "minItems": 1 },
+    "inputMethod": { "const": "fill" },
+    "defaultExpectation": { "enum": ["must-accept", "must-reject", "unspecified"] },
+    "provenance": {
+      "type": "object",
+      "required": ["kind", "license"],
+      "properties": {
+        "kind": { "enum": ["synthetic", "third-party"] },
+        "license": { "type": "string", "minLength": 1 },
+        "source": { "type": "string" }
+      },
+      "if": { "properties": { "kind": { "const": "third-party" } } },
+      "then": { "required": ["source"] }
+    },
+    "notes": { "type": "string" }
+  },
+  "additionalProperties": false
+}

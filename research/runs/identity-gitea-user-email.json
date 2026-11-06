@@ -1,0 +1,231 @@
+{
+  "schemaVersion": "0.1",
+  "kind": "identity",
+  "adapter": "gitea-user-email",
+  "at": "2026-11-05T23:18:32.470Z",
+  "results": [
+    {
+      "id": "case-full",
+      "sameMailbox": true,
+      "a": {
+        "email": "hdl62g8i0@example.com",
+        "login": "hdlidmw462ghs0",
+        "outcome": "accepted",
+        "recordId": "2",
+        "stored": "hdl62g8i0@example.com"
+      },
+      "b": {
+        "email": "HDL62g8i0@EXAMPLE.COM",
+        "login": "hdlidmw462gt61",
+        "outcome": "rejected",
+        "reason": "The email address is already used."
+      },
+      "flags": []
+    },
+    {
+      "id": "case-domain",
+      "sameMailbox": true,
+      "a": {
+        "email": "hdl62gzd2@example.com",
+        "login": "hdlidmw462h0e2",
+        "outcome": "accepted",
+        "recordId": "3",
+        "stored": "hdl62gzd2@example.com"
+      },
+      "b": {
+        "email": "hdl62gzd2@Example.COM",
+        "login": "hdlidmw462hab3",
+        "outcome": "rejected",
+        "reason": "The email address is already used."
+      },
+      "flags": []
+    },
+    {
+      "id": "trailing-space",
+      "sameMailbox": true,
+      "a": {
+        "email": "hdl62hgi4@example.com",
+        "login": "hdlidmw462hhj4",
+        "outcome": "accepted",
+        "recordId": "4",
+        "stored": "hdl62hgi4@example.com"
+      },
+      "b": {
+        "email": " hdl62hgi4@example.com ",
+        "login": "hdlidmw462hs05",
+        "outcome": "rejected",
+        "reason": "Email address is not a valid email address."
+      },
+      "flags": []
+    },
+    {
+      "id": "idn-punycode",
+      "sameMailbox": true,
+      "a": {
+        "email": "hdl62hyv6@örnek.com.tr",
+        "login": "hdlidmw462hzw6",
+        "outcome": "rejected",
+        "reason": "Email address is not a valid email address."
+      },
+      "b": {
+        "email": "hdl62hyv6@xn--rnek-4qa.com.tr",
+        "login": "hdlidmw462i857",
+        "outcome": "accepted",
+        "recordId": "5",
+        "stored": "hdl62hyv6@xn--rnek-4qa.com.tr"
+      },
+      "flags": []
+    },
+    {
+      "id": "idn-case",
+      "sameMailbox": true,
+      "a": {
+        "email": "hdl62ijn8@örnek.com.tr",
+        "login": "hdlidmw462ikw8",
+        "outcome": "rejected",
+        "reason": "Email address is not a valid email address."
+      },
+      "b": {
+        "email": "hdl62ijn8@ÖRNEK.com.tr",
+        "login": "hdlidmw462ith9",
+        "outcome": "rejected",
+        "reason": "Email address is not a valid email address."
+      },
+      "flags": []
+    },
+    {
+      "id": "nfd-local",
+      "sameMailbox": true,
+      "a": {
+        "email": "josé62j0o10@example.com",
+        "login": "hdlidmw462j1w10",
+        "outcome": "rejected",
+        "reason": "Email address is not a valid email address."
+      },
+      "b": {
+        "email": "josé62j0o10@example.com",
+        "login": "hdlidmw462ja811",
+        "outcome": "rejected",
+        "reason": "Email address is not a valid email address."
+      },
+      "flags": []
+    },
+    {
+      "id": "fullwidth",
+      "sameMailbox": false,
+      "a": {
+        "email": "hdl62jhc12@example.com",
+        "login": "hdlidmw462jim12",
+        "outcome": "accepted",
+        "recordId": "6",
+        "stored": "hdl62jhc12@example.com"
+      },
+      "b": {
+        "email": "ｈｄｌ62jhc12@example.com",
+        "login": "hdlidmw462ju813",
+        "outcome": "rejected",
+        "reason": "Email address is not a valid email address."
+      },
+      "flags": [
+        "b-rejected (çakışma mı geçersiz mi: reason)"
+      ]
+    },
+    {
+      "id": "tr-dotless-i",
+      "sameMailbox": false,
+      "a": {
+        "email": "admin62k1i14@example.com",
+        "login": "hdlidmw462k2p14",
+        "outcome": "accepted",
+        "recordId": "7",
+        "stored": "admin62k1i14@example.com"
+      },
+      "b": {
+        "email": "admın62k1i14@example.com",
+        "login": "hdlidmw462keo15",
+        "outcome": "rejected",
+        "reason": "Email address is not a valid email address."
+      },
+      "flags": [
+        "b-rejected (çakışma mı geçersiz mi: reason)"
+      ]
+    },
+    {
+      "id": "tr-dotted-I",
+      "sameMailbox": false,
+      "a": {
+        "email": "ilk62klg16@example.com",
+        "login": "hdlidmw462kmo16",
+        "outcome": "accepted",
+        "recordId": "8",
+        "stored": "ilk62klg16@example.com"
+      },
+      "b": {
+        "email": "İLK62klg16@example.com",
+        "login": "hdlidmw462kzk17",
+        "outcome": "rejected",
+        "reason": "Email address is not a valid email address."
+      },
+      "flags": [
+        "b-rejected (çakışma mı geçersiz mi: reason)"
+      ]
+    },
+    {
+      "id": "kelvin-sign",
+      "sameMailbox": false,
+      "a": {
+        "email": "kim62l6a18@example.com",
+        "login": "hdlidmw462l7i18",
+        "outcome": "accepted",
+        "recordId": "9",
+        "stored": "kim62l6a18@example.com"
+      },
+      "b": {
+        "email": "Kim62l6a18@example.com",
+        "login": "hdlidmw462ljc19",
+        "outcome": "rejected",
+        "reason": "Email address is not a valid email address."
+      },
+      "flags": [
+        "b-rejected (çakışma mı geçersiz mi: reason)"
+      ]
+    },
+    {
+      "id": "long-s",
+      "sameMailbox": false,
+      "a": {
+        "email": "sam62lq920@example.com",
+        "login": "hdlidmw462lrg20",
+        "outcome": "accepted",
+        "recordId": "10",
+        "stored": "sam62lq920@example.com"
+      },
+      "b": {
+        "email": "ſam62lq920@example.com",
+        "login": "hdlidmw462m3b21",
+        "outcome": "rejected",
+        "reason": "Email address is not a valid email address."
+      },
+      "flags": [
+        "b-rejected (çakışma mı geçersiz mi: reason)"
+      ]
+    },
+    {
+      "id": "eai-turkish",
+      "sameMailbox": false,
+      "a": {
+        "email": "işık62maz22@example.com",
+        "login": "hdlidmw462mh022",
+        "outcome": "rejected",
+        "reason": "Email address is not a valid email address."
+      },
+      "b": {
+        "email": "IŞIK62maz22@example.com",
+        "login": "hdlidmw462och23",
+        "outcome": "rejected",
+        "reason": "Email address is not a valid email address."
+      },
+      "flags": []
+    }
+  ]
+}

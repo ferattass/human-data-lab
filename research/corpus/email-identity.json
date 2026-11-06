@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "0.1",
+  "description": "Kimlik çiftleri: A ile hesap aç, sonra B ile ikinci hesap aç. {n} her koşuda benzersiz sayıyla değiştirilir. sameMailbox=true ise A ve B gerçekte aynı posta kutusudur; ikinci hesap kabul edilirse bulgu.",
+  "pairs": [
+    { "id": "case-full", "a": "hdl{n}@example.com", "b": "HDL{n}@EXAMPLE.COM", "sameMailbox": true },
+    { "id": "case-domain", "a": "hdl{n}@example.com", "b": "hdl{n}@Example.COM", "sameMailbox": true },
+    { "id": "trailing-space", "a": "hdl{n}@example.com", "b": " hdl{n}@example.com ", "sameMailbox": true },
+    { "id": "idn-punycode", "a": "hdl{n}@örnek.com.tr", "b": "hdl{n}@xn--rnek-4qa.com.tr", "sameMailbox": true },
+    { "id": "idn-case", "a": "hdl{n}@örnek.com.tr", "b": "hdl{n}@ÖRNEK.com.tr", "sameMailbox": true },
+    { "id": "nfd-local", "a": "josé{n}@example.com", "b": "josé{n}@example.com", "sameMailbox": true },
+    { "id": "fullwidth", "a": "hdl{n}@example.com", "b": "ｈｄｌ{n}@example.com", "sameMailbox": false },
+    { "id": "tr-dotless-i", "a": "admin{n}@example.com", "b": "admın{n}@example.com", "sameMailbox": false },
+    { "id": "tr-dotted-I", "a": "ilk{n}@example.com", "b": "İLK{n}@example.com", "sameMailbox": false },
+    { "id": "kelvin-sign", "a": "kim{n}@example.com", "b": "Kim{n}@example.com", "sameMailbox": false },
+    { "id": "long-s", "a": "sam{n}@example.com", "b": "ſam{n}@example.com", "sameMailbox": false },
+    { "id": "eai-turkish", "a": "işık{n}@example.com", "b": "IŞIK{n}@example.com", "sameMailbox": false }
+  ]
+}

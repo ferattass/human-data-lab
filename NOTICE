@@ -1,0 +1,12 @@
+Human Data Lab
+Copyright 2026 Human Data Lab contributors
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+"Human Data Lab" is a working name; no trademark, npm scope or domain is claimed.
+
+The fixture corpus in packages/corpus/data/human-text.json is original synthetic
+content authored for this project (provenance recorded per fixture). It contains
+no real personal data and no content copied from third-party lists such as BLNS.
+If third-party corpus content is ever added, its license and source are recorded
+per fixture and in this file; it is not relicensed.
