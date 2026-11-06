@@ -1,7 +1,7 @@
 {
   "schemaVersion": "0.1",
   "id": "human-text",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Sentetik insan metni fixture'ları. Her fixture ülke veya kişi değil, sınanan bir metin davranışını (normalleştirme, boşluk, yön, uzunluk birimi, görünmez karakter vb.) hedefler. Tümü sentetiktir, gerçek kişi verisi ve saldırı yükü içermez. Kabul/ret kararı akış sözleşmesine aittir; fixture'lar politika belirlemez (defaultExpectation her yerde unspecified). Görünmez karakterler incelenebilsin diye value alanlarında ASCII dışı her karakter \\u kaçışıyla yazılmıştır.",
   "sets": {
     "smoke": [
@@ -29,6 +29,22 @@
       "emoji.zwj-family.001",
       "emoji.flag.001",
       "control.nul.001"
+    ],
+    "demo-a": [
+      "latin.basic.001",
+      "tr-i.dotted-capital.002",
+      "combining.nfc-acute.001"
+    ],
+    "demo-b": [
+      "latin.basic.001",
+      "combining.nfc-acute.001",
+      "combining.nfd-acute.001",
+      "combining.nfd-turkish.001"
+    ],
+    "demo-c": [
+      "control.nul.001",
+      "latin.basic.001",
+      "tr-i.dotted-capital.002"
     ]
   },
   "fixtures": [

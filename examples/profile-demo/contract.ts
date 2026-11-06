@@ -14,6 +14,8 @@ export const displayNameContract = (o: { control?: 'input-text' | 'textarea'; ru
   preservation: [
     // Required: tasarlanan değerden bağımsız taze okumaya kadar. Başlangıç sessizce ileri taşınmaz (§20).
     { id: 'display-name-preserved', rule: o.rule ?? 'text.exact.v1', required: true, boundary: ['authored', 'readback'] },
+    // NFC sözleşmesinde ham kod noktası farkı görünür kalsın; yalnız kullanıcı exact'i required seçerse CI'yı etkiler (§13).
+    ...(o.rule === 'text.nfc.v1' ? [{ id: 'display-name-exact', rule: 'text.exact.v1' as const, required: false, boundary: ['authored', 'readback'] as ['authored', 'readback'] }] : []),
     // Tanısal: kayıp hangi aşamada başladı? CI sonucunu etkilemez.
     { id: 'input-preserved', rule: 'text.exact.v1', required: false, boundary: ['authored', 'injected'] },
     { id: 'submit-preserved', rule: 'text.exact.v1', required: false, boundary: ['injected', 'submitted'] },

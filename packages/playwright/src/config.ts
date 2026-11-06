@@ -21,5 +21,12 @@ export interface RoundtripConfig {
 export const defineConfig = (c: RoundtripConfig) => c;
 
 /** Replay/test için: corpus yerine somut fixture listesi. */
-export interface FixtureOverride { fixture: Fixture; value?: string; origin: 'replay' | 'inline' }
+export interface FixtureOverride {
+  fixture: Fixture;
+  /** Somut değer; verilmezse fixture.value. Replay saklı değeri kullanır (C01). */
+  value?: string;
+  /** Saklı kabul beklentisi; verilmezse sözleşmeden çözülür. */
+  expect?: 'must-accept' | 'must-reject';
+  origin: 'replay' | 'inline';
+}
 export type { FlowContract };

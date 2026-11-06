@@ -1,0 +1,57 @@
+// TASLAK — hdl init tarafından üretildi. İncelemeden çalıştırmayın.
+// Bu dosya hedef uygulamanızı keşfetmez; aşağıdaki TODO'ları kendi test ortamınıza göre doldurun.
+// Rehber: {{HDL}}/docs/adapter-guide.md   Örnek: {{HDL}}/examples/profile-demo/adapter.ts
+import { AdapterError, defineAdapter } from '{{HDL}}/packages/playwright/src/index.ts';
+
+export default defineAdapter({
+  id: 'my-app',            // TODO
+  version: '0.1.0',
+  capabilities: {
+    control: ['input-text'],
+    inputMethod: ['fill'],
+    // Gerçekten gözleyebildiğiniz sınırlar. 'submitted' gözlemiyorsanız listeden çıkarın; uydurmayın.
+    boundaries: ['authored', 'injected', 'readback'],
+    freshReadSource: 'ui-detail',
+    isolation: 'namespace',  // TODO: denemeye ait kayıtları nasıl ayırıyorsunuz?
+    cleanup: 'verified-delete',
+  },
+
+  // İsteğe bağlı: test kullanıcısıyla oturum. Dönen state artifact'a yazılmaz.
+  // async authenticate(browser, baseURL) { … return await ctx.storageState(); },
+
+  // Hata mesajlarından maskelenecek sırlar (test token, parola).
+  secrets: () => [process.env.MY_APP_TEST_TOKEN ?? ''],
+
+  async prepare(ctx) {
+    const namespace = `hdl-${ctx.identity.runId}-${ctx.identity.attemptId}`.toLowerCase();
+    ctx.allocations.reserve(namespace); // ilk mutasyondan ÖNCE
+    // TODO: test ortamınızda bu denemeye ait temiz bir alan hazırlayın (tenant, etiket, test-fixture endpoint…).
+    // Veritabanını topluca SİLMEYİN; yalnız bu namespace.
+    return { namespace, resourceIds: [], allocationLogRef: ctx.allocations.ref };
+  },
+
+  async create(ctx, own, value) {
+    const page = await ctx.newPage();
+    await page.goto('/TODO/new');
+    const field = await ctx.unique(page.getByLabel('TODO alan etiketi', { exact: true }), 'TODO alan');
+    await field.fill(value);
+    ctx.observe('injected', { status: 'observed', value: await field.inputValue(), source: 'dom-input' });
+    // TODO: kaydet; uygulamanın kabul kanıtını (kayıt kimliği) okuyun. HTTP 200 veya toast tek başına kabul değildir.
+    // Beklenmedik yanıtta tekrar göndermeyin: ilk istek kaydı yaratmış olabilir.
+    throw new AdapterError('create henüz bağlanmadı', 'configuration');
+  },
+
+  async readFresh(ctx, _own, recordId) {
+    // Yeni sayfa + kayıt kimliği: aynı formun bellekteki değerini okumayın.
+    const page = await ctx.newPage();
+    await page.goto(`/TODO/${encodeURIComponent(recordId)}`);
+    const el = await ctx.unique(page.getByTestId('TODO'), 'TODO');
+    const value = await el.textContent();
+    return { status: value === null ? 'not-observed' : 'observed', value: value ?? undefined, source: 'ui-detail' };
+  },
+
+  async cleanup(_ctx, _own) {
+    // TODO: yalnız own.namespace içindeki kaynakları silin ve silindiğini DOĞRULAYIN. İdempotent olmalı.
+    return { status: 'failed', detail: 'cleanup henüz bağlanmadı' };
+  },
+});

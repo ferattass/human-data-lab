@@ -92,7 +92,7 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
   const redact = (e: unknown, o: { multiline?: boolean } = {}) => redactMessage(e, secrets, o);
 
   // ---------- Preflight: şema hatasında browser mutasyonu başlamaz (§22, A14) ----------
-  let fixtures: Array<{ fixture: Fixture; value: string; origin: string }> = [];
+  let fixtures: Array<{ fixture: Fixture; value: string; origin: string; expect?: 'must-accept' | 'must-reject' }> = [];
   let corpusInfo = { id: 'inline', version: '0.0.0', set: 'inline', digest: '' };
   const outOfScope: Array<{ fixtureId: string; reason: string }> = [];
   const allowed = (() => { try { return originsOf(config.allowedOrigins ?? []); } catch { return new Set<string>(); } })();
@@ -123,7 +123,7 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
     if (config.contract.readback.kind === 'readiness-signal' && typeof adapter.readiness !== 'function')
       throw new SchemaError('adapter yetenekleri', [{ path: 'readback', message: 'readiness-signal politikası adapter.readiness gerektirir' }]);
     if (opts.fixtures) {
-      fixtures = opts.fixtures.map((o) => ({ fixture: o.fixture, value: o.value ?? o.fixture.value, origin: o.origin }));
+      fixtures = opts.fixtures.map((o) => ({ fixture: o.fixture, value: o.value ?? o.fixture.value, origin: o.origin, expect: o.expect }));
       corpusInfo = { id: 'override', version: '0.0.0', set: opts.fixtures[0]?.origin ?? 'inline', digest: digestOf(opts.fixtures.map((o) => [o.fixture.id, o.value ?? o.fixture.value])) };
     } else {
       const c = loadCorpus(opts.corpusSet ?? config.corpus?.set ?? 'smoke', config.corpus?.file);
@@ -151,6 +151,7 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
 
   const applicable: Array<{ fixture: Fixture; value: string; origin: string; expect: 'must-accept' | 'must-reject' }> = [];
   for (const f of fixtures) {
+    if (f.expect) { applicable.push({ ...f, expect: f.expect }); continue; }
     const r = resolveExpectation(contract, f.fixture);
     if (r.kind === 'out-of-scope') outOfScope.push({ fixtureId: f.fixture.id, reason: r.reason });
     else applicable.push({ ...f, expect: r.expect });

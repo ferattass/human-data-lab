@@ -1,0 +1,29 @@
+// TASLAK — hdl init tarafından üretildi.
+import { defineConfig } from '{{HDL}}/packages/playwright/src/index.ts';
+import adapter from './adapter.ts';
+
+const baseURL = process.env.MY_APP_URL ?? 'http://localhost:3000'; // TODO: yerel veya izinli staging
+
+export default defineConfig({
+  target: { name: 'my-app', baseURL },
+  allowedOrigins: [baseURL],             // gezinme, yönlendirme, fixture API ve cleanup yalnız buraya
+  adapter,
+  contract: {
+    schemaVersion: '0.1',
+    id: 'my-app.display-name',           // TODO
+    field: { id: 'display-name', control: 'input-text' },
+    inputMethod: 'fill',
+    // Kabul beklentisini SİZ seçersiniz; araç tahmin etmez. İlk eşleşen bağlanır.
+    expectations: [
+      { properties: ['technical-control'], expect: 'must-reject' },
+      { properties: '*', expect: 'must-accept' },
+    ],
+    preservation: [
+      { id: 'display-name-preserved', rule: 'text.exact.v1', required: true, boundary: ['authored', 'readback'] },
+      { id: 'input-preserved', rule: 'text.exact.v1', required: false, boundary: ['authored', 'injected'] },
+    ],
+    readback: { kind: 'first-independent-read' },
+  },
+  corpus: { set: 'smoke' },
+  artifactsDir: 'runs',
+});

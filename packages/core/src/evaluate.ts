@@ -76,8 +76,9 @@ export function evaluateTrial(input: EvaluateInput): AssertionResult[] {
     const [from, to] = check.boundary;
     const a = obs[from];
     const b = obs[to];
-    const missing = [a, b].find((o) => !o || o.status !== 'observed' || typeof o.value !== 'string');
-    if (missing) {
+    // Not: .find() burada kullanılamaz — eksik gözlem `undefined` olduğunda find da undefined döner ve eksiklik gizlenir.
+    const unusable = (o: typeof a) => !o || o.status !== 'observed' || typeof o.value !== 'string';
+    if (unusable(a) || unusable(b)) {
       // A11: gözlenmeyen değer yerine boş dizgi ÜRETİLMEZ.
       const which = !a || a.status !== 'observed' || typeof a.value !== 'string' ? from : to;
       out.push({ ...base, reason: `${which} gözlemi yok (${obs[which]?.status ?? 'kayıt yok'}${obs[which]?.note ? ': ' + obs[which]!.note : ''})` });

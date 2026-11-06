@@ -15,7 +15,7 @@
 //   extra-post             aynı endpoint'e önce bir "analitik" POST gönderir
 //   redirect-foreign       kayıttan sonra başka origin'e yönlendirir
 //   ambiguous-label        "Görünen ad" etiketli iki alan
-//   session-expire:N       oturum N kayıttan sonra geçersiz olur (Demo C)
+//   session-expire:N       oturum N detay sayfası görüntülemesinden sonra geçersiz olur (Demo C)
 //   prepare-crash          namespace rezervasyonu kaynak yaratıp 500 döner
 //   cleanup-fails          temizlik 500 döner
 //   background-rewrite     temizlikten sonra arka plan işi kayıt yazar
@@ -47,7 +47,7 @@ export async function startDemo(opts: DemoOptions = {}) {
   const password = opts.password ?? 'demo-password';
   const sessionLimit = Number([...bugs].find((b) => b.startsWith('session-expire:'))?.split(':')[1] ?? Infinity);
   const foreign = opts.foreignOrigin ?? 'http://foreign.example.test';
-  const sessions = new Map<string, { creations: number }>();
+  const sessions = new Map<string, { creations: number; views: number }>();
   const namespaces = new Map<string, Set<string>>();
   const records = new Map<string, Rec>();
   let nextId = 1;
@@ -87,7 +87,7 @@ export async function startDemo(opts: DemoOptions = {}) {
     const body = async () => { let b = ''; for await (const c of req) b += c; return b; };
     const sid = /(?:^|;\s*)sid=([a-f0-9]+)/.exec(req.headers.cookie ?? '')?.[1];
     const session = sid ? sessions.get(sid) : undefined;
-    const authed = !!session && session.creations < sessionLimit;
+    const authed = !!session && session.views < sessionLimit;
 
     // ---- sağlık / build kimliği ----
     if (url.pathname === '/health') return json(200, { ok: true, build });
@@ -99,7 +99,7 @@ export async function startDemo(opts: DemoOptions = {}) {
       const f = new URLSearchParams(await body());
       if (f.get('user') !== user || f.get('password') !== password) return send(401, page('Giriş', '<p role="alert">Hatalı giriş</p>'));
       const id = randomBytes(12).toString('hex');
-      sessions.set(id, { creations: 0 });
+      sessions.set(id, { creations: 0, views: 0 });
       return send(303, '', 'text/plain', { location: '/', 'set-cookie': `sid=${id}; Path=/; HttpOnly; SameSite=Lax` });
     }
     if (url.pathname === '/') return send(200, page('Demo', `<p>Sentetik profil demo uygulaması (${esc(build)}).</p>`));
@@ -197,6 +197,7 @@ f.addEventListener('submit', async (e) => {
       if (!r) return pm[1] ? json(404, { error: 'yok' }) : send(404, page('Yok', '<p>Profil bulunamadı</p>'));
       if (pm[3]) return json(200, { ready: true });
       if (pm[1]) return json(200, { id: r.id, displayName: r.displayName });
+      session!.views++;
       return send(200, page('Profil', `<h1>Profil</h1><p>Görünen ad: <output data-testid="display-name" data-record-id="${esc(r.id)}">${esc(r.displayName)}</output></p>${url.searchParams.get('saved') ? '<p role="status">Kaydedildi</p>' : ''}`));
     }
     send(404, page('Yok', 'bulunamadı'));

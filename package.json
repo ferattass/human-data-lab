@@ -1,23 +1,25 @@
 {
   "name": "human-data-lab",
-  "version": "0.3.0",
-  "description": "Gerçek insan metninin (Türkçe ı/İ, birleşik aksan, emoji, apostrof…) form → kaydet → okuma, arama, kimlik ve benzersiz ad yollarında bozulup bozulmadığını tarayıcıdan sınar.",
+  "version": "0.4.0",
+  "description": "Checks that human text your app accepts survives the save → fresh re-read journey, in a real browser.",
   "type": "module",
   "private": true,
-  "license": "MIT",
+  "license": "Apache-2.0",
   "bin": {
     "hdl": "bin/hdl.mjs"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22.18"
   },
   "scripts": {
-    "test": "node --test test/unit.test.mjs",
-    "test:e2e": "node --test test/e2e-demo.test.mjs",
-    "test:all": "node --test test/",
-    "demo": "node demo-app/server.mjs",
-    "assets": "node scripts/build-assets.mjs",
-    "repro:round3": "node experiments/repro-round3.mjs"
+    "typecheck": "tsc -p .",
+    "test": "node --test --test-concurrency=1 test/",
+    "test:unit": "node --test test/core.test.ts test/store.test.ts test/architecture.test.ts",
+    "test:research": "node --test research/test/unit.test.mjs",
+    "demo": "node bin/hdl.mjs demo",
+    "demo:server": "node examples/profile-demo/server.ts",
+    "assets": "node research/scripts/build-assets.mjs",
+    "repro:round3": "node research/experiments/repro-round3.mjs"
   },
   "keywords": [
     "unicode",
@@ -32,5 +34,15 @@
     "@playwright/test": "^1.64.1",
     "@types/node": "24.19.2",
     "typescript": "7.0.2"
-  }
+  },
+  "files": [
+    "bin",
+    "packages",
+    "examples",
+    "schema",
+    "docs",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ]
 }
