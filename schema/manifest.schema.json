@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ferattass/human-data-lab/schema/manifest.schema.json",
+  "title": "RunManifest",
+  "description": "manifest.json (§24, §27). Atomik yazılır; status=complete yalnız finalize sonrası. Dosya digest'leri bütünlük yardımcısıdır, özgünlük kanıtı değildir.",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "runId", "status", "startedAt", "cancelled", "syntheticDemo", "provenance", "problems", "files"],
+  "properties": {
+    "kind": { "const": "roundtrip-run" },
+    "status": { "enum": ["complete", "incomplete"] },
+    "exitCode": { "enum": [0, 1, 2, 3, 130] },
+    "replayOf": { "type": "object", "required": ["runId", "findingId", "mismatches"] },
+    "provenance": {
+      "type": "object",
+      "required": ["tool", "adapter", "target", "corpus", "contractDigest", "flowDigest", "browser", "runtime", "budgets", "allowedOrigins", "order"]
+    },
+    "summary": {
+      "type": "object",
+      "required": ["selected", "applicable", "outOfScope", "executed", "preservationChecked", "accepted", "rejected", "indeterminate", "executionErrors", "requiredFailed", "requiredNotRun", "cleanup", "findings"]
+    },
+    "problems": { "type": "array", "items": { "type": "string" } },
+    "files": { "type": "object", "additionalProperties": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" } }
+  }
+}

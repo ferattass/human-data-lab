@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ferattass/human-data-lab/schema/finding.schema.json",
+  "title": "Finding",
+  "description": "findings/<id>.json (§23–25). stable = belirtilen bağımsız tekrarlarda aynı imza; istatistiksel kesinlik veya kök neden kanıtı değildir.",
+  "type": "object",
+  "required": ["schemaVersion", "id", "fixtureId", "signature", "original", "reproducibility", "attemptsObserved", "attemptsReproduced", "syntheticDemo"],
+  "properties": {
+    "signature": { "type": "object", "required": ["adapterId", "fieldId", "boundary", "ruleId", "applicationOutcome", "differenceClass"] },
+    "original": { "type": "object", "required": ["value", "attemptIds"] },
+    "reproducibility": { "enum": ["not-checked", "stable", "unstable", "inconclusive"] },
+    "shrink": {
+      "type": "object",
+      "required": ["status", "best", "trialsUsed", "elapsedMs", "note"],
+      "properties": { "status": { "enum": ["not-attempted", "completed", "budget-exhausted", "stopped-unstable", "stopped-cleanup", "no-smaller-found"] } }
+    },
+    "syntheticDemo": { "type": "boolean" }
+  }
+}
