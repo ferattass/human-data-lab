@@ -1,343 +1,195 @@
 <div align="center">
 
-<img src="docs/assets/hero.svg" alt="human-data-lab — formdan geçen insan metni geri geldiğinde hâlâ aynı mı?" width="100%">
+<img src="docs/assets/hero.svg" alt="human-data-lab: formdan geçen insan metni geri geldiğinde hâlâ aynı mı?" width="100%">
 
 <br>
 
-![durum](https://img.shields.io/badge/durum-prototip%20v0.3-2dd4bf?style=flat-square)
-![node](https://img.shields.io/badge/node-%E2%89%A520-60a5fa?style=flat-square)
-![playwright](https://img.shields.io/badge/playwright-chromium-60a5fa?style=flat-square)
-![testler](https://img.shields.io/badge/testler-15%20birim%20%C2%B7%206%20u%C3%A7tan%20uca-2dd4bf?style=flat-square)
-![lisans](https://img.shields.io/badge/lisans-MIT-94a3b8?style=flat-square)
+![lisans](https://img.shields.io/badge/lisans-Apache--2.0-c2410c?style=flat-square)
+![node](https://img.shields.io/badge/node-%E2%89%A522.18-60a5fa?style=flat-square)
+![browser](https://img.shields.io/badge/browser-Chromium-60a5fa?style=flat-square)
+![kabul](https://img.shields.io/badge/kabul%20senaryosu-42%2F42-2dd4bf?style=flat-square)
+![durum](https://img.shields.io/badge/durum-v0.4%20prototip-94a3b8?style=flat-square)
 
-**İnsan adlarını gerçek uygulamalara tarayıcıdan yazar, geri okur, arar, birbirine karıştırmaya çalışır.**<br>
-Türkçe ı/İ, birleşik aksan, emoji, apostrof, aksanlı ikizler — testlerde olmayan ama kullanıcıda olan metin.
+**Bir formun "Kaydedildi" demesi yeterli değil.**<br>
+Uygulamanızın kabul ettiği insan metninin (Türkçe ı/İ, birleşik aksan, emoji, sağdan sola yazı) kaydet → taze okuma yolculuğunda<br>
+korunup korunmadığını gerçek tarayıcıda sınar. Bulguyu kod noktası düzeyinde kanıtla, tekrar üretim bilgisiyle ve regresyon testi olarak teslim eder.
 
-[Ne buldu](#-ne-buldu) · [Nasıl çalışır](#-nasıl-çalışır) · [Hızlı başlangıç](#-hızlı-başlangıç) · [Adapter yaz](#-kendi-uygulaman-için-adapter) · [Deneyleri tekrar üret](#-deneyleri-tekrar-üret) · [Sınırlar](#-sınırlar)
+<sub>*Open-source testing tool that checks whether human text your app accepts survives the save → fresh re-read journey, using a real browser via Playwright.*</sub>
+
+[30 saniyelik demo](#-30-saniyelik-demo) · [Nasıl çalışır](#-nasıl-çalışır) · [Kendi uygulamanızda](#-kendi-uygulamanızda) · [Playwright testinde](#-mevcut-playwright-testinde) · [Sözleşmeler](docs/contracts.md) · [Kapsam](docs/scope.md)
 
 </div>
 
 ---
 
-## ✦ Neden
+## ▶ 30 saniyelik demo
 
-Çoğu form testi `"John Smith"` ile yazılır. Gerçek kullanıcılar ise **Işık Yıldız**, **O'Brien**, **José** (bazen ayrık aksanla), **Ayşe 🙂** yazar.
-Bu değerler çoğu zaman *kaydedilir* — "Başarılı" mesajı gelir — ama:
+```bash
+npm ci
+npx playwright install chromium
+npm run demo
+```
 
-- geri okunduğunda **boş** ya da kırpılmış olabilir,
-- kendi adıyla **aranınca bulunamaz**,
-- yalnız aksanla ayrılan başka bir kayda (**Cam → Çam**) **yazılır**.
+Hesap, model anahtarı veya bulut gerekmez. Yerel bir **sentetik** profil uygulaması, doğru modda ve üç bilinçli hatayla çalışır (rapor §35):
 
-human-data-lab bu üç yolu (*roundtrip*, *arama*, *eşleme*) gerçek tarayıcıdan, gerçek uygulamalarda, tekrar üretilebilir ve **sapma noktası ayrıştırılmış** biçimde ölçer.
+<img src="docs/assets/demo.svg" alt="hdl demo: doğru mod exit 0, A işaret kaybı exit 1, B izinli NFC exit 0, C red ve oturum engeli exit 2" width="100%">
 
----
+| Senaryo | Ders |
+|---|---|
+| **Doğru mod** | 24 fixture'lık smoke corpus aynen korunur; NUL içeren teknik kontrol girdisi doğru reddedilir. |
+| **A · Başarı mesajının arkasındaki kayıp** | Sunucu birleşik işaretleri atar. "Kaydedildi" görünür, taze okuma farklıdır. Bulgu 3/3 kararlı, `"İpek Çağlar"` → `"İ"` diye küçültülür. Rapor kök neden uydurmaz; ilk gözlenen sapmayı gösterir. |
+| **B · Farklı kod noktası, izinli eşdeğerlik** | Sunucu NFC uygular. Açık `text.nfc.v1` politikası geçer, tanısal exact kontrolü ham farkı görünür tutar. Araç her farkı hata ilan etmez. |
+| **C · Red, ihlal ve yürütme engeli** | Beklenen red korunma başarısı sayılmaz; oturum düşmesi "Unicode bozuldu" diye raporlanmaz. |
 
-## ◆ Ne buldu
+Her senaryo bir HTML raporu üretir. Raporlar script çalıştırmaz, dış kaynak yüklemez, veriyi escape'ler:
 
-3 tur, 3 açık kaynak uygulama (WordPress, Gitea, Redmine · yerel Docker, sentetik veri). Ayrıntı ve ham kanıt: [`FINDINGS.md`](FINDINGS.md), `runs/*.json`.
-
-| # | Uygulama | Ne oluyor | Tür | Kanıt |
-|:-:|---|---|---|---|
-| 1 | **Redmine 7.0.3** wiki (MySQL) | `Cam` sayfasını kaydetmek **`Çam` sayfasının üzerine yazar**. Şiş/Sis, Göl/Gol, Año/Ano, Straße/Strasse, Résumé/Resume de aynı. | sessiz üzerine yazma | `app/models/wiki.rb:58` `LOWER(title) = LOWER(?)` + `utf8mb4_0900_ai_ci` |
-| 2 | **WordPress 7.1.4** Hızlı Düzenle | `Sis` etiketi yazılır, yazıya **`Şiş`** bağlanır. `C` yazılır → **`C++`**. Etiket yoksa 10/10 aksan/noktalama çifti karışır. | sessiz yanlış eşleme | `taxonomy_meta_box_sanitize_cb_input()` (collation) → `term_exists()` (slug) |
-| 3 | **WordPress 7.1.4** yorum araması | `O'Brien` adlı yorumcu **tam adıyla bulunamaz** (`Brien` ile bulunur). | arama hatası | SQL: `LIKE '%O\\\'Brien%'` (wp_magic_quotes eğik çizgisi kalıyor) |
-| 4 | Redmine · WordPress · Gitea | `Ilık Işık` Türkçe küçük/büyük harfle (`ılık ışık`, `ILIK IŞIK`) **bulunamaz**. | varsayılan collation | MySQL `0900_ai_ci` / Postgres; `tr_0900_ai_ci` ile düzeliyor |
-| 5 | WordPress (eski `utf8mb3` tablo) | `Ayşe 🙂` → "New user created" der, **ad boş kaydedilir**. | sessiz veri kaybı | `meta_value = ''` (MySQL'de doğrulandı) |
-
-**Sağlam çıkanlar (negatif sonuçlar da sonuçtur):** modern stack'te 25 fixture'lık roundtrip (4 alan, 3 uygulama, 0 ihlal) · e-posta kimliği (12 çift × 3 uygulama, aynı posta kutusuna ikinci hesap: 0) · Redmine CSV dışa aktarımı (UTF-8 + BOM).
-
-<br>
-
-<img src="docs/assets/collision.svg" alt="Redmine'de Cam kaydı Çam sayfasının üzerine yazar; WordPress'te Sis etiketi Şiş'e bağlanır" width="100%">
-
-<details>
-<summary><b>Tek komutla tekrar üret</b> — <code>npm run repro:round3</code></summary>
-<br>
-<img src="docs/assets/terminal.svg" alt="repro-round3 çıktısı: altı HATA satırı ve Kır/Kir kontrolü OK" width="100%">
-
-Kontrol çifti **Kır/Kir** doğru geçer: MySQL `0900_ai_ci` ı ile i'yi ayırır. Bu, hatayı tahmin değil **collation davranışı** olarak bağlamayı mümkün kıldı.
-</details>
+<img src="docs/assets/report-demo-a.png" alt="Demo A raporu (sentetik): paydalar, required ihlaller, temizlik durumu ve aşama aşama authored/injected/submitted/readback değerleri" width="100%">
 
 ---
 
 ## ◇ Nasıl çalışır
 
-<img src="docs/assets/pipeline.svg" alt="Yazılan → forma giren → kaydet → taze okuma; ilk sapma işaretlenir" width="100%">
+<img src="docs/assets/pipeline.svg" alt="yazılan → forma giren → kaydet → taze okuma; ilk sapma işaretlenir" width="100%">
 
-Her deney aynı ilkeyle kurulur: **kabul ile korunma ayrı ölçülür**, okuma **yeni bir tarayıcı oturumunda** yapılır, ilk sapma noktası raporlanır.
-Gitea'daki uzun ad kesilmesi bu sayede sunucuya değil, tarayıcıdaki `maxlength=100`'e bağlandı (ilk sapma: `injected`).
+1. **Akışı tanımla.** Adapter `prepare / create / readFresh / cleanup` adımlarını sizin uygulamanıza bağlar.
+2. **Beklentiyi siz seçin.** Hangi fixture ailesi kabul edilmeli, hangisi reddedilmeli, metin exact mı korunmalı yoksa NFC eşdeğerliği yeterli mi? Araç tahmin etmez.
+3. **Gerçek uygulamada dene.** Her fixture ayrı namespace'te, yeni browser context'inde çalışır. Kayıt kimliğiyle bağımsız taze okuma yapılır.
+4. **Kurala göre karşılaştır.** `authored`, `injected`, `submitted` ve `readback` gözlemleri ayrı tutulur. Kabul ile korunma iki ayrı assertion'dır.
+5. **Hatayı yeniden üret.** Bulgu 3 bağımsız denemede doğrulanır, aynı imzayı koruyan bütçeli küçültme yapılır, `repro/f1.spec.ts` yazılır.
 
 ```mermaid
 flowchart LR
-    subgraph korpus[Korpus]
-      T[text-smoke<br/>25 fixture]
-      E[email-identity<br/>12 çift]
-      N[name-pairs<br/>13 çift]
-    end
-    subgraph kosucu[Koşucular]
-      R[roundtrip]
-      S[search<br/>+ negatif kontrol]
-      I[identity]
-      C[collision]
-    end
-    subgraph adapter[Adapter · uygulamaya özgü tek dosya]
-      A1[create / readFresh]
-      A2[search]
-      A3[createUser / readEmail]
-      A4[save / read]
-    end
-    T --> R & S
-    E --> I
-    N --> C
-    R --- A1
-    S --- A2
-    I --- A3
-    C --- A4
-    adapter -->|Playwright · Chromium| APP[(Gerçek uygulama)]
-    R & S & I & C --> OUT[runs/*.json<br/>+ çıkış kodu]
+  subgraph cli[cli]
+    run[hdl run / replay / report / cleanup / export]
+  end
+  subgraph pw[playwright]
+    life[yaşam döngüsü · bütçe · iptal · origin allowlist<br/>tekrar · küçültme]
+    ad[[uygulama adapter'ı<br/>prepare · create · readFresh · cleanup]]
+  end
+  core[core<br/>sözleşme · oracle · sonuç modeli<br/><i>Playwright/fs bağımlılığı yok</i>]
+  corpus[corpus<br/>99 sentetik fixture]
+  store[store<br/>run-&lt;id&gt;/ · atomik manifest]
+  rep[reporter<br/>inert JSON → HTML]
+  run --> life --> ad --> app[(test ortamındaki<br/>uygulamanız)]
+  life --> core
+  life --> corpus
+  life --> store --> rep
 ```
 
-| Koşucu | Soru | Kural | Hüküm |
-|---|---|---|---|
-| `roundtrip` | Kaydedilen metin aynen geri geliyor mu? | `text.exact.v1` (örtük trim / case-fold / NFKC **yok**); `text.nfc.v1` ayrıca | fark sınıfı: `emptied`, `truncated`, `marks-stripped`, `normalization-form-changed`, … |
-| `search` | Kayıt, kullanıcının yazabileceği biçimlerle bulunuyor mu? | yalnız `exact` zorunlu; diğer 8 biçim gözlem | anlamsız sorgu "bulundu" derse koşu **durur** (exit 2) |
-| `identity` | Aynı posta kutusunun farklı yazımı ikinci hesap açıyor mu? | `sameMailbox` çiftlerinde ikinci kabul = ihlal | sessiz değişiklik ayrıca işaretlenir |
-| `collision` | Yalnız aksan/noktalamayla ayrılan adlar ayrı kayıt kalıyor mu? | `distinct` / `policy` / `control` beklentisi | `overwritten` · `merged` · `rejected` · `renamed` · `distinct` |
+**Tek yeşil yok.** Her deneme beş bağımsız boyutta raporlanır: `execution`, `applicationOutcome`, assertion durumu, `cleanup` ve `reproducibility`. Çalışmayan bir required kontrol asla "geçti" görünmez:
 
-<img src="docs/assets/matrix.svg" alt="Arama matrisi: Ilık Işık Türkçe küçük/büyük harfle üç uygulamada da bulunamaz; WordPress'te O'Brien hiç bulunamaz" width="100%">
-
----
-
-## ▶ Hızlı başlangıç
-
-```bash
-npm install
-npx playwright install chromium
-
-npm test              # 15 birim testi (saf modüller, tarayıcı yok)
-npm run test:e2e      # 6 uçtan uca test: demo uygulaması doğru + hata modlarında
-```
-
-Docker gerektirmeyen demo:
-
-```bash
-npx hdl demo                        # doğru mod, :4310
-PORT=4311 npx hdl demo latin1       # kasıtlı hata modu
-PORT=4312 npx hdl demo fold-lookup  # Redmine/MySQL tarzı aksan duyarsız eşleme
-
-BASE_URL=http://localhost:4311 npx hdl roundtrip adapters/demo.mjs
-BASE_URL=http://localhost:4312 npx hdl collision adapters/demo-pages.mjs
-```
-
-<details>
-<summary><b>Demo hata modları</b></summary>
-
-| Mod | Taklit ettiği |
-|---|---|
-| `trim`, `collapse-space` | sanitize fonksiyonları (WordPress `sanitize_text_field` gibi) |
-| `nfc`, `strip-marks` | normalleştirme / aksan atma |
-| `latin1` | tek baytlık kodlamaya dönüşüm (`?` ile değiştirme) |
-| `utf8mb3` | MySQL 3 baytlık UTF-8: ilk emojide metni keser |
-| `truncate50` | sessiz uzunluk kesmesi |
-| `fold-lookup` | benzersiz ad eşlemesi aksan + büyüklük duyarsız (MySQL `*_ai_ci`) |
-| `slug-lookup` | benzersiz ad slug ile eşlenir (WordPress `term_exists`) |
-
-Virgülle birleştirilebilir: `npx hdl demo trim,nfc`.
-</details>
-
-### Komutlar
-
-```text
-hdl roundtrip <adapter> [--corpus text-smoke] [--exclude emoji,…] [--out f.json]
-hdl search    <adapter> [--only id,…] [--out f.json]
-hdl identity  <adapter> [--only id,…] [--out f.json]
-hdl collision <adapter> [--only id,…] [--out f.json]
-hdl demo      [hata,modu,…]
-```
-
-**Çıkış kodları** — CI'da doğrudan kapı olarak kullanılabilir:
-
-| Kod | Anlam |
+| Exit | Anlam |
 |:-:|---|
-| `0` | ihlal yok |
-| `1` | ihlal bulundu (exact roundtrip, zorunlu arama, ikinci hesap, karışan ad) |
-| `2` | sonuç **güvenilmez**: çalışmayan kontrol, sunucu hatası, negatif kontrol başarısız, kontrol çifti karıştı |
-
-`2`'nin ayrı olması bilinçli: üç turda dört sahte sonuç yakalandı (adapter yarışı, değişmiş URL formatı, sayfa başlığındaki profil bağlantısı). Araç "yeşil" demeden önce kendini sınar.
+| `0` | Gerekli kontroller tamamlandı; ihlal veya çözümsüz durum yok |
+| `1` | En az bir required ihlal |
+| `2` | Yapılandırma, yürütme, eksik kanıt veya belirsiz sonuç (**required not-run dahil**) |
+| `3` | Cleanup doğrulanamadı; sahipli veri için işlem gerekiyor |
+| `130` | Kullanıcı iptali; kısmi sonuç ve cleanup durumu JSON'da |
 
 ---
 
-## ✎ Kendi uygulaman için adapter
+## ⌂ Kendi uygulamanızda
 
-Uygulamaya özgü her şey tek dosyada; koşucular aynı kalır. Gerçek örnekler: [`adapters/`](adapters/) (WordPress, Gitea, Redmine, demo).
-
-<details open>
-<summary><b>roundtrip</b> — iki fonksiyon</summary>
-
-```js
-// adapters/benim-uygulamam.mjs
-export default {
-  name: 'benim-uygulamam-ad',
-  async newContext(browser) { /* isteğe bağlı: oturum açılmış context */ return browser.newContext(); },
-  async create(page, value) {
-    await page.goto('http://localhost:3000/people/new');
-    const field = page.getByLabel('Ad');
-    await field.fill(value);
-    const injected = await field.inputValue();          // tarayıcının gerçekte gönderdiği
-    await page.getByRole('button', { name: 'Kaydet' }).click();
-    const id = page.url().match(/\/people\/(\d+)/)?.[1];
-    return id ? { injected, recordId: id } : { injected, rejected: 'doğrulama mesajı…' };
-  },
-  async readFresh(context, id) {                         // YENİ context: önbellek/form durumu taşınmaz
-    const page = await context.newPage();
-    await page.goto(`http://localhost:3000/people/${id}/edit`);
-    return page.getByLabel('Ad').inputValue();
-  },
-};
-```
-</details>
-
-<details>
-<summary><b>search</b> — <code>search(context, query, recordId) → { found }</code></summary>
-
-Sonuç sayfasında **o kaydın** bağlantısını ara, genel bir metni değil. Koşucu ilk fixture'dan önce anlamsız bir sorgu gönderir; `found: true` dönerse adapter güvenilmez sayılır ve matris üretilmez.
-</details>
-
-<details>
-<summary><b>identity</b> — <code>createUser(page, { login, email })</code> · <code>readEmail(context, id)</code></summary>
-
-`type="email"` alanı değeri tarayıcıda kendisi düzeltebilir (boşluk, IDN). Sunucu davranışını ölçmek için alanı `text` yapın — gerçek adapter'lar bunu yapar.
-</details>
-
-<details>
-<summary><b>collision</b> — <code>save(page, { name, body }) → { recordId }</code> · <code>read(context, id) → { name, body? }</code></summary>
-
-`recordId` uygulamanın **gerçekte yazdığı** kaydın kimliği olmalı (yönlendirilen URL, bağlanan etiketin id'si) — girilen ad değil.
-Gövdesi olmayan kayıtlar (etiket, kategori) için `bodyless: true` verin.
-</details>
-
-### Mevcut Playwright testinde
-
-```js
-import { test } from '@playwright/test';
-import { loadCorpus, expectTextPreserved } from 'human-data-lab/src/index.mjs';
-
-for (const f of loadCorpus('text-smoke', { exclude: ['emoji'] })) {
-  test(`ad korunur: ${f.id}`, async ({ page }) => {
-    /* doldur, kaydet, yeniden aç */
-    expectTextPreserved(f.value, readback, { label: f.id });
-  });
-}
+```bash
+npx hdl init --adapter playwright        # hdl/adapter.ts + hdl/roundtrip.config.ts taslakları (siteyi keşfetmez)
+# TODO'ları doldurun: alan seçicisi, kayıt kimliği, test namespace'i, temizlik yolu
+npx hdl run hdl/roundtrip.config.ts --corpus smoke
 ```
 
-Başarısızlıkta mesaj kod noktası düzeyindedir:
+Önkoşullar: yerel veya izinli staging ortamı, test kullanıcısı, kaydı kimliğiyle yeniden bulma yolu, deneme başına ayrı namespace ve doğrulanabilir temizlik. Rehber: [`docs/adapter-guide.md`](docs/adapter-guide.md). Çalışan örnek: [`examples/profile-demo`](examples/profile-demo).
+
+```bash
+npx hdl replay runs/run-<id> --finding f1 --config hdl/roundtrip.config.ts   # saklı somut değerle, aynı hedefte
+npx hdl report runs/run-<id>                                                 # bütünlük denetimi + rapor
+npx hdl cleanup runs/run-<id> --owned-only --config hdl/roundtrip.config.ts  # yalnız sahipli kaynaklar
+npx hdl export runs/run-<id> --out share/                                    # allowlist; auth/trace hariç
+```
+
+---
+
+## ✎ Mevcut Playwright testinde
+
+Ayrı bir CLI veya auth düzeni kopyalamadan:
+
+```ts
+import { test, expect, expectTextPreserved } from 'human-data-lab/packages/playwright/src/test.ts';
+
+test('profil adı korunur', async ({ humanData }) => {
+  const r = await humanData.trial({ config, fixtureId: 'tr-i.dotted-capital.002', value: 'İpek Çağlar' });
+  expect(r.violations, r.describe).toEqual([]);
+});
+
+// Kendi kaydet/yeniden-aç adımlarınızı yazıyorsanız yalnız kural:
+expectTextPreserved('İpek Çağlar', await page.getByTestId('display-name').textContent());
+```
+
+Başarısızlıkta açıklama kod noktası düzeyindedir:
 
 ```text
-Metin korunmadı [tr.dotted-capital-i.001]
-kural: text.exact.v1 → failed
-fark sınıfı: marks-stripped  (ilk fark: 0 . kod noktası)
+kural: text.exact.v1
+fark sınıfı: marks-stripped  (ilk fark: 0. kod noktası)
 beklenen: "İpek Çağlar"
-okunan:   "Ipek Caglar"
+görülen:  "Ipek Caglar"
 beklenen kod noktaları: U+0130 U+0070 U+0065 U+006B U+0020 U+00C7 U+0061 U+011F U+006C U+0061 U+0072
-okunan kod noktaları:   U+0049 U+0070 U+0065 U+006B U+0020 U+0043 U+0061 U+0067 U+006C U+0061 U+0072
+görülen kod noktaları:  U+0049 U+0070 U+0065 U+006B U+0020 U+0043 U+0061 U+0067 U+006C U+0061 U+0072
 ```
+
+Tam örnek: [`examples/existing-test`](examples/existing-test). Doğru modda 5/5 yeşil, bozuk modda 3 kırmızı ve açıklamalı.
 
 ---
 
-## ⧉ Korpus
+## ⧉ Corpus
 
-| Dosya | İçerik |
-|---|---|
-| [`corpus/text-smoke.json`](corpus/text-smoke.json) | 25 fixture: Türkçe ı/İ ve tam alfabe, NFC/NFD/yığılmış aksan, ASCII ve tipografik apostrof, kısa çizgi, baş/son/çift boşluk, NBSP, Arapça, İbranice, Farsça ZWNJ, CJK (BMP ve astral), Devanagari, Yunanca son sigma, ß, emoji (temel, ZWJ dizisi, ten tonu), uzun ad |
-| [`corpus/email-identity.json`](corpus/email-identity.json) | 12 çift: büyüklük, boşluk, IDN ↔ punycode, NFD, tam genişlik, ı/İ, Kelvin `K`, uzun `ſ` |
-| [`corpus/name-pairs.json`](corpus/name-pairs.json) | 13 çift: çam/cam, şiş/sis, kül/kul, göl/gol, kır/kir, año/ano, Straße/Strasse, résumé/resume, C++/C, C#/C, Ankara/ANKARA, tam genişlik + **kontrol** Elma/Armut |
+99 sentetik fixture, 11 aile, `smoke` seti 24 fixture ([`packages/corpus`](packages/corpus)):
+Latin pozitif kontrol · Türkçe I ailesi · önceden birleşmiş/ayrık aksan · NFKC uyumluluk · apostrof ve tire · boşluk, NBSP, görünmez karakter · uzunluk birimleri · Latin dışı ve RTL yazı · emoji/ZWJ · satır sonu (textarea) · teknik kontrol (must-reject).
 
-Korpus sentetik; gerçek kişi verisi içermez. Her fixture'ın `properties` etiketi var; `--exclude` ile alt küme seçilir.
+Ülke stereotipi değil, **sınanan metin davranışı** yazılır. Görünmez karakterler incelenebilsin diye her değer `\uXXXX` kaçışlıdır. Gerçek kişi verisi ve saldırı payload'ı yoktur. Kabul politikasını fixture değil sözleşme belirler.
 
 ---
 
-## ↻ Deneyleri tekrar üret
+## ✓ Neyi kanıtlıyoruz
 
 ```bash
-cd experiments/wordpress && docker-compose up -d    # :8081
-cd experiments/gitea     && docker-compose up -d    # :8082
-cd experiments/redmine   && docker-compose up -d    # :8083
+npm run typecheck    # TypeScript 7, build adımı yok
+npm test             # 57 test: 42 kabul senaryosu (A01–C14) + mimari + şema + Playwright entegrasyonu
 ```
 
-Adapter'lar şu yönetici hesaplarını bekler: WordPress `admin / admin12345`, Gitea `hdladmin / admin12345`, Redmine `admin / admin12345`. Örnek kurulum:
+Raporun 42 çekirdek kabul senaryosu test adlarıyla izlenir; `test/matrix.test.ts` bir senaryonun testi kaybolursa kırılır. Testlerin çoğu **gerçek Chromium** ve kasıtlı hata modlu demo uygulamasıyla koşar. Bu testler geliştirme sırasında üç gerçek motor hatasını yakaladı:
 
-```bash
-# WordPress
-docker-compose run --rm cli wp core install --url=http://localhost:8081 --title=hdl \
-  --admin_user=admin --admin_password=admin12345 --admin_email=admin@example.com --skip-email
-# Gitea
-docker exec -u git gitea-gitea-1 gitea admin user create --admin \
-  --username hdladmin --password admin12345 --email hdladmin@example.com --must-change-password=false
-# Redmine (varsayılan admin/admin; ilk girişte değiştirin ya da)
-docker exec -e SECRET_KEY_BASE=hdltestsecretkeybasehdltestsecretkeybase redmine-redmine-1 bin/rails runner \
-  "u=User.find_by_login('admin'); u.password=u.password_confirmation='admin12345'; u.must_change_passwd=false; u.save!"
-```
+- Eksik readback gözlemi `Array.find` yüzünden gizleniyordu.
+- İptalden sonra yarım kalan bir adapter çağrısı, cleanup'tan sonra yeni kayıt yaratabiliyordu.
+- ASCII dışı bir dizin adı (`Yayında`) demo sunucusunun başlamasını engelliyordu.
 
-```bash
-npx hdl collision adapters/redmine-wiki.mjs        # Bulgu 1
-npx hdl collision adapters/wp-tag-quickedit.mjs    # Bulgu 2
-npx hdl search    adapters/wp-comment.mjs          # Bulgu 3–4
-npm run repro:round3                               # 1 + 2, tek komut, kontrol çiftli
-```
-
-Görseller veriden üretilir: `npm run assets` (`runs/search-*.json` → `docs/assets/matrix.svg`).
+Kapsam ve sınırlar: [`docs/scope.md`](docs/scope.md) · ölçülmüş süreler: [`docs/performance.md`](docs/performance.md) · teknik review cevapları: [`docs/review.md`](docs/review.md).
 
 ---
 
 ## ⚠ Sınırlar
 
-Dürüst olmak gerekirse:
-
-- **Giriş yöntemi:** Chromium + Playwright `fill`. IME, gerçek klavye, yapıştırma, mobil klavye ve otomatik düzeltme test edilmedi.
-- **Ölçek:** uygulama başına bir veya birkaç alan; tam uygulama taraması değil.
-- **Ortam:** Docker'daki varsayılan kurulumlar. Postgres'li Redmine, farklı MySQL collation'ları, eklentili WordPress denenmedi.
-- **Kayıt durumu:** Bulgu 2–3'ün WordPress Trac'te bilinen bir kaydı olup olmadığı elle kontrol edilmeli (Trac otomatik erişimi engelliyor).
-- **Hüküm kapsamı:** sonuç yalnız seçilen kural ve okuma yolu için geçerlidir; "sağlam" = bu korpus ve bu yol için ihlal görülmedi.
+- **Chromium + Playwright `fill`.** Gerçek klavye, IME composition, yapıştırma ve diğer tarayıcılar doğrulanmış sayılmaz.
+- **Tek alan, tek metin roundtrip'i.** Arama, CSV/export, tarih, sayı ve zengin metin sonraki fazdır.
+- **İddia yalnız gözlenen okuma yoluyla sınırlıdır.** UI okuması API'yi, API okuması render'ı kanıtlamaz. "İlk gözlenen sapma" kök neden değildir.
+- **Kullanıcı pilotu ve rakip benchmark'ı yapılmadı.** Yöntemleri [`docs/pilot.md`](docs/pilot.md) ve [`docs/benchmark.md`](docs/benchmark.md) içinde, sonuç uydurulmadı.
+- Araç test ortamında **yazma işlemi yapar.** Yalnız yerel veya açıkça izinli ortamlarda çalıştırın: [`SECURITY.md`](SECURITY.md).
 
 ---
 
-## ⌂ Proje yapısı
+## Belgeler
 
-```text
-bin/hdl.mjs              tek CLI
-src/
-  compare.mjs            saf karşılaştırıcılar, fark sınıflandırma, kod noktası açıklaması
-  index.mjs              roundtrip + expectTextPreserved + loadCorpus
-  run.mjs                roundtrip koşucusu
-  variants.mjs           arama sorgusu biçimleri (tr/root küçük-büyük, NFD, ASCII…)
-  search-run.mjs         arama koşucusu (negatif kontrollü)
-  identity.mjs           posta kutusu anahtarı, kimlik işaretleri
-  identity-run.mjs       e-posta kimlik koşucusu
-  collision.mjs          çakışma sınıflandırıcı + hüküm
-  collision-run.mjs      çakışma koşucusu
-  csv.mjs                beyan edilen charset'le CSV çözme (RFC 4180)
-adapters/                demo, WordPress, Gitea, Redmine
-corpus/                  text-smoke, email-identity, name-pairs
-demo-app/server.mjs      hata modlu sentetik uygulama
-experiments/             docker-compose dosyaları + repro-round3.mjs
-runs/                    ham koşu sonuçları (JSON)
-test/                    birim + uçtan uca testler
-docs/assets/             README animasyonları (SVG, script yok)
-scripts/build-assets.mjs veri taşıyan görselleri runs/ içinden üretir
-```
+| | |
+|---|---|
+| [`docs/contracts.md`](docs/contracts.md) | Fixture, akış sözleşmesi, gözlem sınırları, sonuç modeli, kanıt paketi, replay, küçültme |
+| [`docs/adapter-guide.md`](docs/adapter-guide.md) | Kendi uygulamanız için adapter yazmak |
+| [`docs/scope.md`](docs/scope.md) | v0.1 kapsam sözleşmesi ve bilinen sınırlar |
+| [`docs/adr/`](docs/adr) | Karar kayıtları |
+| [`docs/traceability.md`](docs/traceability.md) | Ürün raporunun her bölümü → kod ve test |
+| [`schema/`](schema) | Sürümlü JSON Schema'lar |
+| [`research/`](research) | Erken deneyler (arama, e-posta kimliği, ad çakışması): **deneysel**, v0.1 kapsamı dışında |
 
----
+## Katkı ve lisans
 
-## ➜ Yol haritası
+[`CONTRIBUTING.md`](CONTRIBUTING.md) · [`SECURITY.md`](SECURITY.md) · [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)
 
-- [ ] Ad çifti korpusunu büyütmek (Lehçe, Vietnamca, Çekçe aksan ikizleri; Japonca kana genişliği)
-- [ ] Postgres'li Redmine ve `utf8mb4_tr_0900_ai_ci` ile karşılaştırmalı koşu
-- [ ] Giriş yöntemi katmanı: `keyboard.type`, pano yapıştırma, IME simülasyonu
-- [ ] Dışa aktarım yolları: CSV/XLSX/PDF için ortak `exportValue` sözleşmesi
-- [ ] Bulguların sorumlu bildirimi (WordPress Trac, Redmine.org) — bildirimden önce mevcut kayıtlar kontrol edilecek
+[Apache License 2.0](LICENSE). "Human Data Lab" bir çalışma adıdır; marka, alan adı veya npm adı tahsis edilmemiştir ([`NOTICE`](NOTICE)).
 
----
-
-<div align="center">
-<sub>MIT · Sentetik veri · Animasyonlar <code>prefers-reduced-motion</code> ayarına uyar</sub>
-</div>
+<div align="center"><sub>Animasyonlar <code>prefers-reduced-motion</code> ayarına uyar · Tüm demo verisi sentetiktir</sub></div>

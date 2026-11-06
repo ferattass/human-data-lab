@@ -44,7 +44,7 @@
     <text x="60" y="104" class="sans" font-size="58" font-weight="800" fill="#f8fafc">human-<tspan fill="url(#accent)">data</tspan>-lab</text>
     <text x="62" y="146" class="sans" font-size="22" fill="#94a3b8">Formdan geçen insan metni geri geldiğinde hâlâ aynı mı?<tspan class="cursor" fill="#2dd4bf"> ▍</tspan></text>
     <g class="mono" font-size="14" fill="#64748b">
-      <text x="62" y="184">25 fixture · 3 açık kaynak uygulama · 3 tur · 3 uygulama hatası + 2 yapılandırma sorunu</text>
+      <text x="62" y="184">99 fixture · 42 kabul senaryosu · exact + açık NFC oracle · Chromium · Apache-2.0</text>
     </g>
 
     <!-- aşamalar -->
@@ -61,10 +61,10 @@
     <g class="mono">
       <g class="chip ok" style="animation-delay:0s"><rect x="0" y="281" width="150" height="38" rx="19"/><text x="20" y="306">Işık Yıldız</text><text class="v" x="128" y="306" fill="#2dd4bf">✓</text></g>
       <g class="chip bad" style="animation-delay:-2.33s"><rect x="0" y="281" width="150" height="38" rx="19"/><text x="20" y="306">Ayşe 🙂</text><text class="x" x="128" y="306" fill="#fb7185">✗</text></g>
-      <g class="chip ok" style="animation-delay:-4.66s"><rect x="0" y="281" width="150" height="38" rx="19"/><text x="20" y="306">李小龍</text><text class="v" x="128" y="306" fill="#2dd4bf">✓</text></g>
-      <g class="chip bad" style="animation-delay:-7s"><rect x="0" y="281" width="150" height="38" rx="19"/><text x="20" y="306">O'Brien</text><text class="x" x="128" y="306" fill="#fb7185">✗</text></g>
+      <g class="chip ok" style="animation-delay:-4.66s"><rect x="0" y="281" width="150" height="38" rx="19"/><text x="20" y="306">王小明</text><text class="v" x="128" y="306" fill="#2dd4bf">✓</text></g>
+      <g class="chip bad" style="animation-delay:-7s"><rect x="0" y="281" width="150" height="38" rx="19"/><text x="20" y="306">&#x130;pek</text><text class="x" x="128" y="306" fill="#fb7185">✗</text></g>
       <g class="chip ok" style="animation-delay:-9.33s"><rect x="0" y="281" width="150" height="38" rx="19"/><text x="20" y="306">José Muñoz</text><text class="v" x="128" y="306" fill="#2dd4bf">✓</text></g>
-      <g class="chip bad" style="animation-delay:-11.66s"><rect x="0" y="281" width="150" height="38" rx="19"/><text x="20" y="306">Cam → Çam</text><text class="x" x="128" y="306" fill="#fb7185">✗</text></g>
+      <g class="chip bad" style="animation-delay:-11.66s"><rect x="0" y="281" width="150" height="38" rx="19"/><text x="20" y="306">Jose&#x301; ·NFD</text><text class="x" x="128" y="306" fill="#fb7185">✗</text></g>
     </g>
   </g>
   <rect x=".5" y=".5" width="1199" height="399" rx="20" fill="none" stroke="#1f2a44"/>

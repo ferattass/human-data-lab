@@ -1,7 +1,7 @@
 // Sentetik demo uygulaması. Doğru modda metni aynen saklar.
 // DEMO_BUGS=trim,strip-marks,latin1,utf8mb3,nfc,truncate50,collapse-space ile bilinen hata sınıfları eklenir.
 // Sayfa (benzersiz ad) çakışması için: fold-lookup (aksan+büyüklük duyarsız arama, MySQL *_ai_ci gibi)
-// veya slug-lookup (ad slug'a çevrilip aranır, WordPress term_exists gibi).
+// veya slug-lookup (ad slug'a çevrilip aranır; aksan ve noktalama düşer).
 import { createServer } from 'node:http';
 
 const PORT = Number(process.env.PORT ?? 4310);

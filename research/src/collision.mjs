@@ -33,5 +33,5 @@ export function verdict(expect, outcome) {
 }
 
 // Her koşuda benzersiz kılmak için ada sonek ekler; sonek ASCII ve iki adda aynıdır.
-// Boşluk değil tire: bazı uygulamalar (Redmine wiki) boşluğu '_' yapar, bu da sahte "renamed" üretir.
+// Boşluk değil tire: bazı uygulamalar boşluğu '_' yapar, bu da sahte "renamed" üretir.
 export const withSuffix = (name, suffix) => `${name}-${suffix}`;
