@@ -48,8 +48,8 @@ Durum: **✓ uygulandı ve test edildi** · **◐ kısmen / bilinçli sapma** ·
 | 41 | Dağıtım | ◐ | Tek komut demo, JSON+HTML örnek, entegrasyon rehberi var. Kısa video yok |
 | 42 | Açık kaynak sözleşmesi | ✓ | Apache-2.0, NOTICE, köken kaydı, CONTRIBUTING, SECURITY, issue şablonu |
 | 43 | Uzun vadeli yön | — | Arama/export/tarih/sayı/IME: sonraki fazlar; `research/` deneyleri |
-| 44 | Claude başlangıç brifi | ✓ | Çalışma sırası izlendi; kararlar ADR ile |
-| 45 | Teknik review | ✓ | `docs/review.md` |
+| 44 | Uygulama başlangıç brifi | ✓ | Çalışma sırası izlendi; kararlar ADR ile |
+| 45 | Teknik review soruları | ✓ | `docs/review.md` |
 | 46 | Beta teslim tanımı | ◐ | Aşağıda |
 | 47–50 | Kaynaklar | — | Rapordaki S01–S26 |
 
