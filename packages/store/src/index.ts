@@ -11,7 +11,7 @@
 //   repro/<finding>.spec.ts
 //   evidence/                seçili screenshot
 //   report.html
-import { appendFileSync, copyFileSync, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync, renameSync, statSync, writeFileSync } from 'node:fs';
+import { appendFileSync, closeSync, constants as fsConstants, copyFileSync, existsSync, fstatSync, lstatSync, mkdirSync, openSync, readFileSync, readdirSync, realpathSync, renameSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { SCHEMA_VERSION, checkSchemaVersion, sha256 } from '../../core/src/index.ts';
 import type { ExitCode, Finding, RunStatus, RunSummary, TrialResult } from '../../core/src/index.ts';
@@ -217,13 +217,22 @@ export function writeShare(runDir: string, outDir: string, opts: { includeEviden
   const realRoot = realpathSync(plan.root);
   for (const rel of plan.included) {
     const src = safeResolve(plan.root, rel);
-    // Plan ile kopya arasında değişmiş olabilir (TOCTOU): kopyalamadan hemen önce yeniden denetle.
-    const st = lstatSync(src);
+    // Plan ile kopya arasında değişmiş olabilir (TOCTOU): yeniden denetle, dosyayı BİR KEZ aç, açılan tanımlayıcının
+    // kimliğini lstat ile karşılaştır ve kopyayı yoldan değil tanımlayıcıdan yap. POSIX'te O_NOFOLLOW bağlantıyı açmaz;
+    // Windows'ta bayrak yok, ama arada bağlantıya çevrilen dosyanın hedefi farklı dev/ino verir ve reddedilir.
+    const st = lstatSync(src, { bigint: true });
     const r = relative(realRoot, realpathSync(src));
     if (st.isSymbolicLink() || !st.isFile() || r.startsWith('..') || isAbsolute(r)) throw new ArtifactError(`paylaşım: ${rel} koşu dizini dışına işaret ediyor veya normal dosya değil`);
+    const fd = openSync(src, fsConstants.O_RDONLY | (fsConstants.O_NOFOLLOW ?? 0));
+    let data: Buffer;
+    try {
+      const fst = fstatSync(fd, { bigint: true });
+      if (!fst.isFile() || fst.dev !== st.dev || fst.ino !== st.ino) throw new ArtifactError(`paylaşım: ${rel} denetimden sonra değişti; kopyalanmadı`);
+      data = readFileSync(fd);
+    } finally { closeSync(fd); }
     const dst = safeResolve(outDir, rel);
     mkdirSync(dirname(dst), { recursive: true });
-    copyFileSync(src, dst);
+    writeFileSync(dst, data, { flag: 'wx' }); // hedefte önceden var olan dosya/bağlantının üzerine yazılmaz
   }
   writeFileSync(join(outDir, 'CONTENTS.txt'), ['Dahil edilen dosyalar:', ...plan.included.map((f) => '  + ' + f), '', 'Dışarıda bırakılan dosyalar:', ...plan.excluded.map((e) => `  - ${e.file}  (${e.reason})`), ''].join('\n'));
   return plan;
