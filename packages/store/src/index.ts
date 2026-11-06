@@ -22,7 +22,9 @@ export class ArtifactError extends Error {
 
 /** Dizin dışına çıkan yolu reddeder (C09). */
 export function safeResolve(root: string, rel: string): string {
-  if (typeof rel !== 'string' || !rel || isAbsolute(rel) || rel.includes('\0')) throw new ArtifactError(`geçersiz artifact yolu: ${JSON.stringify(rel)}`);
+  // Artifact yolları platformdan bağımsızdır: yalnız '/' ayraç. Ters eğik çizgi, sürücü harfi ve ':' her işletim sisteminde
+  // reddedilir; aksi halde Windows'ta üretilmiş bir manifest Linux'ta (veya tersi) dizin denetimini atlatabilir (C09).
+  if (typeof rel !== 'string' || !rel || isAbsolute(rel) || /[\0\\:]/.test(rel)) throw new ArtifactError(`geçersiz artifact yolu: ${JSON.stringify(rel)}`);
   const abs = resolve(root, rel);
   const r = relative(resolve(root), abs);
   if (r === '' || r.startsWith('..') || isAbsolute(r) || r.split(sep).includes('..')) throw new ArtifactError(`artifact yolu koşu dizini dışına çıkıyor: ${rel}`);
