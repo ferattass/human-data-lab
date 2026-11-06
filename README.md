@@ -1,14 +1,15 @@
 <div align="center">
 
-<img src="docs/assets/hero.svg" alt="human-data-lab: formdan geçen insan metni geri geldiğinde hâlâ aynı mı?" width="100%">
+<img src="docs/brand/readme-hero-tr-1600x600.webp" alt="Human Data Lab — Kaydedildi. Peki korundu mu? Yaz → Kaydet → Yeniden oku. Açık kaynak Unicode round-trip testi" width="100%">
 
 <br>
 
-![lisans](https://img.shields.io/badge/lisans-Apache--2.0-c2410c?style=flat-square)
-![node](https://img.shields.io/badge/node-%E2%89%A522.18-60a5fa?style=flat-square)
-![browser](https://img.shields.io/badge/browser-Chromium-60a5fa?style=flat-square)
-![kabul](https://img.shields.io/badge/kabul%20senaryosu-42%2F42-2dd4bf?style=flat-square)
-![durum](https://img.shields.io/badge/durum-v0.4%20prototip-94a3b8?style=flat-square)
+[![ci](https://github.com/ferattass/human-data-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/ferattass/human-data-lab/actions/workflows/ci.yml)
+![lisans](https://img.shields.io/badge/lisans-Apache--2.0-D7502B?style=flat-square)
+![node](https://img.shields.io/badge/node-%E2%89%A522.18-202A27?style=flat-square)
+![browser](https://img.shields.io/badge/browser-Chromium-202A27?style=flat-square)
+![kabul](https://img.shields.io/badge/kabul%20senaryosu-42%2F42-47705C?style=flat-square)
+![durum](https://img.shields.io/badge/durum-v0.4%20prototip-65706B?style=flat-square)
 
 **Bir formun "Kaydedildi" demesi yeterli değil.**<br>
 Uygulamanızın kabul ettiği insan metninin (Türkçe ı/İ, birleşik aksan, emoji, sağdan sola yazı) kaydet → taze okuma yolculuğunda<br>
@@ -185,11 +186,25 @@ Kapsam ve sınırlar: [`docs/scope.md`](docs/scope.md) · ölçülmüş süreler
 | [`docs/traceability.md`](docs/traceability.md) | Ürün raporunun her bölümü → kod ve test |
 | [`schema/`](schema) | Sürümlü JSON Schema'lar |
 | [`research/`](research) | Erken deneyler (arama, e-posta kimliği, ad çakışması): **deneysel**, v0.1 kapsamı dışında |
+| [`docs/brand/`](docs/brand) | Görsel kimlik: logo, sembol, renkler, kullanım kuralları |
 
-## Katkı ve lisans
+## Katkı
 
+<a href="CONTRIBUTING.md"><img src="docs/brand/contributor-card-1200x675.webp" alt="Human Data Lab katkı çağrısı" width="100%"></a>
+
+Yeni bir fixture, bir adapter örneği veya bir hata bildirimi. Hepsi sentetik verinin üzerinde çalışır, gerçek müşteri verisi gerekmez.
 [`CONTRIBUTING.md`](CONTRIBUTING.md) · [`SECURITY.md`](SECURITY.md) · [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)
+
+## Lisans
 
 [Apache License 2.0](LICENSE). "Human Data Lab" bir çalışma adıdır; marka, alan adı veya npm adı tahsis edilmemiştir ([`NOTICE`](NOTICE)).
 
-<div align="center"><sub>Animasyonlar <code>prefers-reduced-motion</code> ayarına uyar · Tüm demo verisi sentetiktir</sub></div>
+<div align="center">
+<br>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/brand/logo-horizontal-dark.webp">
+  <img src="docs/brand/logo-horizontal-ink.webp" alt="Human Data Lab" width="320">
+</picture>
+<br>
+<sub><b>Every character matters.</b> · Animasyonlar <code>prefers-reduced-motion</code> ayarına uyar · Tüm demo verisi sentetiktir</sub>
+</div>

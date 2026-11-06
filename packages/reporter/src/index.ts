@@ -134,32 +134,36 @@ export function renderReport(run: LoadedRun): string {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Cpath%20d%3D%22M33%2014H22a10%2010%200%200%200-10%2010v52a10%2010%200%200%200%2010%2010h11M67%2014h11a10%2010%200%200%201%2010%2010v52a10%2010%200%200%201-10%2010H67%22%20fill%3D%22none%22%20stroke%3D%22%23202A27%22%20stroke-width%3D%2210%22%20stroke-linecap%3D%22round%22%2F%3E%3Crect%20x%3D%2243%22%20y%3D%2244%22%20width%3D%2214%22%20height%3D%2236%22%20rx%3D%227%22%20fill%3D%22%23202A27%22%2F%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2229%22%20r%3D%229%22%20fill%3D%22%23D7502B%22%2F%3E%3C%2Fsvg%3E">
 <title>Human Data Lab — ${esc(contractId)} — ${esc(m?.runId ?? 'tamamlanmamış koşu')}</title>
 <style>
-:root{--paper:#faf7f2;--ink:#1c1917;--muted:#57534e;--line:#e7e1d8;--accent:#c2410c;--ok:#166534;--okbg:#e8f3ea;--bad:#991b1b;--badbg:#fbe9e7;--warn:#854d0e;--warnbg:#fdf3dc;--card:#fffdf9}
+/* Human Data Lab marka paleti (docs/brand). --accent metin için koyu turuncu: #D7502B kırık beyazda küçük metinde WCAG AA altında kalır. */
+:root{--paper:#F6F3EB;--ink:#202A27;--muted:#65706B;--line:#D9DAD1;--sage:#EDEDE3;--dot:#D7502B;--accent:#B24526;--ok:#47705C;--okbg:#E6EEE8;--bad:#B14535;--badbg:#F7E6E1;--warn:#7A5A1E;--warnbg:#F6EEDB;--card:#FFFFFF}
 *{box-sizing:border-box}
-body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 "Segoe UI",ui-sans-serif,system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif}
 main{max-width:1180px;margin:0 auto;padding:32px 24px 80px}
-h1,h2,h3,h4{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;font-weight:700;line-height:1.2}
-h1{font-size:2.4rem;margin:.2em 0 .1em}h2{font-size:1.6rem;margin-top:2.2em;border-top:2px solid var(--ink);padding-top:.6em}h3{font-size:1.3rem}h4{font-size:1.05rem;margin-bottom:.4em}
+h1,h2,h3,h4{font-family:Georgia,"Iowan Old Style","Times New Roman",serif;font-weight:700;line-height:1.2}
+h1{font-size:2.4rem;margin:.2em 0 .1em}h2{font-size:1.6rem;margin-top:2.2em;border-top:2px solid var(--line);padding-top:.6em}h3{font-size:1.3rem}h4{font-size:1.05rem;margin-bottom:.4em}
 .eyebrow{letter-spacing:.14em;text-transform:uppercase;font-size:.78rem;color:var(--accent);font-weight:700}
-.mono,code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace}
-code{background:#f1ece4;padding:.1em .35em;border-radius:4px;white-space:pre-wrap;word-break:break-all}
+.mono,code,pre{font-family:Consolas,ui-monospace,SFMono-Regular,Menlo,"Liberation Mono",monospace}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:6px}.brand svg{width:30px;height:30px}
+h1 .dot{color:var(--dot)}
+code{background:var(--sage);padding:.1em .35em;border-radius:4px;white-space:pre-wrap;word-break:break-all}
 code.block{display:block;padding:.6em}
 pre.cmd{background:var(--ink);color:#fafaf9;padding:.8em 1em;border-radius:8px;overflow:auto}
 .small{font-size:.86rem}.muted{color:var(--muted)}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:18px 0}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
-.card .n{font:700 1.9rem/1 "Iowan Old Style",Georgia,serif}.card .l{font-size:.85rem;color:var(--muted);margin-top:6px}
+.card .n{font:700 1.9rem/1 Georgia,"Iowan Old Style",serif}.card .l{font-size:.85rem;color:var(--muted);margin-top:6px}
 .card.bad{border-color:var(--bad);background:var(--badbg)}.card.warn{border-color:var(--warn);background:var(--warnbg)}.card.ok{border-color:var(--ok);background:var(--okbg)}
 .pill{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.06em;padding:.18em .6em;border-radius:999px;border:1.5px solid currentColor;white-space:nowrap}
-.pill.ok{color:var(--ok);background:var(--okbg)}.pill.bad{color:var(--bad);background:var(--badbg)}.pill.warn{color:var(--warn);background:var(--warnbg)}.pill.neutral{color:var(--muted);background:#f5f1ea}.pill.demo{color:var(--accent);background:#fff1e8}
+.pill.ok{color:var(--ok);background:var(--okbg)}.pill.bad{color:var(--bad);background:var(--badbg)}.pill.warn{color:var(--warn);background:var(--warnbg)}.pill.neutral{color:var(--muted);background:var(--sage)}.pill.demo{color:var(--accent);background:#FBEDE6}
 .banner{border:2px solid var(--bad);background:var(--badbg);border-radius:12px;padding:14px 18px;margin:18px 0}
-.banner.demo{border-color:var(--accent);background:#fff1e8}
+.banner.demo{border-color:var(--dot);background:#FBEDE6}
 table{width:100%;border-collapse:collapse;margin:10px 0;background:var(--card)}
 th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}
 thead th{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-tr.boundary th{border-left:4px solid var(--accent)}
+tr.boundary th{border-left:4px solid var(--dot)}
 .tag{display:inline-block;font-size:.72rem;color:var(--accent);margin-left:.4em}
 .finding{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--bad);border-radius:12px;padding:6px 22px 18px;margin:20px 0}
 dl.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px 18px}
@@ -178,8 +182,8 @@ footer{margin-top:60px;font-size:.82rem;color:var(--muted);border-top:1px solid 
 <a class="skip" href="#ozet">Özete atla</a>
 <main>
 <header>
-  <div class="eyebrow">Human Data Lab · yerel rapor</div>
-  <h1>Kaydedildi. Peki korundu mu?</h1>
+  <div class="brand"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M33 14H22a10 10 0 0 0-10 10v52a10 10 0 0 0 10 10h11M67 14h11a10 10 0 0 1 10 10v52a10 10 0 0 1-10 10H67" fill="none" stroke="#202A27" stroke-width="10" stroke-linecap="round"/><rect x="43" y="44" width="14" height="36" rx="7" fill="#202A27"/><circle cx="50" cy="29" r="9" fill="#D7502B"/></svg><div class="eyebrow">Human Data Lab · yerel rapor</div></div>
+  <h1>Kaydedildi<span class="dot">.</span> Peki korundu mu?</h1>
   <p class="mono small">${esc(contractId)} / ${esc(pv?.browser.name ?? 'chromium')} ${esc(pv?.browser.version ?? '')} / ${esc(rules)} / corpus ${esc(pv?.corpus.id ?? '?')}@${esc(pv?.corpus.version ?? '?')} (${esc(pv?.corpus.set ?? '?')}) / koşu ${esc(m?.runId ?? '?')}</p>
 </header>
 ${!complete ? `<div class="banner" role="alert"><strong>Bu koşu tamamlanmış değil.</strong> Başarılı bitiş veya "tüm kontroller geçti" sonucu gösterilemez.
