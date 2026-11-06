@@ -58,12 +58,12 @@ export async function startDemo(opts: DemoOptions = {}) {
     let v = raw;
     saveCount++;
     if (bugs.has('trim')) v = v.trim();
-    if (bugs.has('nbsp-to-space')) v = v.replace(/ /g, ' ');
+    if (bugs.has('nbsp-to-space')) v = v.replace(/\u00a0/g, ' ');
     if (bugs.has('nfc')) v = v.normalize('NFC');
     if (bugs.has('nfkc')) v = v.normalize('NFKC');
     if (bugs.has('strip-marks') || bugs.has('stale-spa')) v = stripMarks(v);
     if (bugs.has('flaky-strip') && saveCount % 2 === 0) v = stripMarks(v);
-    if (bugs.has('drop-dotted-capital-i')) v = v.replace(/İ/g, '');
+    if (bugs.has('drop-dotted-capital-i')) v = v.replace(/\u0130/g, '');
     if (bugs.has('latin1')) v = [...v].map((c) => (c.codePointAt(0)! > 0xff ? '?' : c)).join('');
     return v;
   };

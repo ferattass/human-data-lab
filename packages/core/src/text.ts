@@ -53,8 +53,8 @@ export function classifyDifference(expected: string, actual: string): Difference
   if (actual === '' && expected !== '') return 'emptied';
   if (expected.normalize('NFC') === actual.normalize('NFC')) return 'normalization-form-changed';
   if (expected.trim() === actual) return 'trimmed';
-  if (expected.replace(/ /g, ' ') === actual) return 'nbsp-replaced';
-  if (expected.replace(/[  ]{2,}/g, ' ') === actual || expected.replace(/\s+/g, ' ') === actual) return 'whitespace-collapsed';
+  if (expected.replace(/\u00a0/g, ' ') === actual) return 'nbsp-replaced';
+  if (expected.replace(/[ \u00a0]{2,}/g, ' ') === actual || expected.replace(/\s+/g, ' ') === actual) return 'whitespace-collapsed';
   if (expected.normalize('NFKC') === actual.normalize('NFKC')) return 'compatibility-folded';
   if (actual.length < expected.length && expected.startsWith(actual)) return 'truncated';
   if (stripMarks(expected) === stripMarks(actual)) return 'marks-stripped';

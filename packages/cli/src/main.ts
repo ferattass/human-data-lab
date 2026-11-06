@@ -20,9 +20,9 @@ Kullanım:
   hdl demo [--out runs/demo]                         sentetik demo: doğru mod + üç bilinçli hata (§35)
   hdl init --adapter playwright [--dir hdl]          incelenebilir taslak dosyalar üretir (siteyi keşfetmez)
   hdl run <roundtrip.config.ts> [--corpus smoke|full|<set>] [--out runs] [--no-reproduce] [--no-shrink]
-  hdl replay <run-dizini> --finding f1 [--config <dosya>] [--candidate original|best]
+  hdl replay <run-dizini> --finding f1 --config <dosya> [--candidate original|best]
   hdl report <run-dizini> [--out rapor.html]         bütünlüğü denetler, raporu gösterir/üretir
-  hdl cleanup <run-dizini> --owned-only [--config <dosya>]   yalnız allocation günlüğündeki sahipli kaynaklar
+  hdl cleanup <run-dizini> --owned-only --config <dosya>     yalnız allocation günlüğündeki sahipli kaynaklar
   hdl export <run-dizini> --out <dizin> [--include-evidence] paylaşım paketi (allowlist; auth/trace hariç)
   hdl lab <search|identity|collision|roundtrip> …   araştırma araçları (deneysel, v0.1 kapsamı dışında)
 
@@ -54,6 +54,17 @@ async function loadConfig(p: string): Promise<RoundtripConfig> {
 }
 
 class UsageError extends Error {}
+
+/**
+ * Yapılandırma dosyası import edilir, yani KOD ÇALIŞTIRIR. Koşu dizinleri paylaşılabilir (hdl export), bu yüzden
+ * artifact içindeki yol asla kendiliğinden import edilmez; kullanıcı --config ile açıkça vermelidir (§13, §30).
+ */
+function requireConfigFlag(a: Args, storedPath: string | undefined, cmd: string): string {
+  const p = a.flags.config;
+  if (typeof p === 'string' && p) return p;
+  throw new UsageError(`hdl ${cmd} için --config <roundtrip.config.ts> zorunlu.` +
+    (storedPath ? `\nKaynak koşu şu dosyayı kaydetmiş (yalnız bilgi; otomatik çalıştırılmaz, önce içeriğine bakın): ${storedPath}` : ''));
+}
 
 function abortOnSigint() {
   const ac = new AbortController();
@@ -89,8 +100,7 @@ async function cmdReplay(a: Args): Promise<ExitCode> {
   const finding = run.findings.find((f) => f.id === fid);
   if (!finding) throw new UsageError(`bulgu yok: ${fid} (mevcut: ${run.findings.map((f) => f.id).join(', ') || '—'})`);
   const stored = run.contract as { contract: RoundtripConfig['contract']; contractDigest: string; configPath?: string; adapter: { id: string; version: string } };
-  const cfgPath = (a.flags.config as string) ?? stored.configPath;
-  if (!cfgPath) throw new UsageError('kaynak koşu yapılandırma yolunu kaydetmemiş; --config verin');
+  const cfgPath = requireConfigFlag(a, stored?.configPath, 'replay');
   const config = await loadConfig(cfgPath);
   const mismatches: string[] = [];
   if (digestOf(config.contract) !== stored.contractDigest) mismatches.push('akış sözleşmesi/oracle digest\'i değişmiş (C02)');
@@ -137,11 +147,10 @@ function cmdReport(a: Args): ExitCode {
 
 async function cmdCleanup(a: Args): Promise<ExitCode> {
   const dir = a._[1];
-  if (!dir || !a.flags['owned-only']) throw new UsageError('kullanım: hdl cleanup <run-dizini> --owned-only [--config <dosya>]  (yalnız sahipli kaynaklar; --owned-only zorunlu)');
+  if (!dir || !a.flags['owned-only']) throw new UsageError('kullanım: hdl cleanup <run-dizini> --owned-only --config <dosya>  (yalnız sahipli kaynaklar; --owned-only zorunlu)');
   const run = readRun(dir);
   const stored = run.contract as { configPath?: string } | null;
-  const cfgPath = (a.flags.config as string) ?? stored?.configPath;
-  if (!cfgPath) throw new UsageError('yapılandırma yolu bilinmiyor; --config verin');
+  const cfgPath = requireConfigFlag(a, stored?.configPath, 'cleanup');
   const config = await loadConfig(cfgPath);
   const expectedBase = run.manifest?.provenance.target.baseURL;
   if (expectedBase && expectedBase !== config.target.baseURL) throw new UsageError(`yanlış test ortamı: koşu ${expectedBase} üzerinde, yapılandırma ${config.target.baseURL} — temizlik yapılmadı`);
