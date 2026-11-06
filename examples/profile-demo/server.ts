@@ -24,6 +24,8 @@ import { createServer } from 'node:http';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { randomBytes } from 'node:crypto';
 import type { AddressInfo } from 'node:net';
+import { pathToFileURL } from 'node:url';
+import { resolve as resolvePath } from 'node:path';
 
 export interface DemoOptions {
   port?: number;
@@ -224,7 +226,8 @@ f.addEventListener('submit', async (e) => {
 }
 
 // Doğrudan çalıştırma: node examples/profile-demo/server.ts [hata,modu] (PORT ortam değişkeni)
-if (import.meta.url === `file:///${process.argv[1]?.replace(/\\/g, '/').replace(/^\//, '')}`) {
+// Not: yol karşılaştırması URL kodlamasıyla yapılır; "Yayında" gibi ASCII dışı dizin adları ham argv ile eşleşmez.
+if (process.argv[1] && import.meta.url === pathToFileURL(resolvePath(process.argv[1])).href) {
   const d = await startDemo({ port: Number(process.env.PORT ?? 4400), bugs: (process.argv[2] ?? process.env.DEMO_BUGS ?? '').split(',').filter(Boolean) });
   console.log(`profile-demo ${d.build} → ${d.url}  (kullanıcı: ${d.credentials.user})`);
 }

@@ -13,13 +13,14 @@
   },
   "scripts": {
     "typecheck": "tsc -p .",
-    "test": "node --test --test-concurrency=1 test/",
-    "test:unit": "node --test test/core.test.ts test/store.test.ts test/architecture.test.ts",
+    "test": "node --test --test-concurrency=1 \"test/*.test.ts\"",
+    "test:unit": "node --test test/core.test.ts test/matrix.test.ts test/architecture.test.ts",
     "test:research": "node --test research/test/unit.test.mjs",
     "demo": "node bin/hdl.mjs demo",
     "demo:server": "node examples/profile-demo/server.ts",
     "assets": "node research/scripts/build-assets.mjs",
-    "repro:round3": "node research/experiments/repro-round3.mjs"
+    "repro:round3": "node research/experiments/repro-round3.mjs",
+    "test:browser": "node --test --test-concurrency=1 test/acceptance.test.ts test/playwright-integration.test.ts"
   },
   "keywords": [
     "unicode",
