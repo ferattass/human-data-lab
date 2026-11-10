@@ -40,6 +40,6 @@ Doğrulama komutu: `npm test` (65 test; 10 Kasım 2026 itibarıyla hepsi geçiyo
 - Kullanıcı pilotu yok; kurulum süresi ve tekrar kullanım ölçülmedi ([`pilot.md`](pilot.md)).
 - Rakip karşılaştırması yapılmadı ([`benchmark.md`](benchmark.md)).
 - Firefox/WebKit denenmedi.
-- npm'de ilk yayın bekliyor: paket yayımlanabilir hale getirildi ve `release.yml` etiketle provenance'lı yayın yapar; npm tarafında trusted publishing bağlanmalı ([`release.md`](release.md)). Derlenmiş paket `npm pack` ile üretilip boş projeye kuruluyor ve demo oradan çalıştırılıyor (`test/package.test.ts`).
+- npm'de yayında (`human-data-lab@0.6.1`, 10 Kasım 2026, yerelden). CI'dan provenance'lı otomatik yayın için npm tarafında trusted publishing bağlanmalı ([`release.md`](release.md)); bağlanana kadar `release.yml` npm işi kırmızı kalır. Derlenmiş paket `npm pack` ile üretilip boş projeye kuruluyor ve demo oradan çalıştırılıyor (`test/package.test.ts`).
 - MCP sunucusu el yazımı protokol uygulamasıdır (bağımlılık yok); protokol sürümleri 2024-11-05 … 2025-11-25. Protokol değişirse bakım maliyeti ADR 0010'daki geri dönüşü tetikler.
 - Redaction bilinen kalıplara dayanır; kusursuz değildir.

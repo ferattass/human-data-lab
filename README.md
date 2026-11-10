@@ -6,6 +6,7 @@
 
 [![ci](https://github.com/ferattass/human-data-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/ferattass/human-data-lab/actions/workflows/ci.yml)
 [![codeql](https://github.com/ferattass/human-data-lab/actions/workflows/codeql.yml/badge.svg)](https://github.com/ferattass/human-data-lab/actions/workflows/codeql.yml)
+[![npm](https://img.shields.io/npm/v/human-data-lab?style=flat-square&color=D7502B&label=npm)](https://www.npmjs.com/package/human-data-lab)
 ![lisans](https://img.shields.io/badge/lisans-Apache--2.0-D7502B?style=flat-square)
 ![node](https://img.shields.io/badge/node-%E2%89%A522.18-202A27?style=flat-square)
 ![browser](https://img.shields.io/badge/browser-Chromium-202A27?style=flat-square)
@@ -124,10 +125,10 @@ npx hdl init --adapter playwright        # hdl/adapter.ts + hdl/roundtrip.config
 npx hdl run hdl/roundtrip.config.ts --corpus smoke
 ```
 
-**Paket olarak (beta).** Sürüm etiketi (`vX.Y.Z`) GitHub Release'e tarball ekler ve npm'e provenance ile yayımlar ([`docs/release.md`](docs/release.md)):
+**Paket olarak (beta).** [npm'de yayında](https://www.npmjs.com/package/human-data-lab); sürüm etiketi (`vX.Y.Z`) GitHub Release'e tarball ekler ([`docs/release.md`](docs/release.md)):
 
 ```bash
-npm install human-data-lab @playwright/test     # npm'de ilk yayın bekliyor; o zamana kadar Release sayfasındaki human-data-lab-X.Y.Z.tgz
+npm install human-data-lab @playwright/test     # veya Release sayfasındaki human-data-lab-X.Y.Z.tgz
 ```
 
 Dışa aktarımlar: `human-data-lab` (= `/playwright`), `/playwright/test`, `/core`, `/corpus`, `/store`, `/reporter`, `/mcp`, `/schema/*`.
@@ -247,7 +248,7 @@ Kapsam ve sınırlar: [`docs/scope.md`](docs/scope.md) · ölçülmüş süreler
 | **Sürüm** | v0.6.1 beta · kaynak ve derlenmiş paket · 65 test · CI: Linux, Windows, macOS × Node 22, 24 |
 | **Kararlı** | Tek alan metin roundtrip'i, sözleşme ve sonuç modeli, kanıt paketi, replay, küçültme, Playwright Test entegrasyonu, MCP araçları (koşu yalnız `--allow-run` ile) |
 | **Deneysel** | `research/` araçları (arama, kimlik, çakışma) |
-| **Sırada** | npm'de ilk yayın · kullanıcı pilotu ([yöntem](docs/pilot.md)) · tarih, sayı ve zengin metin alanları · arama ve export yolculukları |
+| **Sırada** | kullanıcı pilotu ([yöntem](docs/pilot.md)) · tarih, sayı ve zengin metin alanları · arama ve export yolculukları |
 | **Kırıcı değişiklik** | 1.0 öncesi `0.X` sürümleri kırıcı olabilir ve [CHANGELOG](CHANGELOG.md)'da açıkça yazılır; şemalar `schemaVersion` ile ayrı sürümlenir, bilinmeyen büyük sürüm okunmaz |
 
 ---

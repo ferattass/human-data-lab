@@ -24,7 +24,7 @@ Sürüm numarası tek yerde durur: `package.json`. CLI ve manifest (`TOOL.versio
 
 1. npmjs.com → paket sayfası → *Settings* → *Trusted Publishing* → GitHub Actions: depo `ferattass/human-data-lab`,
    iş akışı dosyası `release.yml`, ortam boş.
-2. İlk yayın için paket adı boşsa önce yerelden `npm publish --access public` ile paket oluşturulur (bir kez), sonra trusted publishing bağlanır.
+2. İlk yayın (0.6.1) yerelden yapıldı; npm yeni paketleri önce `0.0.0-stage` tutucu sürümle açıp incelemeden sonra gerçek sürümü gösterir (aşamalı yayın). Trusted publishing bağlandıktan sonra sonraki sürümler CI'dan çıkar.
 3. Gerekirse paketi *Settings → Publishing access* altında "Require two-factor authentication or an automation token / trusted publisher" olarak kilitle.
 
 Yayın yoksa veya başarısızsa GitHub Release yine oluşur; `npm` işi bağımsızdır ve günlükte nedenini söyler.

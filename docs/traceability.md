@@ -67,4 +67,4 @@ Durum: **✓ uygulandı ve test edildi** · **◐ kısmen / bilinçli sapma** ·
 | Dokümantasyon | ✓ API, sınırlar, güvenlik, adapter rehberi, hata şablonu, ajan rehberi, İngilizce README, yayın akışı |
 | Pilot | ○ Yöntem var, gözlem yok |
 
-Beta yayımlanmadan önce kalan: npm'de ilk yayın (trusted publishing bağlantısı, `docs/release.md`), pilot.
+Beta yayımlanmadan önce kalan: pilot. npm'de 0.6.1 yayında; CI'dan otomatik yayın için trusted publishing bağlantısı bekliyor (`docs/release.md`).

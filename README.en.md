@@ -6,6 +6,7 @@
 
 [![ci](https://github.com/ferattass/human-data-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/ferattass/human-data-lab/actions/workflows/ci.yml)
 [![codeql](https://github.com/ferattass/human-data-lab/actions/workflows/codeql.yml/badge.svg)](https://github.com/ferattass/human-data-lab/actions/workflows/codeql.yml)
+[![npm](https://img.shields.io/npm/v/human-data-lab?style=flat-square&color=D7502B&label=npm)](https://www.npmjs.com/package/human-data-lab)
 ![license](https://img.shields.io/badge/license-Apache--2.0-D7502B?style=flat-square)
 ![node](https://img.shields.io/badge/node-%E2%89%A522.18-202A27?style=flat-square)
 ![browser](https://img.shields.io/badge/browser-Chromium-202A27?style=flat-square)
@@ -122,10 +123,10 @@ npx hdl init --adapter playwright        # scaffolds hdl/adapter.ts + hdl/roundt
 npx hdl run hdl/roundtrip.config.ts --corpus smoke
 ```
 
-**As a package (beta).** Install from a release tarball or from npm once published:
+**As a package (beta).** [Published on npm](https://www.npmjs.com/package/human-data-lab); each `vX.Y.Z` tag also attaches a tarball to the GitHub Release:
 
 ```bash
-npm install human-data-lab @playwright/test     # first npm release pending; until then use the Release tarball human-data-lab-X.Y.Z.tgz
+npm install human-data-lab @playwright/test     # or the Release tarball human-data-lab-X.Y.Z.tgz
 ```
 
 Exports: `human-data-lab` (= `/playwright`), `human-data-lab/playwright/test`, `human-data-lab/core`, `human-data-lab/corpus`, `human-data-lab/store`, `human-data-lab/reporter`, `human-data-lab/mcp`, `human-data-lab/schema/*`.
@@ -244,7 +245,7 @@ Scope and limits: [`docs/scope.md`](docs/scope.md) · measured timings: [`docs/p
 | **Version** | v0.6.1 beta · source and compiled package · 65 tests · CI: Linux, Windows, macOS × Node 22, 24 |
 | **Stable** | Single-field text round trip, contract and result model, evidence bundle, replay, shrinking, Playwright Test integration, MCP tools (runs only with `--allow-run`) |
 | **Experimental** | `research/` tools (search, identity, collision) |
-| **Next** | First npm release · user pilot ([method](docs/pilot.md)) · date, number and rich-text fields · search and export journeys |
+| **Next** | User pilot ([method](docs/pilot.md)) · date, number and rich-text fields · search and export journeys |
 | **Breaking changes** | `0.X` releases may break and say so in the [CHANGELOG](CHANGELOG.md); schemas are versioned separately via `schemaVersion`, unknown major versions are refused |
 
 ---
