@@ -6,7 +6,7 @@ type: software
 authors:
   - family-names: "Taş"
     given-names: "Ferat"
-version: 0.6.0
+version: 0.6.1
 date-released: 2026-11-10
 license: Apache-2.0
 repository-code: "https://github.com/ferattass/human-data-lab"

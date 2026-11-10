@@ -241,7 +241,7 @@ Scope and limits: [`docs/scope.md`](docs/scope.md) · measured timings: [`docs/p
 
 | | |
 |---|---|
-| **Version** | v0.6.0 beta · source and compiled package · 65 tests · CI: Linux, Windows, macOS × Node 22, 24 |
+| **Version** | v0.6.1 beta · source and compiled package · 65 tests · CI: Linux, Windows, macOS × Node 22, 24 |
 | **Stable** | Single-field text round trip, contract and result model, evidence bundle, replay, shrinking, Playwright Test integration, MCP tools (runs only with `--allow-run`) |
 | **Experimental** | `research/` tools (search, identity, collision) |
 | **Next** | First npm release · user pilot ([method](docs/pilot.md)) · date, number and rich-text fields · search and export journeys |

@@ -4,6 +4,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Sürümleme: [
 
 ## [Yayımlanmamış]
 
+## [0.6.1] — 2026-11-10
+
+### Düzeltildi
+- `release.yml`: tarball adımı `out/` dizinini oluşturmadan `npm pack` çalıştırıyordu; v0.6.0 etiketi bu yüzden GitHub Release üretmedi. Kod değişikliği yok.
+
 ## [0.6.0] — 2026-11-10
 
 ### Eklendi
