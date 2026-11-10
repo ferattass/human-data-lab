@@ -245,7 +245,7 @@ Kapsam ve sınırlar: [`docs/scope.md`](docs/scope.md) · ölçülmüş süreler
 
 | | |
 |---|---|
-| **Sürüm** | v0.6.1 beta · kaynak ve derlenmiş paket · 65 test · CI: Linux, Windows, macOS × Node 22, 24 |
+| **Sürüm** | v0.6.2 beta · kaynak ve derlenmiş paket · 65 test · CI: Linux, Windows, macOS × Node 22, 24 |
 | **Kararlı** | Tek alan metin roundtrip'i, sözleşme ve sonuç modeli, kanıt paketi, replay, küçültme, Playwright Test entegrasyonu, MCP araçları (koşu yalnız `--allow-run` ile) |
 | **Deneysel** | `research/` araçları (arama, kimlik, çakışma) |
 | **Sırada** | kullanıcı pilotu ([yöntem](docs/pilot.md)) · tarih, sayı ve zengin metin alanları · arama ve export yolculukları |
