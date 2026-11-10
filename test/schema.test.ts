@@ -41,6 +41,16 @@ test('denetleyici gerçekten ihlal yakalar (negatif kontrol)', () => {
   assert.ok(check(schema('manifest'), { files: { 'a.json': 'md5:x' } }).length > 0);
 });
 
+test('corpus adı allowlist: dizin ayracı veya ".." içeren ad data/ dışına çıkamaz', async () => {
+  const { readCorpusFile, isCorpusName } = await import('../packages/corpus/src/index.ts');
+  for (const bad of ['../package', 'x/y', 'a\\b', '', 'human-text.json']) {
+    assert.equal(isCorpusName(bad), false, bad);
+    assert.throws(() => readCorpusFile(bad), /geçersiz corpus adı/, bad);
+  }
+  assert.equal(isCorpusName('human-text'), true);
+  assert.equal(readCorpusFile('human-text').id, 'human-text');
+});
+
 test('corpus ve fixture şeması gerçek corpus dosyasıyla uyumlu', () => {
   const c = JSON.parse(readFileSync(new URL('../packages/corpus/data/human-text.json', import.meta.url), 'utf8'));
   assert.deepEqual(check(schema('corpus'), c), []);

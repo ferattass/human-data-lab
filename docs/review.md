@@ -1,7 +1,7 @@
 # Teknik review: rapor §45 soruları, kod ve testle
 
 "Testler geçti" tek başına cevap değildir. Her soru için davranışı belirleyen kod ve onu doğrulayan test kimliği.
-Doğrulama komutu: `npm test` (61 test; 10 Kasım 2026 itibarıyla hepsi geçiyor: yerelde Windows 11 + Node 24.14 + Chromium 156, Linux konteynerinde ve CI'da Linux/Windows/macOS × Node 22/24).
+Doğrulama komutu: `npm test` (62 test; 10 Kasım 2026 itibarıyla hepsi geçiyor: yerelde Windows 11 + Node 24.14 + Chromium 156, Linux konteynerinde ve CI'da Linux/Windows/macOS × Node 22/24).
 
 | Soru | Cevap | Kod | Test |
 |---|---|---|---|

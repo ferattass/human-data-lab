@@ -26,7 +26,7 @@ Kullanım:
   hdl report <run-dizini> [--out rapor.html] [--json] bütünlüğü denetler, raporu gösterir/üretir (--json: makine okunur özet)
   hdl cleanup <run-dizini> --owned-only --config <dosya>     yalnız allocation günlüğündeki sahipli kaynaklar
   hdl export <run-dizini> --out <dizin> [--include-evidence] [--dry-run] paylaşım paketi (allowlist; auth/trace hariç)
-  hdl mcp [--allow-run]                              MCP sunucusu (stdio): ajanlar için oracle, corpus ve koşu kanıtı; koşu yalnız --allow-run ile
+  hdl mcp [--allow-run] [--root <dizin>]             MCP sunucusu (stdio): ajanlar için oracle, corpus ve koşu kanıtı; koşu yalnız --allow-run ile; yollar kökün içinde
   hdl lab <search|identity|collision|roundtrip> …   araştırma araçları (deneysel, v0.1 kapsamı dışında)
 
 Çıkış kodları: ${Object.entries(EXIT_MEANING).map(([k, v]) => `\n  ${k.padStart(3)}  ${v}`).join('')}
@@ -226,7 +226,7 @@ function cmdInit(a: Args): ExitCode {
 async function cmdMcp(a: Args): Promise<ExitCode> {
   // stdout protokole aittir; günlük stderr'e gider. Koşu başlatma yalnız operatör açıkça izin verdiyse (§30).
   const { serveStdio } = await import('../../mcp/src/index.ts');
-  await serveStdio({ allowRun: !!a.flags['allow-run'], log: (l) => console.error(l) });
+  await serveStdio({ allowRun: !!a.flags['allow-run'], root: typeof a.flags.root === 'string' ? a.flags.root : undefined, log: (l) => console.error(l) });
   return 0;
 }
 
