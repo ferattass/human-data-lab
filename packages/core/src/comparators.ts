@@ -16,4 +16,4 @@ export const KNOWN_RULES: readonly RuleId[] = [
 ];
 
 export const isKnownRule = (r: string): r is RuleId => (KNOWN_RULES as readonly string[]).includes(r);
-export const isPreservationRule = (r: string): r is PreservationRuleId => r in PRESERVATION_RULES;
+export const isPreservationRule = (r: string): r is PreservationRuleId => Object.hasOwn(PRESERVATION_RULES, r);

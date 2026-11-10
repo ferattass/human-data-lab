@@ -21,9 +21,29 @@ korunup korunmadığını gerçek tarayıcıda sınar. Bulguyu kod noktası düz
 
 <sub>*Open-source testing tool that checks whether human text your app accepts survives the save → fresh re-read journey, using a real browser via Playwright.*</sub>
 
-[30 saniyelik demo](#-30-saniyelik-demo) · [Nasıl çalışır](#-nasıl-çalışır) · [Kendi uygulamanızda](#-kendi-uygulamanızda) · [Playwright testinde](#-mevcut-playwright-testinde) · [Ajanlar & MCP](#-ajanlar-için-mcp) · [Sözleşmeler](docs/contracts.md) · [Kapsam](docs/scope.md)
+[Neden](#-neden) · [30 saniyelik demo](#-30-saniyelik-demo) · [Nasıl çalışır](#-nasıl-çalışır) · [Kendi uygulamanızda](#-kendi-uygulamanızda) · [Playwright testinde](#-mevcut-playwright-testinde) · [Ajanlar & MCP](#-ajanlar-için-mcp) · [Durum](#-durum-ve-yol-haritası) · [Sözleşmeler](docs/contracts.md)
 
 </div>
+
+---
+
+## ✦ Neden
+
+Bir ad alanına `İpek Çağlar` yazılır, sunucu "Kaydedildi" der, ekranda `Ipek Caglar` görünür. Birim testleri geçer, çünkü her katman
+kendi içinde tutarlıdır: tarayıcı doğru gönderir, API doğru ayrıştırır, veritabanı doğru saklar, bir ara katman sessizce "temizler".
+Kaybı yalnız **uçtan uca** ve **bağımsız bir yeniden okumayla** görürsünüz. Araç tam olarak bunu yapar; başka bir şey vaat etmez.
+
+| Soru | Alışılmış yol | Human Data Lab |
+|---|---|---|
+| Veri korundu mu? | Başarı mesajı veya HTTP 200 | Kayıt kimliğiyle **yeni context'te taze okuma**; `authored → readback` kod noktası eşitliği |
+| Hangi fark hata sayılır? | Testi yazanın o anki kararı | **Sözleşme:** `must-accept / must-reject`, `text.exact.v1` veya açıkça seçilen `text.nfc.v1` |
+| Kayıp nerede başladı? | Tahmin | `authored / injected / submitted / readback` ayrı gözlenir; **ilk gözlenen sapma** işaretlenir |
+| Tekrar üretilebilir mi? | Ekran görüntüsü | 3 bağımsız tekrar, aynı imzayla **küçültme**, `repro/f1.spec.ts`, saklı değerle **replay** |
+| Test ortamı temiz kaldı mı? | Umut | Sahipli namespace, **doğrulanmış cleanup**; aksi halde exit 3 |
+
+**Kimin için:** profil adı, müşteri görünen adı, serbest not gibi insan metni kabul eden ve bir Playwright testi yazabilen ekipler.
+Çerçeve fark etmez: Laravel, Django, Rails, Next.js, hazır CRM; tarayıcıda bir form ve kaydı kimliğiyle yeniden bulma yolu yeter.<br>
+**Ne zaman değil:** üretim ortamında, izinsiz sitelerde, kaydı kimliğiyle yeniden bulamadığınız akışlarda; arama, CSV/export ve zengin metin için (sonraki faz).
 
 ---
 
@@ -197,7 +217,7 @@ Latin pozitif kontrol · Türkçe I ailesi · önceden birleşmiş/ayrık aksan 
 
 ```bash
 npm run typecheck    # TypeScript 7, build adımı yok
-npm test             # 62 test: 42 kabul senaryosu (A01–C14) + mimari + şema + Playwright entegrasyonu + kurulu paket + MCP
+npm test             # 65 test: 42 kabul senaryosu (A01–C14) + mimari + şema + Playwright entegrasyonu + kurulu paket + MCP
 ```
 
 Raporun 42 çekirdek kabul senaryosu test adlarıyla izlenir; `test/matrix.test.ts` bir senaryonun testi kaybolursa kırılır. Testlerin çoğu **gerçek Chromium** ve kasıtlı hata modlu demo uygulamasıyla koşar. Bu testler geliştirme sırasında üç gerçek motor hatasını yakaladı:
@@ -220,6 +240,18 @@ Kapsam ve sınırlar: [`docs/scope.md`](docs/scope.md) · ölçülmüş süreler
 
 ---
 
+## ◷ Durum ve yol haritası
+
+| | |
+|---|---|
+| **Sürüm** | v0.6.0 beta · kaynak ve derlenmiş paket · 65 test · CI: Linux, Windows, macOS × Node 22, 24 |
+| **Kararlı** | Tek alan metin roundtrip'i, sözleşme ve sonuç modeli, kanıt paketi, replay, küçültme, Playwright Test entegrasyonu, MCP araçları (koşu yalnız `--allow-run` ile) |
+| **Deneysel** | `research/` araçları (arama, kimlik, çakışma) |
+| **Sırada** | npm'de ilk yayın · kullanıcı pilotu ([yöntem](docs/pilot.md)) · tarih, sayı ve zengin metin alanları · arama ve export yolculukları |
+| **Kırıcı değişiklik** | 1.0 öncesi `0.X` sürümleri kırıcı olabilir ve [CHANGELOG](CHANGELOG.md)'da açıkça yazılır; şemalar `schemaVersion` ile ayrı sürümlenir, bilinmeyen büyük sürüm okunmaz |
+
+---
+
 ## Belgeler
 
 | | |
@@ -227,6 +259,7 @@ Kapsam ve sınırlar: [`docs/scope.md`](docs/scope.md) · ölçülmüş süreler
 | [`AGENTS.md`](AGENTS.md) | Kod ajanları için sözleşme: komutlar, çıkış kodları, RunView, MCP, asla yapılmayacak iddialar |
 | [`docs/contracts.md`](docs/contracts.md) | Fixture, akış sözleşmesi, gözlem sınırları, sonuç modeli, kanıt paketi, replay, küçültme |
 | [`docs/adapter-guide.md`](docs/adapter-guide.md) | Kendi uygulamanız için adapter yazmak |
+| [`docs/cli.md`](docs/cli.md) | CLI referansı: bütün komutlar, bayraklar, çıkış kodları |
 | [`docs/scope.md`](docs/scope.md) | v0.1 kapsam sözleşmesi ve bilinen sınırlar |
 | [`docs/release.md`](docs/release.md) | Sürümleme, etiket, GitHub Release ve npm trusted publishing |
 | [`docs/adr/`](docs/adr) | Karar kayıtları |
@@ -244,7 +277,7 @@ Yeni bir fixture, bir adapter örneği veya bir hata bildirimi. Hepsi sentetik v
 
 ## Lisans
 
-[Apache License 2.0](LICENSE). "Human Data Lab" bir çalışma adıdır; marka, alan adı veya npm adı tahsis edilmemiştir ([`NOTICE`](NOTICE)).
+[Apache License 2.0](LICENSE). "Human Data Lab" bir çalışma adıdır; marka, alan adı veya npm kapsamı (scope) tahsis edilmemiştir ([`NOTICE`](NOTICE)).
 
 <div align="center">
 <br>

@@ -46,6 +46,8 @@
     "bin",
     "dist",
     "schema",
+    "docs/contracts.md",
+    "docs/adapter-guide.md",
     "README.md",
     "README.en.md",
     "AGENTS.md",

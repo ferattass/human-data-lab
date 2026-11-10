@@ -11,7 +11,7 @@ operatörün bilgisi dışında olmamalıdır.
 **Alternatifler.** Resmî SDK bağımlılığı (çalışma zamanı bağımlılığı sıfırdan bire çıkar); yalnız CLI + `--json` (yeterli ama araç
 tanımları ve şema kaynakları ajan için daha keşfedilebilir); HTTP taşıması (yerel araç için gereksiz saldırı yüzeyi).
 
-**Gerekçe.** Protokolün gereken kısmı küçüktür (initialize, tools/list, tools/call, resources/*); satır ayraçlı JSON-RPC 300 satırda
+**Gerekçe.** Protokolün gereken kısmı küçüktür (initialize, tools/list, tools/call, resources/*); satır ayraçlı JSON-RPC birkaç yüz satırda
 test edilebilir biçimde yazılır. Salt okunur varsayılan ve açık `--allow-run` kapısı, aracın güvenlik sınırını (§30) ajan kullanımına taşır.
 
 **Geri dönüş.** Protokol değişikliği bu uygulamayı sürdürmeyi pahalılaştırırsa resmî SDK'ya geçilir; araç adları ve `RunView` korunur.

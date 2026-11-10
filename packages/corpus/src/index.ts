@@ -41,7 +41,7 @@ export function loadCorpus(set = 'smoke', file = 'human-text'): LoadedCorpus {
   let fixtures: Fixture[];
   if (set === 'full') fixtures = c.fixtures;
   else {
-    const ids = c.sets?.[set];
+    const ids = c.sets && Object.hasOwn(c.sets, set) ? c.sets[set] : undefined;
     if (!ids) throw new Error(`bilinmeyen corpus set: ${set} (mevcut: full, ${Object.keys(c.sets ?? {}).join(', ')})`);
     const byId = new Map(c.fixtures.map((f) => [f.id, f]));
     fixtures = ids.map((i) => byId.get(i)!);

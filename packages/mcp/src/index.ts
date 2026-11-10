@@ -50,7 +50,17 @@ const RESOURCE_NOT_FOUND = -32002;
 
 // ---------- Araçlar ----------
 
-interface ServeContext { allowRun: boolean; log: (l: string) => void; running: boolean; root: string }
+interface ServeContext {
+  allowRun: boolean;
+  log: (l: string) => void;
+  running: boolean;
+  root: string;
+  /** Sunucu düzeyinde iptal (SIGINT/SIGTERM, girdi kapanması): süren koşu durur, sahipli kaynaklar ayrı bütçeyle temizlenir. */
+  serverSignal: AbortSignal;
+  /** Süren koşunun iptal kolu ve istek kimliği (notifications/cancelled eşlemesi için). */
+  runAbort: AbortController | null;
+  runRequestId: number | string | null;
+}
 
 /**
  * Ajanın verdiği yol sunucu kökünün (`--root`, varsayılan çalışma dizini) içinde kalmalı (§30): koşu dizini, yapılandırma
@@ -112,7 +122,7 @@ export const TOOLS: ToolDef[] = [
       const expected = str(a, 'expected')!;
       const actual = str(a, 'actual')!;
       const rule = (str(a, 'rule', false) ?? 'text.exact.v1') as PreservationRuleId;
-      if (!(rule in PRESERVATION_RULES)) throw new RpcError(INVALID_PARAMS, `bilinmeyen kural ${rule}; bilinen: ${KNOWN_RULES.join(', ')}`);
+      if (!Object.hasOwn(PRESERVATION_RULES, rule)) throw new RpcError(INVALID_PARAMS, `bilinmeyen kural ${rule}; bilinen: ${KNOWN_RULES.join(', ')}`);
       return {
         rule, passed: PRESERVATION_RULES[rule](expected, actual), rawEqual: expected === actual,
         differenceClass: classifyDifference(expected, actual), firstDifferenceAt: firstDifference(expected, actual),
@@ -197,7 +207,8 @@ export const TOOLS: ToolDef[] = [
     description: 'roundtrip.config.ts ile gerçek Chromium\'da koşu yapar: her fixture için hedef uygulamada kayıt yaratır, bağımsız taze okuma yapar, kuralla karşılaştırır, ' +
       'sahipli kaynakları temizler ve kanıt paketi (run-<id>/) yazar. Hedef uygulamada YAZMA yapar; yalnız yerel/izinli test ortamı. ' +
       'Sunucu --allow-run ile başlatılmadıysa reddedilir. Yapılandırma dosyası import edilir (kod çalışır): yalnız gözden geçirdiğiniz dosyayı verin; configPath ve artifactsDir sunucu kökünün içinde olmalı. ' +
-      'Seri çalışır; aynı anda ikinci koşu reddedilir. Sonuç hdl_read_run ile aynı görünümdür.',
+      'Seri çalışır; aynı anda ikinci koşu reddedilir. Yapılandırma dosyası her çağrıda yeniden okunur; onun import ettiği adapter modülü sunucu ömrünce önbelleklidir (adapter değiştiyse sunucuyu yeniden başlatın). ' +
+      'İstemci notifications/cancelled gönderirse veya sunucu sonlandırılırsa koşu iptal edilir ve sahipli kaynaklar ayrı bütçeyle temizlenir. Sonuç hdl_read_run ile aynı görünümdür.',
     inputSchema: {
       type: 'object', additionalProperties: false, required: ['configPath'],
       properties: {
@@ -214,16 +225,21 @@ export const TOOLS: ToolDef[] = [
       if (ctx.running) throw new Error('başka bir koşu sürüyor; koşular seri yürütülür (veri izolasyonu, §26). Bitmesini bekleyin.');
       // Kilit denetimden hemen sonra, ilk await'ten ÖNCE alınır: iki eşzamanlı çağrı kapıyı birlikte geçemez.
       ctx.running = true;
+      const ac = new AbortController();
+      const onServerAbort = () => ac.abort(ctx.serverSignal.reason ?? new Error('sunucu sonlandırılıyor'));
+      ctx.serverSignal.addEventListener('abort', onServerAbort, { once: true });
+      if (ctx.serverSignal.aborted) onServerAbort();
+      ctx.runAbort = ac;
       try {
         const configPath = within(ctx, str(a, 'configPath')!, 'configPath');
         const config = await loadConfigFile(configPath);
         const artifactsDir = within(ctx, str(a, 'artifactsDir', false) ?? config.artifactsDir ?? 'runs', 'artifactsDir');
         const out = await runRoundtrip({
-          config, configPath, corpusSet: str(a, 'corpusSet', false), artifactsDir,
+          config, configPath, corpusSet: str(a, 'corpusSet', false), artifactsDir, signal: ac.signal,
           reproduce: bool(a, 'reproduce'), shrink: bool(a, 'shrink'), log: (l) => ctx.log(l),
         });
         return compactRun(readRun(out.runDir));
-      } finally { ctx.running = false; }
+      } finally { ctx.running = false; ctx.runAbort = null; ctx.runRequestId = null; ctx.serverSignal.removeEventListener('abort', onServerAbort); }
     },
   },
 ];
@@ -280,7 +296,14 @@ export async function serveStdio(o: ServeOptions = {}): Promise<void> {
   const output = o.output ?? process.stdout;
   const root = resolve(o.root ?? process.cwd());
   if (!existsSync(root)) throw new Error(`mcp: kök dizin yok: ${root}`);
-  const ctx: ServeContext = { allowRun: !!o.allowRun, log: o.log ?? ((l) => process.stderr.write(l + '\n')), running: false, root };
+  const server = new AbortController();
+  const ctx: ServeContext = { allowRun: !!o.allowRun, log: o.log ?? ((l) => process.stderr.write(l + '\n')), running: false, root, serverSignal: server.signal, runAbort: null, runRequestId: null };
+  // stdout protokole aittir: yapılandırma, adapter veya Playwright console.log yazarsa JSON-RPC akışı bozulmasın diye stderr'e yönlendirilir.
+  const orig = { log: console.log, info: console.info, debug: console.debug };
+  console.log = console.info = console.debug = (...args: unknown[]) => console.error(...args);
+  const onSignal = () => { if (!server.signal.aborted) server.abort(new Error('sunucu sonlandırılıyor: mevcut koşu iptal, sahipli kaynaklar temizleniyor')); };
+  process.on('SIGINT', onSignal);
+  process.on('SIGTERM', onSignal);
   const send = (msg: Json) => { output.write(JSON.stringify(msg) + '\n'); };
   const ok = (id: Req['id'], result: unknown) => send({ jsonrpc: '2.0', id: id ?? null, result });
   const fail = (id: Req['id'], e: unknown) => {
@@ -303,7 +326,11 @@ export async function serveStdio(o: ServeOptions = {}): Promise<void> {
             instructions: INSTRUCTIONS + `\nYol kökü: ${ctx.root} (runDir, configPath ve artifactsDir bunun içinde olmalı).` + (ctx.allowRun ? '\nhdl_run açık (--allow-run).' : '\nhdl_run kapalı: operatör sunucuyu --allow-run ile başlatmadı.'),
           });
         }
-        case 'notifications/initialized': case 'notifications/cancelled': case 'notifications/roots/list_changed': return;
+        case 'notifications/initialized': case 'notifications/roots/list_changed': return;
+        case 'notifications/cancelled':
+          // Yalnız süren hdl_run isteği iptal edilir; başka bir isteğin iptali koşuya dokunmaz.
+          if (ctx.runAbort && ctx.runRequestId !== null && p.requestId === ctx.runRequestId) ctx.runAbort.abort(new Error('istemci iptal etti (notifications/cancelled)'));
+          return;
         case 'ping': return ok(req.id, {});
         case 'tools/list':
           return ok(req.id, { tools: TOOLS.map((t) => ({ name: t.name, title: t.title, description: t.description, inputSchema: t.inputSchema, annotations: { title: t.title, ...t.annotations } })) });
@@ -314,6 +341,7 @@ export async function serveStdio(o: ServeOptions = {}): Promise<void> {
           const args = (p.arguments ?? {}) as Json;
           if (typeof args !== 'object' || Array.isArray(args)) throw new RpcError(INVALID_PARAMS, 'arguments nesne olmalı');
           try {
+            if (tool.name === 'hdl_run') ctx.runRequestId = req.id ?? null;
             const result = await tool.run(args, ctx);
             return ok(req.id, { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }], structuredContent: result, isError: false });
           } catch (e) {
@@ -358,5 +386,11 @@ export async function serveStdio(o: ServeOptions = {}): Promise<void> {
       void done.finally(() => pending.delete(done));
     }
   }
-  await Promise.all(pending);
+  // Girdi kapandı: süren koşu varsa iptal edilir (cleanup kendi bütçesiyle çalışır), sonra beklenir.
+  if (ctx.running) server.abort(new Error('istemci bağlantıyı kapattı: koşu iptal, sahipli kaynaklar temizleniyor'));
+  try { await Promise.all(pending); }
+  finally {
+    process.off('SIGINT', onSignal); process.off('SIGTERM', onSignal);
+    console.log = orig.log; console.info = orig.info; console.debug = orig.debug;
+  }
 }

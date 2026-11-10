@@ -17,7 +17,7 @@ body:
     id: family
     attributes:
       label: Aile ve önerilen kimlik
-      description: Mevcut aileler: latin, tr-i, combining, compat, punct, space, length, script, emoji, newline, control. Biçim `aile.ad.NNN`.
+      description: "Mevcut aileler: latin, tr-i, combining, compat, punct, space, length, script, emoji, newline, control. Biçim `aile.ad.NNN`."
     validations: { required: true }
   - type: textarea
     id: behaviour

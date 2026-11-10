@@ -8,7 +8,16 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../packages/', import.meta.url));
 const filesOf = (pkg: string) => readdirSync(join(root, pkg, 'src'), { recursive: true }).map(String).filter((f) => f.endsWith('.ts')).map((f) => join(root, pkg, 'src', f));
-const importsOf = (file: string) => [...readFileSync(file, 'utf8').matchAll(/^\s*import\s[^'"]*['"]([^'"]+)['"]/gm)].map((m) => m[1]);
+// Statik import/export-from, yan etkili import, dinamik import() ve createRequire hepsi bağımlılıktır.
+const importsOf = (file: string) => {
+  const src = readFileSync(file, 'utf8');
+  return [
+    ...[...src.matchAll(/^\s*(?:import|export)\s[^'"]*?\sfrom\s*['"]([^'"]+)['"]/gm)].map((m) => m[1]),
+    ...[...src.matchAll(/^\s*import\s+['"]([^'"]+)['"]/gm)].map((m) => m[1]),
+    ...[...src.matchAll(/\bimport\(\s*['"]([^'"]+)['"]\s*\)/g)].map((m) => m[1]),
+    ...[...src.matchAll(/createRequire\([^)]*\)\(\s*['"]([^'"]+)['"]/g)].map((m) => m[1]),
+  ];
+};
 
 // paket → import edebileceği paketler
 const ALLOWED: Record<string, string[]> = {

@@ -4,6 +4,7 @@
 //   test('profil adı korunur', async ({ humanData }) => {
 //     const r = await humanData.trial({ config, fixtureId: 'tr-i.dotted-capital.001', value: 'İpek' });
 //     expect(r.violations, r.describe).toEqual([]);
+//     expect(r.notRun, r.describe).toEqual([]);   // required kontrol çalışmadan "geçti" denmez
 //   });
 //
 // Kullanıcının mevcut browser'ı ve proje ayarları kullanılır; ayrı CLI auth/fixture düzeni kopyalatılmaz.
