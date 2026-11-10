@@ -178,7 +178,7 @@ footer{margin-top:60px;font-size:.82rem;color:var(--muted);border-top:1px solid 
 <header>
   <div class="brand"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M33 14H22a10 10 0 0 0-10 10v52a10 10 0 0 0 10 10h11M67 14h11a10 10 0 0 1 10 10v52a10 10 0 0 1-10 10H67" fill="none" stroke="#202A27" stroke-width="10" stroke-linecap="round"/><rect x="43" y="44" width="14" height="36" rx="7" fill="#202A27"/><circle cx="50" cy="29" r="9" fill="#D7502B"/></svg><div class="eyebrow">Human Data Lab · yerel rapor</div></div>
   <h1>Kaydedildi<span class="dot">.</span> Peki korundu mu?</h1>
-  <p class="mono small">${esc(contractId)} / ${esc(pv?.browser.name ?? 'chromium')} ${esc(pv?.browser.version ?? '')} / ${esc(rules)} / corpus ${esc(pv?.corpus.id ?? '?')}@${esc(pv?.corpus.version ?? '?')} (${esc(pv?.corpus.set ?? '?')}) / koşu ${esc(m?.runId ?? '?')}</p>
+  <p class="mono small">${esc(contractId)} / ${esc(pv?.browser?.name ?? 'chromium')} ${esc(pv?.browser?.version ?? '')} / ${esc(rules)} / corpus ${esc(pv?.corpus?.id ?? '?')}@${esc(pv?.corpus?.version ?? '?')} (${esc(pv?.corpus?.set ?? '?')}) / koşu ${esc(m?.runId ?? '?')}</p>
 </header>
 ${!complete ? `<div class="banner" role="alert"><strong>Bu koşu tamamlanmış değil.</strong> Başarılı bitiş veya "tüm kontroller geçti" sonucu gösterilemez.
   <ul>${(run.problems.length ? run.problems : m?.problems ?? []).map((p) => `<li>${esc(p)}</li>`).join('')}${(m?.problems ?? []).filter((p) => !run.problems.includes(p)).map((p) => `<li>${esc(p)}</li>`).join('')}</ul></div>` : ''}
@@ -215,18 +215,18 @@ ${findings.length ? findings.map((f) => findingSection(f, run)).join('') : '<p>B
 <section aria-labelledby="koken-h">
 <h2 id="koken-h">Tekrar üretim bağlamı</h2>
 <table><tbody>
-<tr><th scope="row">Araç</th><td class="mono">${esc(pv?.tool.name)} ${esc(pv?.tool.version)}</td></tr>
-<tr><th scope="row">Adapter</th><td class="mono">${esc(pv?.adapter.id)} ${esc(pv?.adapter.version)}</td></tr>
-<tr><th scope="row">Hedef</th><td class="mono">${esc(pv?.target.name)} · ${esc(pv?.target.baseURL)} · build ${esc(pv?.target.build ?? 'bilinmiyor')}</td></tr>
-<tr><th scope="row">Corpus</th><td class="mono">${esc(pv?.corpus.id)}@${esc(pv?.corpus.version)} set=${esc(pv?.corpus.set)} ${esc(pv?.corpus.digest)}</td></tr>
+<tr><th scope="row">Araç</th><td class="mono">${esc(pv?.tool?.name)} ${esc(pv?.tool?.version)}</td></tr>
+<tr><th scope="row">Adapter</th><td class="mono">${esc(pv?.adapter?.id)} ${esc(pv?.adapter?.version)}</td></tr>
+<tr><th scope="row">Hedef</th><td class="mono">${esc(pv?.target?.name)} · ${esc(pv?.target?.baseURL)} · build ${esc(pv?.target?.build ?? 'bilinmiyor')}</td></tr>
+<tr><th scope="row">Corpus</th><td class="mono">${esc(pv?.corpus?.id)}@${esc(pv?.corpus?.version)} set=${esc(pv?.corpus?.set)} ${esc(pv?.corpus?.digest)}</td></tr>
 <tr><th scope="row">Sözleşme / akış digest</th><td class="mono small">${esc(pv?.contractDigest)}<br>${esc(pv?.flowDigest)}</td></tr>
-<tr><th scope="row">Browser / runtime</th><td class="mono small">${esc(pv?.browser.name)} ${esc(pv?.browser.version)} · ${esc(JSON.stringify(pv?.runtime ?? {}))}</td></tr>
+<tr><th scope="row">Browser / runtime</th><td class="mono small">${esc(pv?.browser?.name)} ${esc(pv?.browser?.version)} · ${esc(JSON.stringify(pv?.runtime ?? {}))}</td></tr>
 <tr><th scope="row">Bütçeler</th><td class="mono small">${esc(JSON.stringify(pv?.budgets ?? {}))}</td></tr>
 <tr><th scope="row">İzinli originler</th><td class="mono small">${esc((pv?.allowedOrigins ?? []).join(', '))}</td></tr>
 </tbody></table>
 <p class="small muted">Digest'ler aynı baytları doğrulamaya yardımcı olur; raporun doğru üretildiğini, yayıncının kimliğini veya uygulama sonucunun doğruluğunu kanıtlamaz.</p>
 </section>
-<footer>Human Data Lab ${esc(pv?.tool.version ?? '')} · Bu sayfa script çalıştırmaz ve dış kaynak yüklemez. Artifact bir çalışma dosyasıdır: paylaşmadan önce içeriği gözden geçirin (<span class="mono">hdl export</span> yalnız allowlist dosyalarını kopyalar).</footer>
+<footer>Human Data Lab ${esc(pv?.tool?.version ?? '')} · Bu sayfa script çalıştırmaz ve dış kaynak yüklemez. Artifact bir çalışma dosyasıdır: paylaşmadan önce içeriği gözden geçirin (<span class="mono">hdl export</span> yalnız allowlist dosyalarını kopyalar).</footer>
 </main>
 </body>
 </html>

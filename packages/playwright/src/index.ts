@@ -11,7 +11,7 @@ import type { RoundtripConfig } from './config.ts';
 
 export * from './adapter.ts';
 export * from './config.ts';
-export { runRoundtrip, TOOL } from './runner.ts';
+export { runRoundtrip, TOOL, redactMessage, guardedRequestContext, raceSignal } from './runner.ts';
 export type { RunOptions, RunOutcome } from './runner.ts';
 
 export interface SingleTrialResult {

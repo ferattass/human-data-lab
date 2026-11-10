@@ -20,7 +20,7 @@ npx hdl run hdl/roundtrip.config.ts --corpus smoke
 npx hdl report runs/run-<id> --json           # makine okunur özet (aşağıdaki RunView)
 ```
 
-Kaynaktan çalışmak için Node ≥ 22.18 (TypeScript tip silme; build adımı yok). Kurulu pakette derlenmiş `dist/` çalışır.
+Kaynaktan çalışmak için Node ≥ 22.18 (TypeScript tip silme; build adımı yok). Kurulu pakette derlenmiş `dist/` çalışır. Bütün komut ve bayraklar: [`docs/cli.md`](docs/cli.md).
 
 ## MCP sunucusu
 
@@ -38,7 +38,7 @@ npx hdl mcp --allow-run   # + hdl_run (gerçek koşu). Operatör izni; ajan kend
 | Araç | Tarayıcı | Ne döner |
 |---|:-:|---|
 | `hdl_describe_difference` `{expected, actual, rule?}` | yok | `passed`, `rawEqual`, `differenceClass`, `firstDifferenceAt`, kaçışlı değerler, kod noktaları, birimli ölçüler |
-| `hdl_list_fixtures` `{set?, family?, property?}` | yok | corpus kimliği/sürümü/digest'i ve fixture listesi (ham + kaçışlı) |
+| `hdl_list_fixtures` `{set?, family?, property?, file?}` | yok | corpus kimliği/sürümü/digest'i ve fixture listesi (ham + kaçışlı) |
 | `hdl_validate_contract` `{contract}` | yok | `valid`, `issues[]` (yol + mesaj) |
 | `hdl_read_run` `{runDir}` | yok | RunView: bütünlük sorunları, özet, bulgular, bütün denemeler, aşama gözlemleri |
 | `hdl_plan_export` `{runDir, includeEvidence?}` | yok | paylaşım paketine girecek/girmeyecek dosyalar ve nedenleri |
@@ -71,7 +71,7 @@ Tek yeşil yoktur. Her deneme beş boyutta raporlanır: `execution`, `applicatio
 ## RunView (hdl report --json, hdl_read_run, hdl_run)
 
 ```text
-runDir, runId, status (complete|incomplete), complete, exitCode, exitMeaning, cancelled, syntheticDemo, replayOf, problems[]
+schemaVersion, runDir, runId, status (complete|incomplete), complete, exitCode, exitMeaning, cancelled, syntheticDemo, replayOf, problems[]
 target {name, baseURL, build}, adapter {id, version}, corpus {id, version, set, digest}, summary {…RunSummary}
 findings[]  { id, fixtureId, rule, boundary, differenceClass, applicationOutcome, reproducibility, attemptsReproduced, attemptsObserved,
               original {value, escaped}, smallest {value, escaped, status, note} | null, attemptIds[], reproSpec }

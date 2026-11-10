@@ -68,8 +68,10 @@ export class RunDir {
   static create(parent: string, runId: string): RunDir {
     if (!/^[A-Za-z0-9._-]+$/.test(runId)) throw new ArtifactError(`geçersiz runId: ${runId}`);
     const root = join(resolve(parent), `run-${runId}`);
-    if (existsSync(root)) throw new ArtifactError(`koşu dizini zaten var, üzerine yazılmaz: ${root}`);
-    mkdirSync(root, { recursive: true });
+    mkdirSync(resolve(parent), { recursive: true });
+    // Atomik: var olan dizin EEXIST verir (existsSync + mkdir yarışı yok); üzerine yazılmaz.
+    try { mkdirSync(root); }
+    catch (e) { if ((e as NodeJS.ErrnoException).code === 'EEXIST') throw new ArtifactError(`koşu dizini zaten var, üzerine yazılmaz: ${root}`); throw e; }
     for (const d of ['observations', 'findings', 'repro', 'evidence']) mkdirSync(join(root, d));
     return new RunDir(root);
   }
@@ -162,6 +164,20 @@ export function readRun(dir: string): LoadedRun {
       if (!existsSync(abs)) problems.push(`eksik kanıt dosyası: ${rel}`);
       else if (sha256(readFileSync(abs)) !== digest) problems.push(`digest uyuşmuyor: ${rel}`);
     }
+    // Manifest'te listelenmeyen artifact: tamamlanmış koşuya sonradan eklenmiş dosya (ör. findings/f9.json) kanıt sayılmaz.
+    // recovery/ hariç: hdl cleanup finalize'dan sonra yazar ve ayrı dosyadır.
+    if (manifest.status === 'complete') {
+      const listed = new Set(Object.keys(manifest.files ?? {}));
+      const walk = (dir: string) => {
+        for (const name of readdirSync(dir)) {
+          const abs = join(dir, name);
+          const rel = relative(root, abs).split(sep).join('/');
+          if (statSync(abs).isDirectory()) { if (rel !== 'recovery') walk(abs); }
+          else if (rel !== 'manifest.json' && !rel.includes('.tmp-') && !listed.has(rel)) problems.push(`manifest'te listelenmeyen dosya: ${rel}`);
+        }
+      };
+      walk(root);
+    }
   }
   let contract: unknown = null;
   try { contract = JSON.parse(readFileSync(join(root, 'contract.json'), 'utf8')); } catch { problems.push('contract.json okunamadı'); }
@@ -174,11 +190,14 @@ export function readRun(dir: string): LoadedRun {
     try { findings.push(JSON.parse(readFileSync(join(fdir, f), 'utf8'))); } catch { problems.push(`findings/${f} bozuk JSON`); }
   }
   const observations: Record<string, unknown> = {};
-  for (const a of attempts) {
-    const rel = `observations/${a.identity.attemptId}.json`;
+  for (const [i, a] of attempts.entries()) {
+    // Geçerli JSON ama bozuk kayıt (identity yok, attemptId'de ayraç) çökme değil sorun üretir.
+    const id = (a as { identity?: { attemptId?: unknown } } | null)?.identity?.attemptId;
+    if (typeof id !== 'string' || !/^[A-Za-z0-9._-]+$/.test(id)) { problems.push(`attempts.jsonl:${i + 1} geçersiz veya eksik attemptId`); continue; }
+    const rel = `observations/${id}.json`;
     const abs = safeResolve(root, rel);
     if (!existsSync(abs)) { problems.push(`eksik gözlem: ${rel}`); continue; }
-    try { observations[a.identity.attemptId] = JSON.parse(readFileSync(abs, 'utf8')); } catch { problems.push(`${rel} bozuk JSON`); }
+    try { observations[id] = JSON.parse(readFileSync(abs, 'utf8')); } catch { problems.push(`${rel} bozuk JSON`); }
   }
   return { root, manifest, contract, attempts, fixtures, allocations, findings, observations, problems, complete: !!manifest && manifest.status === 'complete' && problems.length === 0 };
 }
@@ -215,6 +234,7 @@ export function writeShare(runDir: string, outDir: string, opts: { includeEviden
   const plan = planShare(runDir, opts);
   if (existsSync(outDir)) throw new ArtifactError(`paylaşım dizini zaten var: ${outDir}`);
   const realRoot = realpathSync(plan.root);
+  mkdirSync(outDir, { recursive: true }); // dahil edilen dosya olmasa da CONTENTS.txt yazılır
   for (const rel of plan.included) {
     const src = safeResolve(plan.root, rel);
     // Plan ile kopya arasında değişmiş olabilir (TOCTOU): yeniden denetle, dosyayı BİR KEZ aç, açılan tanımlayıcının
@@ -308,9 +328,9 @@ export function compactRun(run: LoadedRun): RunView {
     syntheticDemo: !!m?.syntheticDemo,
     replayOf: m?.replayOf ?? null,
     problems: run.problems,
-    target: m?.provenance.target ?? null,
-    adapter: m ? { id: m.provenance.adapter.id, version: m.provenance.adapter.version } : null,
-    corpus: m?.provenance.corpus ?? null,
+    target: m?.provenance?.target ?? null,
+    adapter: m?.provenance?.adapter ? { id: m.provenance.adapter.id, version: m.provenance.adapter.version } : null,
+    corpus: m?.provenance?.corpus ?? null,
     summary: m?.summary ?? null,
     findings: [...run.findings].sort((a, b) => a.id.localeCompare(b.id, 'en', { numeric: true })).map((f) => ({
       id: f.id, fixtureId: f.fixtureId, rule: f.signature.ruleId, boundary: f.signature.boundary.join('→'),
@@ -320,7 +340,7 @@ export function compactRun(run: LoadedRun): RunView {
       smallest: f.shrink ? { value: f.shrink.best.value, escaped: escaped(f.shrink.best.value), status: f.shrink.status, note: f.shrink.note } : null,
       attemptIds: f.original.attemptIds, reproSpec: `repro/${f.id}.spec.ts`,
     })),
-    attempts: run.attempts.map((t) => ({
+    attempts: run.attempts.filter((t) => t && typeof t === 'object' && t.identity && Array.isArray(t.assertions)).map((t) => ({
       attemptId: t.identity.attemptId, candidateId: t.identity.candidateId, fixtureId: t.fixtureId, expectation: t.expectation,
       execution: t.execution, applicationOutcome: t.applicationOutcome, cleanup: t.cleanup,
       recordId: t.acceptanceEvidence?.recordId ?? null,

@@ -9,13 +9,14 @@ import { displayNameContract } from '../examples/profile-demo/contract.ts';
 
 after(closeBrowser);
 const schema = (n: string) => JSON.parse(readFileSync(new URL(`../schema/${n}.schema.json`, import.meta.url), 'utf8'));
-type S = { required?: string[]; properties?: Record<string, S>; enum?: unknown[]; const?: unknown; additionalProperties?: boolean | S; items?: S; type?: string };
+type S = { required?: string[]; properties?: Record<string, S>; enum?: unknown[]; const?: unknown; additionalProperties?: boolean | S; items?: S; type?: string; pattern?: string };
 
 /** Hafif yapısal denetim; hataları yol ile döndürür. */
 function check(s: S, v: unknown, path = '$'): string[] {
   const out: string[] = [];
   if (s.const !== undefined && v !== s.const) out.push(`${path}: const ${JSON.stringify(s.const)} bekleniyor, ${JSON.stringify(v)}`);
   if (s.enum && !s.enum.includes(v)) out.push(`${path}: ${JSON.stringify(v)} enum dışında (${s.enum.join(', ')})`);
+  if (s.pattern && typeof v === 'string' && !new RegExp(s.pattern).test(v)) out.push(`${path}: ${JSON.stringify(v)} pattern ${s.pattern} ile uyuşmuyor`);
   if (v && typeof v === 'object' && !Array.isArray(v)) {
     const o = v as Record<string, unknown>;
     for (const k of s.required ?? []) if (!(k in o)) out.push(`${path}.${k}: zorunlu alan yok`);
@@ -38,7 +39,7 @@ test('denetleyici gerçekten ihlal yakalar (negatif kontrol)', () => {
   assert.ok(check(schema('fixture'), noValue).some((e) => /\$\.value: zorunlu/.test(e)));
   const obsSchema = schema('trial-result');
   assert.ok(check(obsSchema, { observations: { readback: { boundary: 'readback', status: 'maybe' } } }).some((e) => /status: "maybe" enum/.test(e)), 'nesne tipli additionalProperties denetleniyor');
-  assert.ok(check(schema('manifest'), { files: { 'a.json': 'md5:x' } }).length > 0);
+  assert.ok(check(schema('manifest'), { files: { 'a.json': 'md5:x' } }).some((e) => /pattern/.test(e)), 'digest biçimi pattern ile denetleniyor');
 });
 
 test('corpus adı allowlist: dizin ayracı veya ".." içeren ad data/ dışına çıkamaz', async () => {

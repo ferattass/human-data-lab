@@ -83,18 +83,23 @@ export function validateContract(c: unknown): asserts c is FlowContract {
   if (!field || !isStr(field.id) || !CONTROLS.includes(field.control as string)) issues.push({ path: 'field', message: 'id ve control (input-text|textarea) zorunlu' });
   if (x.inputMethod !== 'fill') issues.push({ path: 'inputMethod', message: 'v0.1 yalnız "fill"' });
   if (!Array.isArray(x.expectations) || !x.expectations.length) issues.push({ path: 'expectations', message: 'en az bir kabul beklentisi bağlanmalı (ürün tahmin etmez)' });
-  else x.expectations.forEach((e: Record<string, unknown>, i: number) => {
+  else x.expectations.forEach((raw: unknown, i: number) => {
+    if (!raw || typeof raw !== 'object') { issues.push({ path: `expectations[${i}]`, message: 'nesne olmalı' }); return; }
+    const e = raw as Record<string, unknown>;
     if (!(e.properties === '*' || isStrArr(e.properties))) issues.push({ path: `expectations[${i}].properties`, message: '"*" veya özellik listesi' });
     if (!['must-accept', 'must-reject'].includes(e.expect as string)) issues.push({ path: `expectations[${i}].expect`, message: 'must-accept | must-reject' });
   });
   if (x.fixtureExpectations !== undefined) {
-    for (const [k, v] of Object.entries(x.fixtureExpectations as object))
+    if (!x.fixtureExpectations || typeof x.fixtureExpectations !== 'object' || Array.isArray(x.fixtureExpectations)) issues.push({ path: 'fixtureExpectations', message: 'nesne olmalı' });
+    else for (const [k, v] of Object.entries(x.fixtureExpectations as object))
       if (!['must-accept', 'must-reject'].includes(v)) issues.push({ path: `fixtureExpectations.${k}`, message: 'must-accept | must-reject' });
   }
   if (!Array.isArray(x.preservation) || !x.preservation.length) issues.push({ path: 'preservation', message: 'en az bir korunma kontrolü' });
   else {
     const ids = new Set<string>();
-    x.preservation.forEach((p: Record<string, unknown>, i: number) => {
+    x.preservation.forEach((raw: unknown, i: number) => {
+      if (!raw || typeof raw !== 'object') { issues.push({ path: `preservation[${i}]`, message: 'nesne olmalı' }); return; }
+      const p = raw as Record<string, unknown>;
       if (!isStr(p.id) || ids.has(p.id)) issues.push({ path: `preservation[${i}].id`, message: 'benzersiz kimlik zorunlu' });
       ids.add(p.id as string);
       if (!isStr(p.rule) || !isKnownRule(p.rule) || !isPreservationRule(p.rule)) issues.push({ path: `preservation[${i}].rule`, message: `bilinmeyen karşılaştırıcı ${JSON.stringify(p.rule)}` });
@@ -106,7 +111,7 @@ export function validateContract(c: unknown): asserts c is FlowContract {
   }
   const rb = x.readback as Record<string, unknown> | undefined;
   if (!rb || !['first-independent-read', 'stable-read', 'readiness-signal'].includes(rb.kind as string)) issues.push({ path: 'readback', message: 'first-independent-read | stable-read | readiness-signal' });
-  else if (rb.kind === 'stable-read' && !(Number(rb.consecutive) >= 2 && Number(rb.budgetMs) > 0 && Number(rb.intervalMs) >= 0))
+  else if (rb.kind === 'stable-read' && !(typeof rb.consecutive === 'number' && rb.consecutive >= 2 && typeof rb.budgetMs === 'number' && rb.budgetMs > 0 && typeof rb.intervalMs === 'number' && rb.intervalMs >= 0))
     issues.push({ path: 'readback', message: 'stable-read: consecutive ≥ 2, intervalMs, budgetMs zorunlu' });
   if (issues.length) throw new SchemaError('akış sözleşmesi', issues);
 }

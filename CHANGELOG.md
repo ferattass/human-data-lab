@@ -24,6 +24,13 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Sürümleme: [
 - Rapor, çıkış kodu anlamını ve ilk gözlenen sapmayı çekirdekten alır (yinelenen tanım kaldırıldı).
 
 ### Güvenlik
+- Redaction sırası düzeltildi: `Authorization: Bearer <token>` içindeki token artık maskeleniyor (önce şema+token, sonra cookie satırı,
+  sonra tek değerli başlıklar). Adapter'ın `reason`/`note` dizgileri de redakte edilir; sırlar authenticate sonrasında da okunur.
+- `hdl cleanup`: hedef denetimi manifest yoksa `contract.json`'dan yapılır; `allocations.jsonl` bütünlüğü bozuksa temizlik yapılmaz;
+  istekler origin allowlist'ten geçer ve yönlendirme izlemez; ayrıntılar redakte; bütçe aşımında gerçekten durur.
+- MCP: `rule`/`set` için prototip anahtarları (`constructor` vb.) reddedilir; sunucu çalışırken `console.log` stderr'e yönlenir;
+  SIGINT/SIGTERM, girdi kapanması ve `notifications/cancelled` süren koşuyu iptal eder (cleanup ayrı bütçeyle çalışır).
+- Tarayıcı origin allowlist'i WebSocket bağlantılarını ve son aşamadan sonra gelen geç istekleri de kapsar.
 - `hdl export` sembolik bağlantıları ve junction'ları izlemez. Başkasından gelen bir koşu dizinindeki bağlantı
   (ör. `report.html → ~/.ssh/id_rsa`) hedefin içeriğini paylaşım paketine taşıyamaz.
 - Paylaşım kopyası doğrulanmış dosya tanımlayıcısından yapılır: POSIX'te `O_NOFOLLOW` ile açılır, `dev/ino` denetimden
@@ -40,6 +47,18 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Sürümleme: [
 - CI: Linux, Windows ve macOS; Node 22 ve 24.
 
 ### Düzeltildi
+- Üretilen `repro/*.spec.ts` artık `notRun` da denetler: required kontrol çalışmadan "geçti" denmez.
+- `hdl report` tamamlanmamış koşuda saklı 130 (iptal) ve 3 (cleanup) kodunu 2'ye düşürmez.
+- Kirli ortam (doğrulanmamış cleanup) sonraki tekrar ve küçültmeyi durdurur; planlanan tekrarların hepsi koşmadıysa `stable` değil `inconclusive`.
+- Küçültmede son bağımsız onay için deneme bütçesi rezerve edilir; bütçe biten doğrulanmış aday atılmaz, eksik onay not edilir.
+- Rezerve edilen her namespace temizlenir (en kötü durum raporlanır); cleanup bütçesi aşıldıktan sonra geç istek bağlamı açılamaz;
+  `authenticate` ve `targetBuild` deneme bütçesi ve iptal sinyaliyle sınırlı.
+- `readRun`: manifest'te listelenmeyen dosya, bozuk `attempts.jsonl` satırı ve `provenance`'sız manifest çökme değil sorun üretir;
+  boş paylaşım paketi de yazılabilir; koşu dizini atomik oluşturulur.
+- CLI: boolean bayraklar (`--json`, `--no-shrink`, `--owned-only`, …) sonraki argümanı yutmaz; değersiz `--out` açık hata verir.
+- `preservationChecked` yalnız required kontrolleri sayar (tanısal kontrolün geçmesi "korunma kontrolü çalıştı" değildir).
+- Şema doğrulayıcı null öğeli diziler ve sayı yerine dizgi verilen `stable-read` alanlarında çökmez.
+- `hdl_run` yapılandırma dosyasını her çağrıda yeniden okur.
 - `hdl export` ve testler, Windows'ta yolda ASCII dışı karakter (ör. `Yayında`) varken çöküyordu:
   Node 24.14'te `fs.cpSync` bu durumda hiçbir hata basmadan 127 koduyla sonlanıyor. `copyFileSync` tabanlı kopyaya geçildi.
 - Artifact yollarında ters eğik çizgi, sürücü harfi ve `:` her işletim sisteminde reddedilir (C09; Linux'ta `C:\x` kabul ediliyordu).

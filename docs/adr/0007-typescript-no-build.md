@@ -7,6 +7,8 @@ Yalnız silinebilir söz dizimi (`erasableSyntaxOnly`): enum, namespace, paramet
 
 **Alternatifler.** tsup/tsc ile derleme; npm workspaces.
 
-**Bedel.** npm'e yayımlarken Node'un `node_modules` içinde tip silmeyi desteklememesi nedeniyle derlenmiş çıktı gerekecek (beta işi).
+**Bedel.** npm'e yayımlarken Node'un `node_modules` içinde tip silmeyi desteklememesi nedeniyle derlenmiş çıktı gerekir.
+
+**Durum (0.5.0+).** Geliştirmede build yok; yayın için `npm run build` (`scripts/build.mjs`) dist/ üretir ve `prepack` ile kendiliğinden çalışır.
 
 **Testler.** `npm run typecheck`, mimari testi.

@@ -1,15 +1,16 @@
 // @human-data-lab/cli — run / replay / report / owned cleanup / export / demo / init (§28).
 // CLI ikinci bir oracle yaratmaz; çekirdek sonuçlarını serileştirir.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join, relative, resolve } from 'node:path';
+import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { EXIT_MEANING, SCHEMA_VERSION, digestOf, sameSignature, signatureOf } from '../../core/src/index.ts';
 import type { ExitCode, Fixture } from '../../core/src/index.ts';
 import { readCorpusFile } from '../../corpus/src/index.ts';
 import { compactRun, readRun, writeShare, planShare } from '../../store/src/index.ts';
+import type { LoadedRun } from '../../store/src/index.ts';
 import { renderReport } from '../../reporter/src/index.ts';
-import { loadConfigFile, runRoundtrip, TOOL } from '../../playwright/src/index.ts';
+import { guardedRequestContext, loadConfigFile, raceSignal, redactMessage, runRoundtrip, TOOL } from '../../playwright/src/index.ts';
 import type { RoundtripConfig } from '../../playwright/src/index.ts';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
@@ -33,16 +34,22 @@ Kullanım:
 Birden çok durum varsa öncelik 130 > 3 > 2 > 1 > 0. "fail yok" ile "tüm gerekli kontroller geçti" aynı değildir.`;
 
 type Args = { _: string[]; flags: Record<string, string | boolean> };
+/** Değer almayan bayraklar: sonraki konumsal argümanı yutmazlar (`hdl report --json runs/x` çalışır). Diğerleri değer ister. */
+const BOOLEAN_FLAGS = new Set(['json', 'dry-run', 'include-evidence', 'owned-only', 'no-reproduce', 'no-shrink', 'allow-run', 'help', 'version']);
 function parse(argv: string[]): Args {
   const out: Args = { _: [], flags: {} };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
-    if (a.startsWith('--')) {
-      const [k, v] = a.slice(2).split('=', 2);
-      if (v !== undefined) out.flags[k] = v;
-      else if (argv[i + 1] && !argv[i + 1].startsWith('--')) out.flags[k] = argv[++i];
-      else out.flags[k] = true;
-    } else out._.push(a);
+    if (!a.startsWith('--')) { out._.push(a); continue; }
+    const [k, v] = a.slice(2).split('=', 2);
+    if (BOOLEAN_FLAGS.has(k)) {
+      if (v !== undefined && !['true', 'false', '1', '0'].includes(v)) throw new UsageError(`--${k} değer almaz`);
+      out.flags[k] = v === undefined || v === 'true' || v === '1';
+      continue;
+    }
+    if (v !== undefined) out.flags[k] = v;
+    else if (argv[i + 1] !== undefined && !argv[i + 1].startsWith('--')) out.flags[k] = argv[++i];
+    else throw new UsageError(`--${k} bir değer gerektirir`);
   }
   return out;
 }
@@ -53,6 +60,13 @@ async function loadConfig(p: string): Promise<RoundtripConfig> {
 }
 
 class UsageError extends Error {}
+
+/** Tamamlanmamış koşu en az 2'dir; saklı kod daha yüksek öncelikliyse (130 iptal, 3 cleanup) o korunur (§28: 130 > 3 > 2 > 1 > 0). */
+function reportExit(run: LoadedRun): ExitCode {
+  const code = run.manifest?.exitCode;
+  if (run.complete) return (code ?? 2) as ExitCode;
+  return code === 130 || code === 3 ? code : 2;
+}
 
 /**
  * Yapılandırma dosyası import edilir, yani KOD ÇALIŞTIRIR. Koşu dizinleri paylaşılabilir (hdl export), bu yüzden
@@ -135,29 +149,37 @@ function cmdReport(a: Args): ExitCode {
   if (a.flags.json) {
     // Makine okunur özet (ajanlar ve CI için): manifest + bulgular + denemeler, aynı sonuç modeliyle; ikinci oracle yok.
     console.log(JSON.stringify(compactRun(run), null, 2));
-    return run.complete ? ((m?.exitCode ?? 2) as ExitCode) : 2;
+    return reportExit(run);
   }
   console.log(`koşu ${m?.runId ?? '?'} · durum ${m?.status ?? 'manifest yok'} · exit ${m?.exitCode ?? '?'}${m?.syntheticDemo ? ' · SENTETİK DEMO' : ''}`);
   if (m?.summary) console.log(`seçilen ${m.summary.selected} · uygun ${m.summary.applicable} · yürütülen ${m.summary.executed} · korunma kontrolü çalışan ${m.summary.preservationChecked} · required ihlal ${m.summary.requiredFailed} · çalışmayan required ${m.summary.requiredNotRun} · bulgu ${m.summary.findings}`);
   if (run.problems.length) console.log(`sorunlar:\n  - ${run.problems.join('\n  - ')}`);
   const target = a.flags.out ? resolve(a.flags.out as string) : join(run.root, 'report.html');
+  const relToRun = relative(run.root, target);
+  if (a.flags.out && existsSync(target) && !relToRun.startsWith('..') && !isAbsolute(relToRun))
+    throw new UsageError(`${relative(process.cwd(), target)} koşu dizinindeki digest'li bir dosyadır; üzerine yazılmaz (başka --out verin)`);
   if (a.flags.out || !existsSync(target)) {
     // Tamamlanmamış/çökmüş koşu için rapor üretilebilir; tamamlanmış koşunun digestli raporu üzerine yazılmaz.
     writeFileSync(target, renderReport(run), 'utf8');
     console.log(`rapor yazıldı: ${relative(process.cwd(), target)}`);
   } else console.log(`rapor: ${relative(process.cwd(), target)}`);
-  return run.complete ? ((m?.exitCode ?? 2) as ExitCode) : 2;
+  return reportExit(run);
 }
 
 async function cmdCleanup(a: Args): Promise<ExitCode> {
   const dir = a._[1];
   if (!dir || !a.flags['owned-only']) throw new UsageError('kullanım: hdl cleanup <run-dizini> --owned-only --config <dosya>  (yalnız sahipli kaynaklar; --owned-only zorunlu)');
   const run = readRun(dir);
-  const stored = run.contract as { configPath?: string } | null;
+  const stored = run.contract as { configPath?: string; target?: { baseURL?: string } } | null;
   const cfgPath = requireConfigFlag(a, stored?.configPath, 'cleanup');
   const config = await loadConfig(cfgPath);
-  const expectedBase = run.manifest?.provenance.target.baseURL;
-  if (expectedBase && expectedBase !== config.target.baseURL) throw new UsageError(`yanlış test ortamı: koşu ${expectedBase} üzerinde, yapılandırma ${config.target.baseURL} — temizlik yapılmadı`);
+  // Hedef denetimi çökmüş koşuda da yapılır: manifest yoksa contract.json'daki hedef; o da yoksa temizlik yapılmaz.
+  const expectedBase = run.manifest?.provenance?.target?.baseURL ?? stored?.target?.baseURL;
+  if (!expectedBase) throw new UsageError('koşunun hedefi okunamadı (manifest.json ve contract.json yok veya bozuk); yanlış ortamda temizlik riski nedeniyle durduruldu');
+  if (expectedBase !== config.target.baseURL) throw new UsageError(`yanlış test ortamı: koşu ${expectedBase} üzerinde, yapılandırma ${config.target.baseURL} — temizlik yapılmadı`);
+  // Sahiplik günlüğü güvenilmezse (bozuk satır, digest uyuşmazlığı) hangi namespace'in bize ait olduğu bilinemez; temizlik yapılmaz.
+  const logProblems = run.problems.filter((p) => /allocations\.jsonl/.test(p));
+  if (logProblems.length) throw new UsageError(`allocations.jsonl güvenilmez; temizlik yapılmadı:\n  - ${logProblems.join('\n  - ')}`);
   // Namespace başına son durum: reserve var, doğrulanmış cleanup yok → kurtarma adayı.
   const state = new Map<string, { resources: Set<string>; last?: string; attemptId: string }>();
   for (const e of run.allocations) {
@@ -170,19 +192,29 @@ async function cmdCleanup(a: Args): Promise<ExitCode> {
   const todo = [...state].filter(([, s]) => s.last !== 'verified' && s.last !== 'not-needed');
   console.log(`${state.size} sahipli namespace, ${todo.length} tanesi doğrulanmış temizlik bekliyor.`);
   if (!todo.length) return 0;
-  const { request } = await import('@playwright/test');
+  // Koşudaki aynı güvenlik sınırı: origin allowlist + yönlendirme yok, ayrı bütçe, sırlar redakte, geç istek bağlamı açılmaz.
+  const allowed = new Set((config.allowedOrigins ?? []).map((o) => new URL(o).origin));
+  const secrets = (() => { try { return (config.adapter.secrets?.() ?? []).filter((x) => typeof x === 'string' && x.length >= 4); } catch { return []; } })();
   const recovery: unknown[] = [];
   let bad = 0;
   for (const [ns, s] of todo) {
-    const api = await request.newContext({ baseURL: config.target.baseURL, maxRedirects: 0 });
+    const apis: Array<{ dispose(): Promise<void> }> = [];
+    const gate = { closed: false };
     const ac = new AbortController();
-    const timer = setTimeout(() => ac.abort(), config.budgets?.cleanupTimeoutMs ?? 10_000);
+    const timer = setTimeout(() => ac.abort(new Error(`cleanup bütçesi aşıldı (${config.budgets?.cleanupTimeoutMs ?? 10_000} ms)`)), config.budgets?.cleanupTimeoutMs ?? 10_000);
     let status = 'failed'; let detail = '';
     try {
-      const r = await config.adapter.cleanup({ identity: { runId: run.manifest?.runId ?? '?', caseId: '-', candidateId: '-', attemptId: s.attemptId, fixtureKey: '-' }, baseURL: config.target.baseURL, signal: ac.signal, request: async () => api }, { namespace: ns, resourceIds: [...s.resources], allocationLogRef: 'allocations.jsonl' });
-      status = r.status; detail = r.detail ?? '';
-    } catch (e) { detail = String((e as Error).message).split('\n')[0]; }
-    finally { clearTimeout(timer); await api.dispose(); }
+      const r = await raceSignal(config.adapter.cleanup({
+        identity: { runId: run.manifest?.runId ?? '?', caseId: '-', candidateId: '-', attemptId: s.attemptId, fixtureKey: '-' }, baseURL: config.target.baseURL, signal: ac.signal,
+        request: async () => {
+          if (gate.closed) throw new Error('cleanup kapandı; yeni istek bağlamı açılmaz');
+          const api = await guardedRequestContext(config.target.baseURL, allowed);
+          apis.push(api); return api;
+        },
+      }, { namespace: ns, resourceIds: [...s.resources], allocationLogRef: 'allocations.jsonl' }), ac.signal);
+      status = r.status; detail = redactMessage(r.detail ?? '', secrets);
+    } catch (e) { status = ac.signal.aborted ? 'pending' : 'failed'; detail = redactMessage(e, secrets); }
+    finally { clearTimeout(timer); gate.closed = true; for (const api of apis) await api.dispose().catch(() => {}); }
     if (status !== 'verified' && status !== 'not-needed') bad++;
     recovery.push({ at: new Date().toISOString(), namespace: ns, status, detail });
     console.log(`  ${ns}: ${status}${detail ? ' — ' + detail : ''}`);
@@ -242,7 +274,8 @@ function cmdLab(a: Args): ExitCode {
 }
 
 export async function main(argv = process.argv.slice(2)): Promise<number> {
-  const a = parse(argv);
+  let a: Args;
+  try { a = parse(argv); } catch (e) { console.error(`${(e as Error).message}\n\n${HELP}`); return 2; }
   const cmd = a._[0] ?? (a.flags.version ? 'version' : a.flags.help ? 'help' : undefined);
   try {
     switch (cmd) {

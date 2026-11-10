@@ -21,7 +21,7 @@ Durum: **✓ uygulandı ve test edildi** · **◐ kısmen / bilinçli sapma** ·
 | 14 | Unicode kararları | ✓ | `core/text.ts` (birimli ölçüler, segmenter), ICU/Unicode sürümü manifest'te; A03–A05, A12 |
 | 15 | Corpus aileleri | ✓ | 11 aile, 99 fixture (hedef "yaklaşık 100"), saldırı payload'ı yok |
 | 16 | Fixture sözleşmesi | ✓ | `schema/fixture.schema.json`, sürüm + digest + CHANGELOG, somut değer kopyası |
-| 17 | Motor mimarisi | ✓ | core / playwright / store / reporter / cli ayrımı; mimari testi |
+| 17 | Motor mimarisi | ✓ | core / corpus / playwright / store / reporter / mcp / cli ayrımı; mimari testi |
 | 18 | Adapter arayüzü | ✓ | `playwright/src/adapter.ts`; yetenekler dürüst bildirilir |
 | 19 | Deneme kimliği ve sahiplik | ✓ | `TrialIdentity`, `OwnedFixture`, `allocations.jsonl`; B10 · [ADR 0004](adr/0004-data-isolation.md) |
 | 20 | Forma yazma ve gönderim | ✓ | Bekleyici tıklamadan önce, sahipli istek korelasyonu, HTTP 200 kabul değil, tekrar gönderim yok; B02, B05, B08, B09 |
@@ -41,7 +41,7 @@ Durum: **✓ uygulandı ve test edildi** · **◐ kısmen / bilinçli sapma** ·
 | 34 | Kabul matrisi C | ✓ | `test/acceptance.test.ts`, C14 `core.test.ts`; `test/matrix.test.ts` 42/42 kapsamı zorlar |
 | 35 | Üç demo | ✓ | `hdl demo` (A, B, C + doğru mod), sentetik etiketli |
 | 36 | Performans bütçesi | ✓ | `DEFAULT_BUDGETS`; ölçüm `docs/performance.md` |
-| 37 | Depo ve paket sınırları | ◐ | `packages/{core,corpus,playwright,store,reporter,cli}`, `examples/{profile-demo,existing-test}`, `schema/`, `docs/`. Sapma: fixture verisi `packages/corpus/data` altında (ayrı `fixtures/` yok); `store` paketi eklendi; npm workspaces kullanılmadı ([ADR 0007](adr/0007-typescript-no-build.md)) |
+| 37 | Depo ve paket sınırları | ◐ | `packages/{core,corpus,playwright,store,reporter,mcp,cli}`, `examples/{profile-demo,existing-test}`, `schema/`, `docs/`. Sapma: fixture verisi `packages/corpus/data` altında (ayrı `fixtures/` yok); `store` paketi eklendi; npm workspaces kullanılmadı ([ADR 0007](adr/0007-typescript-no-build.md)) |
 | 38 | Geliştirme sırası ve kapılar | ◐ | Faz 0–4 tamamlandı (sözleşme, çekirdek, gerçek akış, kanıt, küçültme). Faz 5 pilot ve faz 6 beta açık |
 | 39 | Karar günlüğü | ✓ | `docs/adr/` (10 kayıt) |
 | 40 | Pilot | ○ | `docs/pilot.md` (başlamadı) |

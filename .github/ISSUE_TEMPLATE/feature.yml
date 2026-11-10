@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Kapsam sözleşmesi: [`docs/scope.md`](../blob/main/docs/scope.md). Arama, CSV/export, tarih/sayı ve zengin metin sonraki fazdır;
+        Kapsam sözleşmesi: [`docs/scope.md`](https://github.com/ferattass/human-data-lab/blob/main/docs/scope.md). Arama, CSV/export, tarih/sayı ve zengin metin sonraki fazdır;
         bunlar için öneri yine değerlidir, ama "destekleniyor" etiketi yalnız testi olan yetenek için verilir.
   - type: dropdown
     id: kind

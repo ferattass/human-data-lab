@@ -2,11 +2,12 @@
 
 İlk sürümde neyin çalıştığı, aynı kesinlikle (ürün raporu §8). "Destekleniyor" etiketi yalnız ilgili sözleşme ve
 kritik testler gerçekten çalıştığında verilir; yol haritası bugünün özelliği gibi yazılmaz.
+"v0.1" bu kapsam sözleşmesinin ürün raporundaki adıdır; paket sürümünden (`package.json`) bağımsızdır.
 
 | Yetenek | Durum | Kabul sınırı | Kanıt |
 |---|---|---|---|
 | Metin roundtrip | **Destekleniyor** | Tek alan; formdan gönder, bağımsız taze okuma ile karşılaştır. Referans okuma UI detay sayfası; API okuması açık etiketli (`freshReadSource: 'api'`). | `test/acceptance.test.ts` B01–B14 |
-| Browser | **Chromium** | Diğer tarayıcılara güvence verilmez. | CI: ubuntu + Chromium |
+| Browser | **Chromium** | Diğer tarayıcılara güvence verilmez. | CI: Linux, Windows, macOS (Chromium) |
 | Giriş yöntemi | **Playwright `fill`** | Gerçek klavye / IME composition doğrulanmış sayılmaz. | `inputMethod: 'fill'` dışı preflight hatası |
 | Oracle | **`text.exact.v1` + açık `text.nfc.v1`** | Varsayılan sessiz trim / case-fold / NFKC yok. | `test/core.test.ts` A01–A14 |
 | Kabul beklentisi | **`must-accept` / `must-reject`** | Uygulama sahibi sözleşmede bağlar; araç tahmin etmez. Eşleşmeyen fixture kapsam dışı. | A08–A10, C13 |

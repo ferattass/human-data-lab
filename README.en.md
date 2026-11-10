@@ -10,6 +10,7 @@
 ![node](https://img.shields.io/badge/node-%E2%89%A522.18-202A27?style=flat-square)
 ![browser](https://img.shields.io/badge/browser-Chromium-202A27?style=flat-square)
 ![acceptance](https://img.shields.io/badge/acceptance%20scenarios-42%2F42-47705C?style=flat-square)
+![status](https://img.shields.io/badge/status-v0.6%20beta-65706B?style=flat-square)
 ![mcp](https://img.shields.io/badge/MCP-server%20included-65706B?style=flat-square)
 
 **Türkçe:** [README.md](README.md) · **English:** this page
@@ -18,9 +19,29 @@
 Human Data Lab checks whether the human text your application accepts (Turkish ı/İ, combining marks, emoji, right-to-left scripts)<br>
 survives the **save → fresh re-read** journey in a real browser. Findings come with code-point-level evidence, reproduction context and a regression test.
 
-[30-second demo](#-30-second-demo) · [How it works](#-how-it-works) · [Your own app](#-in-your-own-application) · [Playwright tests](#-inside-an-existing-playwright-test) · [Agents & MCP](#-for-coding-agents-mcp) · [Contracts](docs/contracts.md) · [Scope](docs/scope.md)
+[Why](#-why) · [30-second demo](#-30-second-demo) · [How it works](#-how-it-works) · [Your own app](#-in-your-own-application) · [Playwright tests](#-inside-an-existing-playwright-test) · [Agents & MCP](#-for-coding-agents-mcp) · [Status](#-status-and-roadmap) · [Contracts](docs/contracts.md)
 
 </div>
+
+---
+
+## ✦ Why
+
+Someone types `İpek Çağlar` into a name field, the server says "Saved", the screen shows `Ipek Caglar`. Unit tests pass, because every
+layer is consistent with itself: the browser sends correctly, the API parses correctly, the database stores correctly, and one middleware
+quietly "cleans". You only see the loss **end to end** and through an **independent re-read**. That is exactly what this tool does, and nothing else.
+
+| Question | Usual answer | Human Data Lab |
+|---|---|---|
+| Was the data preserved? | Success toast or HTTP 200 | **Fresh read in a new context** by record id; `authored → readback` code-point equality |
+| Which difference counts as a bug? | Whatever the test author decided that day | **A contract:** `must-accept / must-reject`, `text.exact.v1` or an explicitly chosen `text.nfc.v1` |
+| Where did the loss start? | A guess | `authored / injected / submitted / readback` observed separately; the **first observed divergence** is marked |
+| Can it be reproduced? | A screenshot | 3 independent repeats, **shrinking** under the same signature, `repro/f1.spec.ts`, **replay** with the stored value |
+| Is the test environment clean? | Hope | Owned namespace and **verified cleanup**; otherwise exit 3 |
+
+**Who it is for:** teams whose app accepts human text (profile names, customer display names, free-text notes) and who can write a Playwright test.
+The framework does not matter: Laravel, Django, Rails, Next.js, an off-the-shelf CRM. A form in a browser and a way to find the record by id is enough.<br>
+**When not to use it:** in production, on sites you are not authorized to test, in flows where you cannot re-find the record by id; for search, CSV/export and rich text (later phases).
 
 ---
 
@@ -43,7 +64,9 @@ No account, no model key, no cloud. A local **synthetic** profile app runs in co
 | **B · Different code points, allowed equivalence** | The server applies NFC. An explicit `text.nfc.v1` policy passes while a diagnostic exact check keeps the raw difference visible. Not every difference is declared a bug. |
 | **C · Rejection, violation and an execution block** | An expected rejection is not counted as preservation success; a dropped session is reported as an execution problem, not as "Unicode got corrupted". |
 
-Every scenario produces an HTML report. Reports run no scripts, load no external resources and escape all data.
+Every scenario produces an HTML report. Reports run no scripts, load no external resources and escape all data:
+
+<img src="docs/assets/report-demo-a.png" alt="Demo A report (synthetic): denominators, required violations, cleanup status and per-stage authored/injected/submitted/readback values" width="100%">
 
 ---
 
@@ -191,7 +214,7 @@ Fixtures describe the **text behaviour under test**, not a country stereotype. E
 
 ```bash
 npm run typecheck    # TypeScript 7, no build step
-npm test             # 62 tests: 42 acceptance scenarios (A01–C14) + architecture + schema + Playwright integration + installed package + MCP
+npm test             # 65 tests: 42 acceptance scenarios (A01–C14) + architecture + schema + Playwright integration + installed package + MCP
 ```
 
 The 42 core acceptance scenarios of the product report are tracked by test name; `test/matrix.test.ts` fails if one disappears. Most tests run against **real Chromium** and the demo app with deliberate bug modes. They caught three real engine bugs during development:
@@ -214,6 +237,18 @@ Scope and limits: [`docs/scope.md`](docs/scope.md) · measured timings: [`docs/p
 
 ---
 
+## ◷ Status and roadmap
+
+| | |
+|---|---|
+| **Version** | v0.6.0 beta · source and compiled package · 65 tests · CI: Linux, Windows, macOS × Node 22, 24 |
+| **Stable** | Single-field text round trip, contract and result model, evidence bundle, replay, shrinking, Playwright Test integration, MCP tools (runs only with `--allow-run`) |
+| **Experimental** | `research/` tools (search, identity, collision) |
+| **Next** | First npm release · user pilot ([method](docs/pilot.md)) · date, number and rich-text fields · search and export journeys |
+| **Breaking changes** | `0.X` releases may break and say so in the [CHANGELOG](CHANGELOG.md); schemas are versioned separately via `schemaVersion`, unknown major versions are refused |
+
+---
+
 ## Documentation
 
 | | |
@@ -221,6 +256,7 @@ Scope and limits: [`docs/scope.md`](docs/scope.md) · measured timings: [`docs/p
 | [`AGENTS.md`](AGENTS.md) | Contract for coding agents: commands, exit codes, RunView, MCP, what never to claim |
 | [`docs/contracts.md`](docs/contracts.md) | Fixture, flow contract, observation boundaries, result model, evidence bundle, replay, shrinking |
 | [`docs/adapter-guide.md`](docs/adapter-guide.md) | Writing an adapter for your own application |
+| [`docs/cli.md`](docs/cli.md) | CLI reference: every command, flag and exit code (Turkish) |
 | [`docs/scope.md`](docs/scope.md) | v0.1 scope contract and known limits |
 | [`docs/release.md`](docs/release.md) | Versioning, tagging, GitHub Release and npm trusted publishing |
 | [`docs/adr/`](docs/adr) | Decision records |

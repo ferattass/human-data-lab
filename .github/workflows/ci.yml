@@ -32,7 +32,7 @@ jobs:
         run: npx playwright install chromium
       - name: Tip denetimi
         run: npm run typecheck
-      - name: Kabul matrisi, mimari, şema, Playwright entegrasyonu, paket
+      - name: Kabul matrisi, mimari, şema, Playwright entegrasyonu, paket, MCP
         run: npm test
       - name: Araştırma araçları (deneysel)
         run: npm run test:research

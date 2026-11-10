@@ -10,7 +10,7 @@ npm ci
 npx playwright install chromium
 npm run typecheck      # tsc --noEmit (TypeScript 7, build adımı yok; Node ≥ 22.18 .ts dosyalarını doğrudan çalıştırır)
 npm test               # birim + kabul testleri (A/B/C matrisi, gerçek Chromium)
-npm run demo           # üç sentetik demo
+npm run demo           # dört sentetik senaryo (doğru mod + A/B/C)
 ```
 
 Kod Node'un tip silme (type stripping) özelliğiyle çalışır: yalnız **silinebilir TypeScript** kullanın

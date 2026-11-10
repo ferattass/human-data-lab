@@ -16,7 +16,8 @@ export function summarize(params: {
     applicable: params.selected - params.outOfScope.length,
     outOfScope: params.outOfScope,
     executed: trials.length,
-    preservationChecked: trials.filter((t) => t.assertions.some((a) => a.id !== 'acceptance' && (a.status === 'passed' || a.status === 'failed'))).length,
+    // Yalnız required korunma kontrolü sayılır: tanısal (opsiyonel) kontrolün geçmesi "korunma kontrolü çalıştı" demek değildir.
+    preservationChecked: trials.filter((t) => t.assertions.some((a) => a.id !== 'acceptance' && a.required && (a.status === 'passed' || a.status === 'failed'))).length,
     accepted: trials.filter((t) => t.applicationOutcome === 'accepted').length,
     rejected: trials.filter((t) => t.applicationOutcome === 'rejected').length,
     indeterminate: trials.filter((t) => t.applicationOutcome === 'indeterminate').length,

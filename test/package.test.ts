@@ -43,7 +43,8 @@ test('paket: npm pack içeriği ve kurulu paketten demo', () => {
   for (const must of ['LICENSE', 'NOTICE', 'README.md', 'bin/hdl.mjs', 'dist/packages/cli/src/main.js', 'dist/packages/playwright/src/index.d.ts', 'dist/packages/corpus/data/human-text.json', 'schema/fixture.schema.json'])
     assert.ok(files.includes(must), `pakette olmalı: ${must}`);
   for (const f of files) {
-    assert.ok(!/^(research|test|runs|docs|examples|packages)\//.test(f), `pakete girmemeli: ${f}`);
+    assert.ok(!/^(research|test|runs|examples|packages)\//.test(f), `pakete girmemeli: ${f}`);
+    assert.ok(!f.startsWith('docs/') || ['docs/contracts.md', 'docs/adapter-guide.md'].includes(f), `pakete girmemeli: ${f}`);
     assert.ok(!/\.pdf$|storage-state|\.env/i.test(f), `pakete girmemeli: ${f}`);
   }
 
@@ -81,6 +82,19 @@ console.log(TOOL.version, loadCorpus('smoke').fixtures.length, describeDifferenc
   assert.match(readFileSync(join(proj, 'hdl', 'adapter.ts'), 'utf8'), /from 'human-data-lab\/playwright'/);
   // lab: araştırma araçları pakette yok, açık mesaj
   assert.equal(spawnSync(process.execPath, [hdl, 'lab', 'search'], { cwd: proj, encoding: 'utf8' }).status, 2);
+
+  // mcp: kurulu paketten sunucu başlar; araçlar ve şema/ajan kaynakları listelenir; stdout yalnız protokol satırlarıdır
+  const mcp = spawnSync(process.execPath, [hdl, 'mcp'], {
+    cwd: proj, encoding: 'utf8', timeout: 60_000,
+    input: ['{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"t","version":"0"}}}',
+      '{"jsonrpc":"2.0","id":2,"method":"tools/list"}', '{"jsonrpc":"2.0","id":3,"method":"resources/list"}', ''].join('\n'),
+  });
+  assert.equal(mcp.status, 0, mcp.stderr);
+  const msgs = mcp.stdout.trim().split('\n').map((l) => JSON.parse(l) as { id: number; result: { serverInfo?: { version: string }; tools?: unknown[]; resources?: Array<{ uri: string }> } });
+  assert.equal(msgs.find((m) => m.id === 1)!.result.serverInfo!.version, ver.stdout.trim(), 'dist içinden sürüm package.json ile aynı');
+  assert.equal(msgs.find((m) => m.id === 2)!.result.tools!.length, 6);
+  const uris = msgs.find((m) => m.id === 3)!.result.resources!.map((r) => r.uri);
+  for (const u of ['hdl://schema/fixture', 'hdl://docs/agents', 'hdl://docs/contracts', 'hdl://docs/adapter-guide']) assert.ok(uris.includes(u), `kaynak eksik: ${u} (${uris.join(', ')})`);
 
   // Demo, kurulu paketten
   const demo = spawnSync(process.execPath, [hdl, 'demo', '--out', 'runs'], { cwd: proj, encoding: 'utf8', timeout: 300_000 });

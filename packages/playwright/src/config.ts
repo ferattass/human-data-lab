@@ -30,7 +30,9 @@ export const defineConfig = (c: RoundtripConfig) => c;
 export async function loadConfigFile(p: string): Promise<RoundtripConfig> {
   const abs = resolve(p);
   if (!existsSync(abs)) throw new Error(`yapılandırma dosyası yok: ${p}`);
-  const mod = (await import(pathToFileURL(abs).href)) as { default?: RoundtripConfig; config?: RoundtripConfig };
+  // Sorgu eki: uzun ömürlü süreçte (MCP sunucusu) yapılandırma dosyası her çağrıda yeniden okunur. Onun import ettiği
+  // modüller (adapter) ise ESM önbelleğinde kalır; adapter değiştiyse süreç yeniden başlatılmalı.
+  const mod = (await import(`${pathToFileURL(abs).href}?t=${Date.now()}`)) as { default?: RoundtripConfig; config?: RoundtripConfig };
   const c = mod.default ?? mod.config;
   if (!c || typeof c !== 'object') throw new Error(`${p} default export olarak yapılandırma vermiyor (defineConfig)`);
   return c;

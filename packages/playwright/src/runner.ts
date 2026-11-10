@@ -69,7 +69,7 @@ function originsOf(list: string[]) {
 }
 
 /** Sonucu bir abort sinyaline bağlı yarışa sokar; Playwright çağrıları signal'ı kendileri dinlemez. */
-function raceSignal<T>(p: Promise<T>, signal: AbortSignal): Promise<T> {
+export function raceSignal<T>(p: Promise<T>, signal: AbortSignal): Promise<T> {
   // Sinyal kazanırsa terk edilen işlemin geç gelen hatası işlenmemiş reddetmeye dönüşmesin.
   p.catch(() => {});
   if (signal.aborted) return Promise.reject(signal.reason);
@@ -77,6 +77,24 @@ function raceSignal<T>(p: Promise<T>, signal: AbortSignal): Promise<T> {
     const onAbort = () => rej(signal.reason);
     signal.addEventListener('abort', onAbort, { once: true });
     p.then((v) => { signal.removeEventListener('abort', onAbort); res(v); }, (e) => { signal.removeEventListener('abort', onAbort); rej(e); });
+  });
+}
+
+/** Origin allowlist uygulanmış HTTP istemcisi: izinli olmayan origin'e istek atmaz, yönlendirme izlemez (§30). CLI kurtarma temizliği de bunu kullanır. */
+export async function guardedRequestContext(baseURL: string, allowed: Set<string>, storageState?: Awaited<ReturnType<BrowserContext['storageState']>>): Promise<APIRequestContext> {
+  const api = await pwRequest.newContext({ baseURL, storageState });
+  return new Proxy(api, {
+    get(t, prop, recv) {
+      const v = Reflect.get(t, prop, recv);
+      if (typeof v !== 'function' || !['get', 'post', 'put', 'patch', 'delete', 'head', 'fetch'].includes(String(prop))) return typeof v === 'function' ? v.bind(t) : v;
+      return (url: string | { url(): string }, options?: Record<string, unknown>) => {
+        const href = typeof url === 'string' ? url : url.url();
+        const origin = new URL(href, baseURL).origin;
+        if (!allowed.has(origin)) throw new ScopeError(`izinli olmayan origin'e istek engellendi: ${origin}`);
+        // Yönlendirme izlenmez: izinli sunucunun 3xx'i sırlı başlıkları başka origin'e taşımasın (§30).
+        return (v as (...a: unknown[]) => unknown).call(t, url, { ...(options ?? {}), maxRedirects: 0 });
+      };
+    },
   });
 }
 
@@ -101,8 +119,9 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
   const problems: string[] = [];
   const adapter = config.adapter;
   const runSignal = opts.signal ?? new AbortController().signal;
-  const secrets = (() => { try { return (adapter?.secrets?.() ?? []).filter((x) => typeof x === 'string' && x.length >= 4); } catch { return []; } })();
-  const redact = (e: unknown, o: { multiline?: boolean } = {}) => redactMessage(e, secrets, o);
+  // Sırlar her kullanımda yeniden okunur: adapter authenticate sırasında öğrendiği sırları (oturum token'ı) da bildirebilir.
+  const secretsNow = () => { try { return (adapter?.secrets?.() ?? []).filter((x) => typeof x === 'string' && x.length >= 4); } catch { return []; } };
+  const redact = (e: unknown, o: { multiline?: boolean } = {}) => redactMessage(e, secretsNow(), o);
 
   // ---------- Preflight: şema hatasında browser mutasyonu başlamaz (§22, A14) ----------
   let fixtures: Array<{ fixture: Fixture; value: string; origin: string; expect?: 'must-accept' | 'must-reject' }> = [];
@@ -176,38 +195,41 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
   let storageState: Awaited<ReturnType<BrowserContext['storageState']>> | undefined;
   let cancelled = false;
   let stopRun: string | null = null;
+  /** Herhangi bir denemenin cleanup'ı doğrulanamadıysa ortam kirlidir: sonraki tekrar ve küçültme yapılmaz (§26). */
+  let dirtyEnv = false;
   const trials: TrialResult[] = [];
   const order: string[] = [];
   let seq = 0;
   let targetBuild: string | undefined;
 
-  const cleanupCtxFor = (identity: TrialIdentity, signal: AbortSignal, apis: APIRequestContext[]): CleanupContext => ({
+  // Cleanup bağlamı: kapı kapandıktan (bütçe/timeout sonrası) sonra yeni istek bağlamı açılamaz; geç gelen istek sonraki denemeyle çakışmaz.
+  const cleanupCtxFor = (identity: TrialIdentity, signal: AbortSignal, apis: APIRequestContext[], gate: { closed: boolean } = { closed: false }): CleanupContext => ({
     identity, baseURL: config.target.baseURL, signal,
-    request: async () => { const api = await guardedApi(); apis.push(api); return api; },
+    request: async () => {
+      if (gate.closed) throw new Cancelled('cleanup kapandı; yeni istek bağlamı açılmaz');
+      const api = await guardedApi();
+      if (gate.closed) { await api.dispose().catch(() => {}); throw new Cancelled('cleanup kapandı; yeni istek bağlamı açılmaz'); }
+      apis.push(api); return api;
+    },
   });
 
-  async function guardedApi(): Promise<APIRequestContext> {
-    const api = await pwRequest.newContext({ baseURL: config.target.baseURL, storageState });
-    return new Proxy(api, {
-      get(t, prop, recv) {
-        const v = Reflect.get(t, prop, recv);
-        if (typeof v !== 'function' || !['get', 'post', 'put', 'patch', 'delete', 'head', 'fetch'].includes(String(prop))) return typeof v === 'function' ? v.bind(t) : v;
-        return (url: string | { url(): string }, options?: Record<string, unknown>) => {
-          const href = typeof url === 'string' ? url : url.url();
-          const origin = new URL(href, config.target.baseURL).origin;
-          if (!allowed.has(origin)) throw new ScopeError(`izinli olmayan origin'e istek engellendi: ${origin}`);
-          // Yönlendirme izlenmez: izinli sunucunun 3xx'i sırlı başlıkları başka origin'e taşımasın (§30).
-          return (v as (...a: unknown[]) => unknown).call(t, url, { ...(options ?? {}), maxRedirects: 0 });
-        };
-      },
-    });
-  }
+  const guardedApi = () => guardedRequestContext(config.target.baseURL, allowed, storageState);
 
+  /** Koşu başı adımları (authenticate, targetBuild) deneme bütçesi ve iptal sinyaliyle sınırlıdır: asılı bir /health koşuyu kilitlemez. */
+  const budgeted = async <T>(what: string, fn: (signal: AbortSignal) => Promise<T>): Promise<T> => {
+    const ac = new AbortController();
+    const onAbort = () => ac.abort(runSignal.reason ?? new Cancelled('koşu iptal edildi'));
+    runSignal.addEventListener('abort', onAbort, { once: true });
+    if (runSignal.aborted) onAbort();
+    const timer = setTimeout(() => ac.abort(new PhaseTimeout(`${what} bütçesi aşıldı (${budgets.trialTimeoutMs} ms)`)), budgets.trialTimeoutMs);
+    try { return await raceSignal(fn(ac.signal), ac.signal); }
+    finally { clearTimeout(timer); runSignal.removeEventListener('abort', onAbort); }
+  };
   try {
-    if (adapter.authenticate) storageState = await adapter.authenticate(browser, config.target.baseURL);
+    if (adapter.authenticate) storageState = await budgeted('authenticate', () => adapter.authenticate!(browser, config.target.baseURL));
     if (adapter.targetBuild) {
       const apis: APIRequestContext[] = [];
-      try { targetBuild = await adapter.targetBuild(cleanupCtxFor({ runId, caseId: '-', candidateId: '-', attemptId: '-', fixtureKey: '-' }, new AbortController().signal, apis)); }
+      try { targetBuild = await budgeted('targetBuild', (signal) => adapter.targetBuild!(cleanupCtxFor({ runId, caseId: '-', candidateId: '-', attemptId: '-', fixtureKey: '-' }, signal, apis))); }
       catch (e) { problems.push(`targetBuild okunamadı: ${redact(e)}`); }
       finally { for (const a of apis) await a.dispose().catch(() => {}); }
     }
@@ -267,13 +289,24 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
           trialAc.abort(new ScopeError(`izinli olmayan origin: ${r.url()} — mutasyon durduruldu`));
         }
       });
-      return ctx.route('**/*', (route) => {
+      // WebSocket bağlantıları request/route akışına düşmez; ayrıca denetlenir. İzinli origin'e gidenler sunucuya bağlanır.
+      const ws = ctx.routeWebSocket(/.*/, (socket) => {
+        let o = '';
+        try { o = new URL(socket.url()).origin.replace(/^ws/, 'http'); } catch { /* geçersiz URL */ }
+        if (!allowed.has(o)) {
+          if (!scopeViolation) { scopeViolation = socket.url(); trialAc.abort(new ScopeError(`izinli olmayan origin (WebSocket): ${socket.url()} — mutasyon durduruldu`)); }
+          socket.close({ code: 1008, reason: 'origin allowlist' });
+          return;
+        }
+        socket.connectToServer();
+      });
+      return Promise.all([ws, ctx.route('**/*', (route) => {
         const u = route.request().url();
         if (u.startsWith('data:')) return route.continue();
         const o = new URL(u).origin;
         if (!allowed.has(o)) return route.abort('blockedbyclient');
         return route.continue();
-      });
+      })]).then(() => undefined);
     };
 
     const tctx: TrialContext = {
@@ -295,7 +328,7 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
         if (trialClosed) { await a.dispose().catch(() => {}); throw new Cancelled('deneme kapandı; yeni istek bağlamı açılmaz'); }
         apis.push(a); return a;
       },
-      observe(boundary, obs) { observations[boundary] = { boundary, at: now(), ...obs } as Observation; },
+      observe(boundary, obs) { observations[boundary] = { boundary, at: now(), ...obs, ...(obs.note === undefined ? {} : { note: redact(obs.note) }) } as Observation; },
       allocations,
       async evidence(name, page) { return captureEvidence(page, `${attemptId}-${name}`); },
       async unique(locator, what) {
@@ -347,10 +380,10 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
         }
       } else if (created.kind === 'rejected') {
         applicationOutcome = 'rejected';
-        acceptanceEvidence = { reason: created.reason, evidenceRef: created.evidenceRef };
+        acceptanceEvidence = { reason: redact(created.reason), evidenceRef: created.evidenceRef };
       } else {
         applicationOutcome = 'indeterminate';
-        acceptanceEvidence = { reason: created.reason };
+        acceptanceEvidence = { reason: redact(created.reason) };
       }
       if (!observations.injected) observations.injected = { boundary: 'injected', status: adapter.capabilities.boundaries.includes('injected') ? 'not-observed' : 'not-supported' };
       if (!observations.submitted) observations.submitted = { boundary: 'submitted', status: adapter.capabilities.boundaries.includes('submitted') ? 'not-observed' : 'not-supported', note: 'submitted gözlenmedi; injected değeri submitted diye etiketlenmez' };
@@ -363,7 +396,7 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
             observations.readback = { boundary: 'readback', status: 'not-observed', source: rb.source, note: `yanlış kayıt okundu (${rb.recordIdSeen} ≠ ${recordId})` };
             errors.push({ class: 'observation', phase: 'readFresh', message: `readFresh beklenen kaydı okumadı: ${rb.recordIdSeen} ≠ ${recordId}` });
           } else {
-            observations.readback = { boundary: 'readback', status: rb.status, value: rb.status === 'observed' ? rb.value : undefined, source: rb.source, note: rb.note, at: now() };
+            observations.readback = { boundary: 'readback', status: rb.status, value: rb.status === 'observed' ? rb.value : undefined, source: rb.source, note: rb.note === undefined ? undefined : redact(rb.note), at: now() };
           }
         }
       }
@@ -382,6 +415,12 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
     } finally {
       clearTimeout(timer);
       runSignal.removeEventListener('abort', onRunAbort);
+    }
+    // Son aşama bittikten sonra gelen yabancı origin isteği de kapsam ihlalidir: engellendi ama kayda geçer ve koşuyu durdurur (§30).
+    if (scopeViolation && execution === 'completed') {
+      execution = 'error';
+      errors.push({ class: 'configuration', phase: 'finalize', message: redact(new ScopeError(`izinli olmayan origin: ${scopeViolation}`)) });
+      stopRun = `kapsam hatası: izinli olmayan origin: ${scopeViolation}`;
     }
 
     // ---------- Karşılaştırma ----------
@@ -404,25 +443,37 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
 
     // ---------- Cleanup: ana signal'dan bağımsız, ayrı bütçe (§22, B11) ----------
     let cleanup: CleanupStatus = 'not-needed';
-    const ownForCleanup: OwnedFixture | undefined = own ?? (allocNamespaces.length ? { namespace: allocNamespaces[0], resourceIds: allocResources, allocationLogRef: 'allocations.jsonl' } : undefined);
-    if (ownForCleanup) {
+    // Rezerve edilen HER namespace temizlenir (prepare yarıda kalmış veya birden çok alan açmış olabilir); en kötü durum raporlanır.
+    const namespaces = [...new Set([...(own ? [own.namespace] : []), ...allocNamespaces])];
+    if (namespaces.length) {
       if (own) own.resourceIds = [...new Set([...own.resourceIds, ...allocResources])];
+      const rank: Record<CleanupStatus, number> = { 'not-needed': 0, verified: 1, pending: 2, failed: 3 };
+      const cGate = { closed: false };
       const cAc = new AbortController();
       const cTimer = setTimeout(() => cAc.abort(new PhaseTimeout('cleanup bütçesi aşıldı')), budgets.cleanupTimeoutMs);
       const c0 = Date.now();
       events.push({ phase: 'cleanup', event: 'start', at: now() });
       try {
-        const r: CleanupResult = await raceSignal(adapter.cleanup(cleanupCtxFor(identity, cAc.signal, apis), ownForCleanup), cAc.signal);
-        cleanup = r.status;
-        events.push({ phase: 'cleanup', event: 'end', at: now(), message: r.detail === undefined ? undefined : redact(r.detail) });
-        if (r.status === 'failed' || r.status === 'pending') errors.push({ class: 'cleanup', phase: 'cleanup', message: redact(r.detail ?? r.status) });
-      } catch (e) {
-        cleanup = e instanceof PhaseTimeout ? 'pending' : 'failed';
-        events.push({ phase: 'cleanup', event: 'error', at: now(), errorClass: 'cleanup', message: redact(e) });
-        errors.push({ class: 'cleanup', phase: 'cleanup', message: redact(e) });
-      } finally { clearTimeout(cTimer); timings.cleanup = Date.now() - c0; }
-      run.appendJsonl('allocations.jsonl', { at: now(), attemptId, event: 'cleanup', namespace: ownForCleanup.namespace, status: cleanup });
+        for (const ns of namespaces) {
+          const target: OwnedFixture = own && own.namespace === ns ? own : { namespace: ns, resourceIds: allocResources, allocationLogRef: 'allocations.jsonl' };
+          let status: CleanupStatus;
+          try {
+            const r: CleanupResult = await raceSignal(adapter.cleanup(cleanupCtxFor(identity, cAc.signal, apis, cGate), target), cAc.signal);
+            status = r.status;
+            events.push({ phase: 'cleanup', event: 'end', at: now(), message: r.detail === undefined ? undefined : redact(r.detail) });
+            if (r.status === 'failed' || r.status === 'pending') errors.push({ class: 'cleanup', phase: 'cleanup', message: redact(r.detail ?? r.status) });
+          } catch (e) {
+            status = e instanceof PhaseTimeout ? 'pending' : 'failed';
+            events.push({ phase: 'cleanup', event: 'error', at: now(), errorClass: 'cleanup', message: redact(e) });
+            errors.push({ class: 'cleanup', phase: 'cleanup', message: redact(e) });
+          }
+          run.appendJsonl('allocations.jsonl', { at: now(), attemptId, event: 'cleanup', namespace: ns, status });
+          if (rank[status] > rank[cleanup]) cleanup = status;
+          if (cAc.signal.aborted) break; // bütçe bitti: kalan namespace'ler günlükte 'reserve' olarak kalır, hdl cleanup --owned-only bulur
+        }
+      } finally { clearTimeout(cTimer); cGate.closed = true; timings.cleanup = Date.now() - c0; }
     }
+    if (cleanup === 'failed' || cleanup === 'pending') dirtyEnv = true;
     // Auth/API bağlamı temizlik tamamlanmadan kapatılmaz.
     for (const a of apis) await a.dispose().catch(() => {});
 
@@ -447,7 +498,7 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
       if (pol.kind === 'first-independent-read') return adapter.readFresh(tctx, own!, recordId);
       if (pol.kind === 'readiness-signal') {
         const deadline = Date.now() + budgets.trialTimeoutMs;
-        while (Date.now() < deadline) {
+        while (Date.now() < deadline && !trialAc.signal.aborted) {
           if (await adapter.readiness!(tctx, own!, recordId)) return adapter.readFresh(tctx, own!, recordId);
           await new Promise((r) => setTimeout(r, 200));
         }
@@ -456,7 +507,7 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
       // stable-read: N ardışık aynı gözlem; ara örnekler saklanır. Eşitliği kovalamak geçici bozulmayı gizleyebilir (§21).
       const deadline = Date.now() + pol.budgetMs;
       let streak = 0; let last: string | undefined; let lastObs: ReadObservation | undefined;
-      while (Date.now() < deadline) {
+      while (Date.now() < deadline && !trialAc.signal.aborted) {
         const r = await adapter.readFresh(tctx, own!, recordId);
         readbackSamples.push({ at: now(), value: r.value, status: r.status });
         if (r.status === 'observed' && r.value === last) streak++; else streak = r.status === 'observed' ? 1 : 0;
@@ -491,18 +542,21 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
       const attemptIds = [t.identity.attemptId];
       let repeats: TrialResult[] = [];
       let note = '';
-      if (doReproduce && !stopRun && !runSignal.aborted && t.cleanup !== 'failed' && t.cleanup !== 'pending') {
+      if (dirtyEnv) note = 'ortam kirli (doğrulanmamış cleanup); tekrar yapılmadı';
+      else if (doReproduce && !stopRun && !runSignal.aborted) {
         for (let i = 0; i < budgets.reproduceTrials - 1 && !stopRun && !runSignal.aborted; i++) {
           const r = await runTrial(f.fixture, t.observations.authored!.value!, f.expect, f.fixture.id, 'original', 'reproduce');
           repeats.push(r); attemptIds.push(r.identity.attemptId);
-          if (r.cleanup === 'failed' || r.cleanup === 'pending') { note = 'cleanup doğrulanamadı; tekrar durdu'; break; }
+          if (dirtyEnv) { note = 'cleanup doğrulanamadı; tekrar durdu'; break; }
         }
-      } else if (t.cleanup === 'failed' || t.cleanup === 'pending') note = 'cleanup doğrulanamadı; tekrar yapılmadı';
-      const reproducibility = repeats.length ? classifyReproducibility(sig, [t, ...repeats], adapter.id, contract.field.id) : 'not-checked';
+      }
+      // Planlanan tekrarların hepsi koşmadıysa (kirli ortam, iptal, kapsam hatası) karar verilemez; "stable" denmez (C03).
+      const planned = doReproduce ? budgets.reproduceTrials - 1 : 0;
+      const reproducibility = !repeats.length ? 'not-checked' : repeats.length < planned ? 'inconclusive' : classifyReproducibility(sig, [t, ...repeats], adapter.id, contract.field.id);
       const reproduced = [t, ...repeats].filter((r) => sameSignature(sig, signatureOf(r, adapter.id, contract.field.id))).length;
       let shrink: ShrinkSummary | undefined;
-      if (doShrink && reproducibility === 'stable' && !stopRun && !runSignal.aborted) shrink = await shrinkFinding(f, sig);
-      else shrink = { status: 'not-attempted', best: { value: t.observations.authored!.value!, candidateId: 'original', verifiedTrials: reproduced }, trialsUsed: 0, elapsedMs: 0, note: reproducibility === 'stable' ? (doShrink ? 'koşu durdu' : 'küçültme kapalı') : `küçültme yapılmadı: tekrar durumu ${reproducibility}${note ? '; ' + note : ''}` };
+      if (doShrink && reproducibility === 'stable' && !dirtyEnv && !stopRun && !runSignal.aborted) shrink = await shrinkFinding(f, sig);
+      else shrink = { status: 'not-attempted', best: { value: t.observations.authored!.value!, candidateId: 'original', verifiedTrials: reproduced }, trialsUsed: 0, elapsedMs: 0, note: reproducibility === 'stable' ? (dirtyEnv ? 'ortam kirli (doğrulanmamış cleanup); küçültme yapılmadı' : doShrink ? 'koşu durdu' : 'küçültme kapalı') : `küçültme yapılmadı: tekrar durumu ${reproducibility}${note ? '; ' + note : ''}` };
       const finding: Finding = {
         schemaVersion: SCHEMA_VERSION, id: findingId, fixtureId: t.fixtureId, signature: sig,
         original: { value: t.observations.authored!.value!, attemptIds }, reproducibility,
@@ -520,11 +574,13 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
       let best = history[0];
       let status: ShrinkSummary['status'] = 'no-smaller-found';
       let cand = 0;
-      const budgetLeft = () => trialsUsed < budgets.shrinkMaxTrials && Date.now() - t0 < budgets.shrinkMaxMs;
-      const confirm = async (value: string, candidateId: string, n: number) => {
+      // Arama sırasında son bağımsız onay için reproduceTrials deneme rezerve edilir; bütçe biten aday atılmaz, onayı eksik işaretlenir.
+      const budgetLeft = (reserve = 0) => trialsUsed + reserve < budgets.shrinkMaxTrials && Date.now() - t0 < budgets.shrinkMaxMs;
+      let finalNote = '';
+      const confirm = async (value: string, candidateId: string, n: number, reserve = 0) => {
         let ok = 0;
         for (let i = 0; i < n; i++) {
-          if (!budgetLeft() || stopRun || runSignal.aborted) return { ok, complete: false, dirty: false };
+          if (!budgetLeft(reserve) || stopRun || runSignal.aborted) return { ok, complete: false, dirty: false };
           const r = await runTrial(f.fixture, value, f.expect, f.fixture.id, candidateId, 'shrink-confirm'); trialsUsed++;
           if (r.cleanup === 'failed' || r.cleanup === 'pending') return { ok, complete: false, dirty: true };
           if (sameSignature(sig, signatureOf(r, adapter.id, contract.field.id))) ok++; else return { ok, complete: true, dirty: false };
@@ -534,13 +590,13 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
       outer: while (true) {
         let improved = false;
         for (const red of reductions(best.value)) {
-          if (!budgetLeft()) { status = 'budget-exhausted'; break outer; }
+          if (!budgetLeft(budgets.reproduceTrials)) { status = 'budget-exhausted'; break outer; }
           if (stopRun || runSignal.aborted) { status = 'budget-exhausted'; break outer; }
           const candidateId = `c${++cand}`;
           const r = await runTrial(f.fixture, red.value, f.expect, f.fixture.id, candidateId, `shrink:${red.strategy}`); trialsUsed++;
           if (r.cleanup === 'failed' || r.cleanup === 'pending') { status = 'stopped-cleanup'; break outer; }
           if (!sameSignature(sig, signatureOf(r, adapter.id, contract.field.id))) continue; // C04: farklı imza (ör. red) aynı hata değildir
-          const c = await confirm(red.value, candidateId, budgets.reproduceTrials - 1);
+          const c = await confirm(red.value, candidateId, budgets.reproduceTrials - 1, budgets.reproduceTrials);
           if (c.dirty) { status = 'stopped-cleanup'; break outer; }
           if (!c.complete) { status = 'budget-exhausted'; break outer; }
           if (c.ok !== budgets.reproduceTrials - 1) { status = 'stopped-unstable'; break outer; }
@@ -554,17 +610,22 @@ export async function runRoundtrip(opts: RunOptions): Promise<RunOutcome> {
       // Son bağımsız onay; kararsızsa önceki doğrulanmış aday korunur (C06).
       if (best.candidateId !== 'original' && status !== 'stopped-cleanup') {
         const fin = await confirm(best.value, `${best.candidateId}-final`, budgets.reproduceTrials);
-        if (!(fin.complete && fin.ok === budgets.reproduceTrials)) {
+        if (fin.dirty || (fin.complete && fin.ok !== budgets.reproduceTrials)) {
+          // Kararsız veya kirli: önceki doğrulanmış aday korunur (C06).
           history.pop();
           best = history[history.length - 1];
-          status = fin.dirty ? 'stopped-cleanup' : fin.complete ? 'stopped-unstable' : 'budget-exhausted';
+          status = fin.dirty ? 'stopped-cleanup' : 'stopped-unstable';
+        } else if (!fin.complete) {
+          // Süre/iptal son onaya yetmedi: aday arama sırasında zaten reproduceTrials kez doğrulanmıştı, atılmaz; eksik onay not edilir.
+          status = 'budget-exhausted';
+          finalNote = ` Son bağımsız onay tamamlanmadı (${fin.ok}/${budgets.reproduceTrials}; bütçe veya iptal).`;
         }
       }
       const elapsedMs = Date.now() - t0;
       const note = best.candidateId === 'original'
         ? 'Belirtilen strateji ve bütçe altında daha küçük doğrulanmış örnek bulunamadı.'
         : `Belirtilen strateji ve bütçe altında doğrulanmış en küçük aday: ${[...best.value].length} kod noktası. Küresel minimum garantisi yoktur.`;
-      return { status, best, trialsUsed, elapsedMs, note };
+      return { status, best, trialsUsed, elapsedMs, note: note + finalNote };
     }
   } finally {
     if (ownsBrowser) await browser.close().catch(() => {});
@@ -607,8 +668,11 @@ export function redactMessage(e: unknown, secrets: string[] = [], o: { multiline
   let m = String((e as Error)?.message ?? e ?? '');
   m = m.split(/\n\s*Call log:/i)[0];
   if (!o.multiline) m = m.split('\n')[0];
-  m = m.replace(/\b(x-[a-z0-9-]*token|authorization|proxy-authorization|cookie|set-cookie|x-api-key)(["']?\s*[:=]\s*["']?)[^\s"',;}]+/gi, '$1$2[REDACTED]');
+  // Sıra önemli: önce şema+token (Bearer/Basic), sonra cookie satırının tamamı, sonra tek değerli başlıklar.
+  // Aksi halde "Authorization: Bearer x" → "[REDACTED] x" olur ve token kalır.
   m = m.replace(/\b(Bearer|Basic)\s+[A-Za-z0-9._~+/=-]+/g, '$1 [REDACTED]');
+  m = m.replace(/\b(cookie|set-cookie)(["']?\s*[:=]\s*["']?)[^\n"'}]+/gi, '$1$2[REDACTED]');
+  m = m.replace(/\b(x-[a-z0-9-]*token|authorization|proxy-authorization|x-api-key)(["']?\s*[:=]\s*["']?(?:(?:Bearer|Basic)\s+)?)[^\s"',;}]+/gi, '$1$2[REDACTED]');
   for (const sec of secrets) m = m.split(sec).join('[REDACTED]');
   return m.slice(0, 2000);
 }
@@ -636,6 +700,7 @@ test(${JSON.stringify(`${f.id}: ${f.fixtureId} korunmalı (${f.signature.ruleId}
   const r = await runSingleTrial({ config, browser, fixtureId: ${JSON.stringify(f.fixtureId)}, value });
   expect(r.execution, r.describe).toBe('completed');
   expect(r.violations, r.describe).toEqual([]);
+  expect(r.notRun, r.describe).toEqual([]); // required kontrol çalışmadan "geçti" denmez (C14)
 });
 `;
 }
