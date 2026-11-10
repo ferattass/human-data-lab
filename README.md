@@ -5,11 +5,15 @@
 <br>
 
 [![ci](https://github.com/ferattass/human-data-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/ferattass/human-data-lab/actions/workflows/ci.yml)
+[![codeql](https://github.com/ferattass/human-data-lab/actions/workflows/codeql.yml/badge.svg)](https://github.com/ferattass/human-data-lab/actions/workflows/codeql.yml)
 ![lisans](https://img.shields.io/badge/lisans-Apache--2.0-D7502B?style=flat-square)
 ![node](https://img.shields.io/badge/node-%E2%89%A522.18-202A27?style=flat-square)
 ![browser](https://img.shields.io/badge/browser-Chromium-202A27?style=flat-square)
 ![kabul](https://img.shields.io/badge/kabul%20senaryosu-42%2F42-47705C?style=flat-square)
-![durum](https://img.shields.io/badge/durum-v0.5%20beta%20aday%C4%B1-65706B?style=flat-square)
+![durum](https://img.shields.io/badge/durum-v0.6%20beta-65706B?style=flat-square)
+![mcp](https://img.shields.io/badge/MCP-sunucu%20dahil-65706B?style=flat-square)
+
+**Türkçe:** bu sayfa · **English:** [README.en.md](README.en.md)
 
 **Bir formun "Kaydedildi" demesi yeterli değil.**<br>
 Uygulamanızın kabul ettiği insan metninin (Türkçe ı/İ, birleşik aksan, emoji, sağdan sola yazı) kaydet → taze okuma yolculuğunda<br>
@@ -17,7 +21,7 @@ korunup korunmadığını gerçek tarayıcıda sınar. Bulguyu kod noktası düz
 
 <sub>*Open-source testing tool that checks whether human text your app accepts survives the save → fresh re-read journey, using a real browser via Playwright.*</sub>
 
-[30 saniyelik demo](#-30-saniyelik-demo) · [Nasıl çalışır](#-nasıl-çalışır) · [Kendi uygulamanızda](#-kendi-uygulamanızda) · [Playwright testinde](#-mevcut-playwright-testinde) · [Sözleşmeler](docs/contracts.md) · [Kapsam](docs/scope.md)
+[30 saniyelik demo](#-30-saniyelik-demo) · [Nasıl çalışır](#-nasıl-çalışır) · [Kendi uygulamanızda](#-kendi-uygulamanızda) · [Playwright testinde](#-mevcut-playwright-testinde) · [Ajanlar & MCP](#-ajanlar-için-mcp) · [Sözleşmeler](docs/contracts.md) · [Kapsam](docs/scope.md)
 
 </div>
 
@@ -61,7 +65,7 @@ Her senaryo bir HTML raporu üretir. Raporlar script çalıştırmaz, dış kayn
 ```mermaid
 flowchart LR
   subgraph cli[cli]
-    run[hdl run / replay / report / cleanup / export]
+    run[hdl run / replay / report / cleanup / export / mcp]
   end
   subgraph pw[playwright]
     life[yaşam döngüsü · bütçe · iptal · origin allowlist<br/>tekrar · küçültme]
@@ -71,10 +75,13 @@ flowchart LR
   corpus[corpus<br/>99 sentetik fixture]
   store[store<br/>run-&lt;id&gt;/ · atomik manifest]
   rep[reporter<br/>inert JSON → HTML]
+  mcp[mcp<br/>ajanlar için stdio sunucu]
   run --> life --> ad --> app[(test ortamındaki<br/>uygulamanız)]
   life --> core
   life --> corpus
   life --> store --> rep
+  mcp --> core
+  mcp --> store
 ```
 
 **Tek yeşil yok.** Her deneme beş bağımsız boyutta raporlanır: `execution`, `applicationOutcome`, assertion durumu, `cleanup` ve `reproducibility`. Çalışmayan bir required kontrol asla "geçti" görünmez:
@@ -97,18 +104,22 @@ npx hdl init --adapter playwright        # hdl/adapter.ts + hdl/roundtrip.config
 npx hdl run hdl/roundtrip.config.ts --corpus smoke
 ```
 
-**Paket olarak (beta).** npm kayıt defterinde henüz yok. Kendi projenize kurmak için depoda `npm pack` çalıştırın
-(derlenmiş `dist/` üretir), sonra projenizde `npm install /yol/human-data-lab-0.5.0.tgz @playwright/test`.
-Dışa aktarımlar: `human-data-lab`, `human-data-lab/playwright/test`, `human-data-lab/core`, `human-data-lab/corpus`.
-Bu yol `test/package.test.ts` ile Linux, Windows ve macOS'ta sınanıyor.
+**Paket olarak (beta).** Sürüm etiketi (`vX.Y.Z`) GitHub Release'e tarball ekler ve npm'e provenance ile yayımlar ([`docs/release.md`](docs/release.md)):
+
+```bash
+npm install human-data-lab @playwright/test     # npm'de ilk yayın bekliyor; o zamana kadar Release sayfasındaki human-data-lab-X.Y.Z.tgz
+```
+
+Dışa aktarımlar: `human-data-lab` (= `/playwright`), `/playwright/test`, `/core`, `/corpus`, `/store`, `/reporter`, `/mcp`, `/schema/*`.
+Kurulu paket kaynak kod olmadan demoyu çalıştırır; `test/package.test.ts` bunu Linux, Windows ve macOS'ta sınar.
 
 Önkoşullar: yerel veya izinli staging ortamı, test kullanıcısı, kaydı kimliğiyle yeniden bulma yolu, deneme başına ayrı namespace ve doğrulanabilir temizlik. Rehber: [`docs/adapter-guide.md`](docs/adapter-guide.md). Çalışan örnek: [`examples/profile-demo`](examples/profile-demo).
 
 ```bash
 npx hdl replay runs/run-<id> --finding f1 --config hdl/roundtrip.config.ts   # saklı somut değerle, aynı hedefte
-npx hdl report runs/run-<id>                                                 # bütünlük denetimi + rapor
+npx hdl report runs/run-<id> [--json]                                        # bütünlük denetimi + rapor (makineler için JSON)
 npx hdl cleanup runs/run-<id> --owned-only --config hdl/roundtrip.config.ts  # yalnız sahipli kaynaklar
-npx hdl export runs/run-<id> --out share/                                    # allowlist; auth/trace hariç
+npx hdl export runs/run-<id> --out share/ [--dry-run]                        # allowlist; auth/trace hariç
 ```
 
 ---
@@ -144,6 +155,33 @@ Tam örnek: [`examples/existing-test`](examples/existing-test). Doğru modda 5/5
 
 ---
 
+## ⚙ Ajanlar için (MCP)
+
+Araç, bağımlılıksız bir [Model Context Protocol](https://modelcontextprotocol.io) sunucusu içerir. MCP konuşan her kod asistanı, IDE eklentisi
+veya CI botu oracle'a, corpus'a ve koşu kanıtına doğrudan ulaşır; çekirdeğin kararını yine model değil kural verir ([ADR 0005](docs/adr/0005-ai-optional.md), [ADR 0010](docs/adr/0010-mcp-server.md)).
+
+```bash
+npx hdl mcp               # salt okunur araçlar + JSON Schema kaynakları
+npx hdl mcp --allow-run   # ek olarak hdl_run (hedef uygulamada yazar; operatör izni)
+```
+
+```json
+{ "mcpServers": { "human-data-lab": { "command": "npx", "args": ["hdl", "mcp"] } } }
+```
+
+| Araç | Tarayıcı | Ne döner |
+|---|:-:|---|
+| `hdl_describe_difference` | yok | kural sonucu, fark sınıfı, ilk farklı kod noktası, kaçışlı değerler, kod noktaları, ölçüler |
+| `hdl_list_fixtures` | yok | corpus kimliği/sürümü/digest'i ve set, aile veya özelliğe göre fixture'lar |
+| `hdl_validate_contract` | yok | akış sözleşmesinin preflight doğrulaması |
+| `hdl_read_run` | yok | bir koşunun bütünlük sorunları, özeti, bulguları, bütün denemeleri ve aşama gözlemleri |
+| `hdl_plan_export` | yok | paylaşım paketine girecek ve girmeyecek dosyalar, nedenleriyle |
+| `hdl_run` | Chromium | tam koşu; yalnız `--allow-run`, seri, yapılandırma dosyası import edilir |
+
+Aynı makine okunur görünüm CLI'dan `hdl report <koşu> --json` ile alınır. Ajan sözleşmesi (çıkış kodları nasıl okunur, hangi iddia asla yapılmaz): [`AGENTS.md`](AGENTS.md).
+
+---
+
 ## ⧉ Corpus
 
 99 sentetik fixture, 11 aile, `smoke` seti 24 fixture ([`packages/corpus`](packages/corpus)):
@@ -157,7 +195,7 @@ Latin pozitif kontrol · Türkçe I ailesi · önceden birleşmiş/ayrık aksan 
 
 ```bash
 npm run typecheck    # TypeScript 7, build adımı yok
-npm test             # 59 test: 42 kabul senaryosu (A01–C14) + mimari + şema + Playwright entegrasyonu + kurulu paket
+npm test             # 61 test: 42 kabul senaryosu (A01–C14) + mimari + şema + Playwright entegrasyonu + kurulu paket + MCP
 ```
 
 Raporun 42 çekirdek kabul senaryosu test adlarıyla izlenir; `test/matrix.test.ts` bir senaryonun testi kaybolursa kırılır. Testlerin çoğu **gerçek Chromium** ve kasıtlı hata modlu demo uygulamasıyla koşar. Bu testler geliştirme sırasında üç gerçek motor hatasını yakaladı:
@@ -184,9 +222,11 @@ Kapsam ve sınırlar: [`docs/scope.md`](docs/scope.md) · ölçülmüş süreler
 
 | | |
 |---|---|
+| [`AGENTS.md`](AGENTS.md) | Kod ajanları için sözleşme: komutlar, çıkış kodları, RunView, MCP, asla yapılmayacak iddialar |
 | [`docs/contracts.md`](docs/contracts.md) | Fixture, akış sözleşmesi, gözlem sınırları, sonuç modeli, kanıt paketi, replay, küçültme |
 | [`docs/adapter-guide.md`](docs/adapter-guide.md) | Kendi uygulamanız için adapter yazmak |
 | [`docs/scope.md`](docs/scope.md) | v0.1 kapsam sözleşmesi ve bilinen sınırlar |
+| [`docs/release.md`](docs/release.md) | Sürümleme, etiket, GitHub Release ve npm trusted publishing |
 | [`docs/adr/`](docs/adr) | Karar kayıtları |
 | [`docs/traceability.md`](docs/traceability.md) | Ürün raporunun her bölümü → kod ve test |
 | [`schema/`](schema) | Sürümlü JSON Schema'lar |
@@ -198,7 +238,7 @@ Kapsam ve sınırlar: [`docs/scope.md`](docs/scope.md) · ölçülmüş süreler
 <a href="CONTRIBUTING.md"><img src="docs/brand/contributor-card-1200x675.webp" alt="Human Data Lab katkı çağrısı" width="100%"></a>
 
 Yeni bir fixture, bir adapter örneği veya bir hata bildirimi. Hepsi sentetik verinin üzerinde çalışır, gerçek müşteri verisi gerekmez.
-[`CONTRIBUTING.md`](CONTRIBUTING.md) · [`SECURITY.md`](SECURITY.md) · [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)
+[`CONTRIBUTING.md`](CONTRIBUTING.md) · [`SECURITY.md`](SECURITY.md) · [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) · [`CITATION.cff`](CITATION.cff)
 
 ## Lisans
 

@@ -1,0 +1,74 @@
+name: release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: read
+jobs:
+  verify:
+    name: verify (tag = package.json, typecheck, tests)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Etiket ile package.json sürümü aynı mı
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          PKG="$(node -p "require('./package.json').version")"
+          test "$TAG" = "$PKG" || { echo "etiket v$TAG, package.json $PKG" >&2; exit 1; }
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run typecheck
+      - run: npm test
+      - name: Tarball
+        run: npm pack --pack-destination out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tarball
+          path: out/*.tgz
+
+  github-release:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: tarball
+          path: out
+      - name: CHANGELOG'dan sürüm notları
+        run: |
+          V="${GITHUB_REF_NAME#v}"
+          awk -v v="$V" '
+            $0 ~ "^## \\[" v "\\]" { on=1; next }
+            on && /^## \[/ { exit }
+            on { print }
+          ' CHANGELOG.md > notes.md
+          [ -s notes.md ] || echo "Sürüm notları için CHANGELOG.md" > notes.md
+      - name: GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" out/*.tgz --title "Human Data Lab $GITHUB_REF_NAME" --notes-file notes.md --verify-tag
+
+  npm:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - name: npm publish (trusted publishing, provenance)
+        run: npm publish --provenance --access public

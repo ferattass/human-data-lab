@@ -1,4 +1,7 @@
 // Koşu yapılandırması (roundtrip.config.ts). Sırlar yapılandırmaya değil adapter'ın authenticate kancasına aittir.
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import type { Budgets, Fixture, FlowContract } from '../../core/src/index.ts';
 import type { RoundtripAdapter } from './adapter.ts';
 
@@ -19,6 +22,19 @@ export interface RoundtripConfig {
 }
 
 export const defineConfig = (c: RoundtripConfig) => c;
+
+/**
+ * Yapılandırma dosyasını import eder: bu, KOD ÇALIŞTIRMAK demektir (adapter yerel proje kodudur, §30).
+ * Yalnız kullanıcının açıkça verdiği yol yüklenir; koşu artifact'ındaki yol asla kendiliğinden import edilmez.
+ */
+export async function loadConfigFile(p: string): Promise<RoundtripConfig> {
+  const abs = resolve(p);
+  if (!existsSync(abs)) throw new Error(`yapılandırma dosyası yok: ${p}`);
+  const mod = (await import(pathToFileURL(abs).href)) as { default?: RoundtripConfig; config?: RoundtripConfig };
+  const c = mod.default ?? mod.config;
+  if (!c || typeof c !== 'object') throw new Error(`${p} default export olarak yapılandırma vermiyor (defineConfig)`);
+  return c;
+}
 
 /** Replay/test için: corpus yerine somut fixture listesi. */
 export interface FixtureOverride {

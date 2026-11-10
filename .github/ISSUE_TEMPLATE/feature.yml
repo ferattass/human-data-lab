@@ -1,0 +1,38 @@
+name: Özellik veya adapter önerisi
+description: Yeni yetenek, yeni kural kimliği, adapter örneği veya belge iyileştirmesi.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Kapsam sözleşmesi: [`docs/scope.md`](../blob/main/docs/scope.md). Arama, CSV/export, tarih/sayı ve zengin metin sonraki fazdır;
+        bunlar için öneri yine değerlidir, ama "destekleniyor" etiketi yalnız testi olan yetenek için verilir.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Tür
+      options:
+        - Yeni korunma kuralı (text.<ad>.v1) veya kabul kuralı
+        - Yeni gözlem/okuma politikası
+        - Adapter örneği veya rehber iyileştirmesi
+        - CLI / rapor / MCP aracı
+        - Belge
+        - Diğer
+    validations: { required: true }
+  - type: textarea
+    id: problem
+    attributes:
+      label: Hangi gerçek sorunu çözer
+      description: Hangi uygulama akışında, hangi metin davranışında eksik kaldı? Sentetik örnekle.
+    validations: { required: true }
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Öneri
+      description: Davranış, sözleşme alanı, çıkış kodu etkisi, hangi kabul senaryosu kimliği eklenmeli.
+    validations: { required: true }
+  - type: textarea
+    id: decisions
+    attributes:
+      label: Etkilenen kararlar
+      description: docs/adr altındaki hangi kayıt değişir veya yeni ADR gerekir mi?

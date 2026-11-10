@@ -2,14 +2,14 @@
 // CLI ikinci bir oracle yaratmaz; çekirdek sonuçlarını serileştirir.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
-import { pathToFileURL, fileURLToPath } from 'node:url';
+import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { EXIT_MEANING, SCHEMA_VERSION, digestOf, sameSignature, signatureOf } from '../../core/src/index.ts';
 import type { ExitCode, Fixture } from '../../core/src/index.ts';
 import { readCorpusFile } from '../../corpus/src/index.ts';
-import { readRun, writeShare, planShare } from '../../store/src/index.ts';
+import { compactRun, readRun, writeShare, planShare } from '../../store/src/index.ts';
 import { renderReport } from '../../reporter/src/index.ts';
-import { runRoundtrip, TOOL } from '../../playwright/src/index.ts';
+import { loadConfigFile, runRoundtrip, TOOL } from '../../playwright/src/index.ts';
 import type { RoundtripConfig } from '../../playwright/src/index.ts';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
@@ -23,9 +23,10 @@ Kullanım:
   hdl init --adapter playwright [--dir hdl]          incelenebilir taslak dosyalar üretir (siteyi keşfetmez)
   hdl run <roundtrip.config.ts> [--corpus smoke|full|<set>] [--out runs] [--no-reproduce] [--no-shrink]
   hdl replay <run-dizini> --finding f1 --config <dosya> [--candidate original|best]
-  hdl report <run-dizini> [--out rapor.html]         bütünlüğü denetler, raporu gösterir/üretir
+  hdl report <run-dizini> [--out rapor.html] [--json] bütünlüğü denetler, raporu gösterir/üretir (--json: makine okunur özet)
   hdl cleanup <run-dizini> --owned-only --config <dosya>     yalnız allocation günlüğündeki sahipli kaynaklar
-  hdl export <run-dizini> --out <dizin> [--include-evidence] paylaşım paketi (allowlist; auth/trace hariç)
+  hdl export <run-dizini> --out <dizin> [--include-evidence] [--dry-run] paylaşım paketi (allowlist; auth/trace hariç)
+  hdl mcp [--allow-run]                              MCP sunucusu (stdio): ajanlar için oracle, corpus ve koşu kanıtı; koşu yalnız --allow-run ile
   hdl lab <search|identity|collision|roundtrip> …   araştırma araçları (deneysel, v0.1 kapsamı dışında)
 
 Çıkış kodları: ${Object.entries(EXIT_MEANING).map(([k, v]) => `\n  ${k.padStart(3)}  ${v}`).join('')}
@@ -47,12 +48,8 @@ function parse(argv: string[]): Args {
 }
 
 async function loadConfig(p: string): Promise<RoundtripConfig> {
-  const abs = resolve(p);
-  if (!existsSync(abs)) throw new UsageError(`yapılandırma dosyası yok: ${p}`);
-  const mod = await import(pathToFileURL(abs).href);
-  const c = mod.default ?? mod.config;
-  if (!c) throw new UsageError(`${p} default export olarak yapılandırma vermiyor (defineConfig)`);
-  return c;
+  try { return await loadConfigFile(p); }
+  catch (e) { throw new UsageError((e as Error).message); }
 }
 
 class UsageError extends Error {}
@@ -135,6 +132,11 @@ function cmdReport(a: Args): ExitCode {
   if (!dir) throw new UsageError('kullanım: hdl report <run-dizini>');
   const run = readRun(dir);
   const m = run.manifest;
+  if (a.flags.json) {
+    // Makine okunur özet (ajanlar ve CI için): manifest + bulgular + denemeler, aynı sonuç modeliyle; ikinci oracle yok.
+    console.log(JSON.stringify(compactRun(run), null, 2));
+    return run.complete ? ((m?.exitCode ?? 2) as ExitCode) : 2;
+  }
   console.log(`koşu ${m?.runId ?? '?'} · durum ${m?.status ?? 'manifest yok'} · exit ${m?.exitCode ?? '?'}${m?.syntheticDemo ? ' · SENTETİK DEMO' : ''}`);
   if (m?.summary) console.log(`seçilen ${m.summary.selected} · uygun ${m.summary.applicable} · yürütülen ${m.summary.executed} · korunma kontrolü çalışan ${m.summary.preservationChecked} · required ihlal ${m.summary.requiredFailed} · çalışmayan required ${m.summary.requiredNotRun} · bulgu ${m.summary.findings}`);
   if (run.problems.length) console.log(`sorunlar:\n  - ${run.problems.join('\n  - ')}`);
@@ -221,6 +223,13 @@ function cmdInit(a: Args): ExitCode {
   return 0;
 }
 
+async function cmdMcp(a: Args): Promise<ExitCode> {
+  // stdout protokole aittir; günlük stderr'e gider. Koşu başlatma yalnız operatör açıkça izin verdiyse (§30).
+  const { serveStdio } = await import('../../mcp/src/index.ts');
+  await serveStdio({ allowRun: !!a.flags['allow-run'], log: (l) => console.error(l) });
+  return 0;
+}
+
 async function cmdDemo(a: Args): Promise<ExitCode> {
   const { runDemo } = await import('./demo.ts');
   return runDemo({ out: (a.flags.out as string) ?? 'runs/demo' });
@@ -244,6 +253,7 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
       case 'export': return cmdExport(a);
       case 'init': return cmdInit(a);
       case 'demo': return await cmdDemo(a);
+      case 'mcp': return await cmdMcp(a);
       case 'lab': return cmdLab(a);
       case undefined: case 'help': case '-h': case '--help': console.log(HELP); return 0;
       case '--version': case 'version': console.log(TOOL.version); return 0;

@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "Bu aracı bir çalışmada kullandıysanız şöyle atıf verebilirsiniz."
+title: "Human Data Lab"
+abstract: "Open-source testing tool that checks whether human text an application accepts survives the save → fresh re-read journey in a real browser, with code-point-level evidence, replay and regression specs."
+type: software
+authors:
+  - family-names: "Taş"
+    given-names: "Ferat"
+version: 0.6.0
+date-released: 2026-11-10
+license: Apache-2.0
+repository-code: "https://github.com/ferattass/human-data-lab"
+keywords:
+  - unicode
+  - i18n
+  - testing
+  - playwright
+  - data-integrity
+  - normalization

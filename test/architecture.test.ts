@@ -17,7 +17,8 @@ const ALLOWED: Record<string, string[]> = {
   store: ['core'],
   reporter: ['core', 'store'],
   playwright: ['core', 'corpus', 'store', 'reporter'],
-  cli: ['core', 'corpus', 'store', 'reporter', 'playwright'],
+  mcp: ['core', 'corpus', 'store', 'reporter', 'playwright'],
+  cli: ['core', 'corpus', 'store', 'reporter', 'playwright', 'mcp'],
 };
 
 test('core: Playwright, React, dosya sistemi veya ağ bağımlılığı yok', () => {

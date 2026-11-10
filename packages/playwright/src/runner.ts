@@ -2,6 +2,7 @@
 import { chromium, request as pwRequest } from '@playwright/test';
 import type { APIRequestContext, Browser, BrowserContext, Page } from '@playwright/test';
 import { randomBytes } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import { relative, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
@@ -21,7 +22,17 @@ import { AdapterError, ScopeError } from './adapter.ts';
 import type { CleanupContext, CleanupResult, ReadObservation, RoundtripAdapter, TrialContext } from './adapter.ts';
 import type { FixtureOverride, RoundtripConfig } from './config.ts';
 
-export const TOOL = { name: 'human-data-lab', version: '0.5.0' };
+/** Sürüm tek yerden: package.json (depoda ../../../, derlenmiş dist/ içinde ../../../../). */
+function readVersion(): string {
+  for (const rel of ['../../../package.json', '../../../../package.json']) {
+    try {
+      const p = JSON.parse(readFileSync(new URL(rel, import.meta.url), 'utf8')) as { name?: string; version?: string };
+      if (p.name === 'human-data-lab' && typeof p.version === 'string') return p.version;
+    } catch { /* sonraki aday */ }
+  }
+  return '0.0.0';
+}
+export const TOOL = { name: 'human-data-lab', version: readVersion() };
 
 export interface RunOptions {
   config: RoundtripConfig;

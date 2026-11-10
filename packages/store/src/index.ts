@@ -13,7 +13,7 @@
 //   report.html
 import { appendFileSync, closeSync, constants as fsConstants, copyFileSync, existsSync, fstatSync, lstatSync, mkdirSync, openSync, readFileSync, readdirSync, realpathSync, renameSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
-import { SCHEMA_VERSION, checkSchemaVersion, sha256 } from '../../core/src/index.ts';
+import { EXIT_MEANING, SCHEMA_VERSION, checkSchemaVersion, escaped, firstObservedDivergence, sha256 } from '../../core/src/index.ts';
 import type { ExitCode, Finding, RunStatus, RunSummary, TrialResult } from '../../core/src/index.ts';
 
 export class ArtifactError extends Error {
@@ -253,3 +253,83 @@ export function copyTree(src: string, dst: string): void {
 }
 
 export const STORE_SCHEMA_VERSION = SCHEMA_VERSION;
+
+// ---------- Makine okunur koşu görünümü (hdl report --json, MCP) ----------
+
+export interface RunView {
+  schemaVersion: string;
+  runDir: string;
+  runId: string | null;
+  status: RunStatus | 'unknown';
+  complete: boolean;
+  exitCode: ExitCode | null;
+  exitMeaning: string | null;
+  cancelled: boolean;
+  syntheticDemo: boolean;
+  replayOf: Manifest['replayOf'] | null;
+  problems: string[];
+  target: Manifest['provenance']['target'] | null;
+  adapter: { id: string; version: string } | null;
+  corpus: Manifest['provenance']['corpus'] | null;
+  summary: RunSummary | null;
+  findings: Array<{
+    id: string; fixtureId: string; rule: string; boundary: string; differenceClass: string; applicationOutcome: string;
+    reproducibility: string; attemptsReproduced: number; attemptsObserved: number;
+    original: { value: string; escaped: string }; smallest: { value: string; escaped: string; status: string; note: string } | null;
+    attemptIds: string[]; reproSpec: string;
+  }>;
+  attempts: Array<{
+    attemptId: string; candidateId: string; fixtureId: string; expectation: string; execution: string; applicationOutcome: string; cleanup: string;
+    recordId: string | null;
+    assertions: Array<{ id: string; rule: string; required: boolean; status: string; difference?: string; firstDifferenceAt?: number; rawEqual?: boolean; reason?: string }>;
+    observations: Partial<Record<string, { status: string; value?: string; escaped?: string; source?: string; note?: string }>>;
+    firstObservedDivergence: { at: string | null; from: string | null; unobserved: string[] };
+    errors: TrialResult['errors'];
+  }>;
+  reportPath: string;
+}
+
+/**
+ * Koşu dizininin yoğunlaştırılmış, makine okunur görünümü. Yalnız kayıtlı kanıtı yeniden düzenler; yeni karar üretmez
+ * (CLI ve MCP ikinci bir oracle yaratmaz, §28). Görünmez karakterler için her değerin kaçışlı biçimi de verilir.
+ */
+export function compactRun(run: LoadedRun): RunView {
+  const m = run.manifest;
+  const code = m?.exitCode;
+  return {
+    schemaVersion: SCHEMA_VERSION,
+    runDir: run.root,
+    runId: m?.runId ?? null,
+    status: m?.status ?? 'unknown',
+    complete: run.complete,
+    exitCode: code ?? null,
+    exitMeaning: code === undefined ? null : EXIT_MEANING[code],
+    cancelled: !!m?.cancelled,
+    syntheticDemo: !!m?.syntheticDemo,
+    replayOf: m?.replayOf ?? null,
+    problems: run.problems,
+    target: m?.provenance.target ?? null,
+    adapter: m ? { id: m.provenance.adapter.id, version: m.provenance.adapter.version } : null,
+    corpus: m?.provenance.corpus ?? null,
+    summary: m?.summary ?? null,
+    findings: [...run.findings].sort((a, b) => a.id.localeCompare(b.id, 'en', { numeric: true })).map((f) => ({
+      id: f.id, fixtureId: f.fixtureId, rule: f.signature.ruleId, boundary: f.signature.boundary.join('→'),
+      differenceClass: f.signature.differenceClass, applicationOutcome: f.signature.applicationOutcome,
+      reproducibility: f.reproducibility, attemptsReproduced: f.attemptsReproduced, attemptsObserved: f.attemptsObserved,
+      original: { value: f.original.value, escaped: escaped(f.original.value) },
+      smallest: f.shrink ? { value: f.shrink.best.value, escaped: escaped(f.shrink.best.value), status: f.shrink.status, note: f.shrink.note } : null,
+      attemptIds: f.original.attemptIds, reproSpec: `repro/${f.id}.spec.ts`,
+    })),
+    attempts: run.attempts.map((t) => ({
+      attemptId: t.identity.attemptId, candidateId: t.identity.candidateId, fixtureId: t.fixtureId, expectation: t.expectation,
+      execution: t.execution, applicationOutcome: t.applicationOutcome, cleanup: t.cleanup,
+      recordId: t.acceptanceEvidence?.recordId ?? null,
+      assertions: t.assertions.map((a) => ({ id: a.id, rule: a.rule, required: a.required, status: a.status, difference: a.difference, firstDifferenceAt: a.firstDifferenceAt, rawEqual: a.rawEqual, reason: a.reason })),
+      observations: Object.fromEntries(Object.entries(t.observations).map(([b, o]) => [b, o ? { status: o.status, value: o.value, escaped: typeof o.value === 'string' ? escaped(o.value) : undefined, source: o.source, note: o.note } : undefined])),
+      firstObservedDivergence: firstObservedDivergence(t.observations),
+      errors: t.errors,
+    })),
+    reportPath: join(run.root, 'report.html'),
+  };
+}
+
