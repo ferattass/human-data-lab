@@ -1,6 +1,6 @@
 {
   "name": "human-data-lab",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Checks that human text your app accepts survives the save → fresh re-read journey, in a real browser.",
   "type": "module",
   "license": "Apache-2.0",

@@ -4,6 +4,12 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Sürümleme: [
 
 ## [Yayımlanmamış]
 
+## [0.6.2] — 2026-11-10
+
+### Değiştirildi
+- Belgeler: paket npm'de yayında; README'lere npm rozeti ve doğrudan kurulum satırı, yayın belgesine aşamalı yayın notu.
+- Yayın: GitHub Actions üzerinden trusted publishing ile ilk provenance'lı npm yayını (kod değişikliği yok).
+
 ## [0.6.1] — 2026-11-10
 
 ### Düzeltildi
