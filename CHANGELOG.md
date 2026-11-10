@@ -9,7 +9,8 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Sürümleme: [
 ### Eklendi
 - **MCP sunucusu** (`hdl mcp`, `packages/mcp`, dışa aktarım `human-data-lab/mcp`): stdio üzerinden, bağımlılıksız. Salt okunur araçlar
   `hdl_describe_difference`, `hdl_list_fixtures`, `hdl_validate_contract`, `hdl_read_run`, `hdl_plan_export`; JSON Schema ve belge kaynakları.
-  `hdl_run` yalnız `--allow-run` ile açılır ve seri çalışır ([ADR 0010](docs/adr/0010-mcp-server.md)).
+  `hdl_run` yalnız `--allow-run` ile açılır ve seri çalışır ([ADR 0010](docs/adr/0010-mcp-server.md)). Ajanın verdiği yollar sunucu
+  kökünün (`--root`, varsayılan çalışma dizini) içinde kalır; corpus dosyası adla seçilir (allowlist).
 - `hdl report --json`: makine okunur koşu görünümü (`RunView`, `store.compactRun`); MCP ile aynı biçim.
 - `AGENTS.md`: kod ajanları için sözleşme (komutlar, çıkış kodlarının okunması, RunView, yapılmayacak iddialar). Pakete dahil.
 - `README.en.md`: İngilizce README; iki README birbirine bağlı.

@@ -178,6 +178,8 @@ npx hdl mcp --allow-run   # ek olarak hdl_run (hedef uygulamada yazar; operatör
 | `hdl_plan_export` | yok | paylaşım paketine girecek ve girmeyecek dosyalar, nedenleriyle |
 | `hdl_run` | Chromium | tam koşu; yalnız `--allow-run`, seri, yapılandırma dosyası import edilir |
 
+Ajanın verdiği yollar sunucu kökünün (`--root`, varsayılan çalışma dizini) içinde kalır; kök dışı istek reddedilir.
+
 Aynı makine okunur görünüm CLI'dan `hdl report <koşu> --json` ile alınır. Ajan sözleşmesi (çıkış kodları nasıl okunur, hangi iddia asla yapılmaz): [`AGENTS.md`](AGENTS.md).
 
 ---
@@ -195,7 +197,7 @@ Latin pozitif kontrol · Türkçe I ailesi · önceden birleşmiş/ayrık aksan 
 
 ```bash
 npm run typecheck    # TypeScript 7, build adımı yok
-npm test             # 61 test: 42 kabul senaryosu (A01–C14) + mimari + şema + Playwright entegrasyonu + kurulu paket + MCP
+npm test             # 62 test: 42 kabul senaryosu (A01–C14) + mimari + şema + Playwright entegrasyonu + kurulu paket + MCP
 ```
 
 Raporun 42 çekirdek kabul senaryosu test adlarıyla izlenir; `test/matrix.test.ts` bir senaryonun testi kaybolursa kırılır. Testlerin çoğu **gerçek Chromium** ve kasıtlı hata modlu demo uygulamasıyla koşar. Bu testler geliştirme sırasında üç gerçek motor hatasını yakaladı:

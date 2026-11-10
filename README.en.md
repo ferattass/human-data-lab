@@ -172,6 +172,8 @@ npx hdl mcp --allow-run   # additionally enables hdl_run (writes to the target a
 | `hdl_plan_export` | no | what a share bundle would include and exclude, with reasons |
 | `hdl_run` | Chromium | a full run; only with `--allow-run`, serial, config file is imported |
 
+Paths supplied by an agent must stay inside the server root (`--root`, default: the working directory); anything outside is rejected.
+
 The same machine-readable view is available from the CLI with `hdl report <run> --json`. The agent contract (how to read exit codes, what never to claim) lives in [`AGENTS.md`](AGENTS.md). Decision record: [ADR 0010](docs/adr/0010-mcp-server.md). No model is called inside the core ([ADR 0005](docs/adr/0005-ai-optional.md)).
 
 ---
@@ -189,7 +191,7 @@ Fixtures describe the **text behaviour under test**, not a country stereotype. E
 
 ```bash
 npm run typecheck    # TypeScript 7, no build step
-npm test             # 61 tests: 42 acceptance scenarios (A01–C14) + architecture + schema + Playwright integration + installed package + MCP
+npm test             # 62 tests: 42 acceptance scenarios (A01–C14) + architecture + schema + Playwright integration + installed package + MCP
 ```
 
 The 42 core acceptance scenarios of the product report are tracked by test name; `test/matrix.test.ts` fails if one disappears. Most tests run against **real Chromium** and the demo app with deliberate bug modes. They caught three real engine bugs during development:

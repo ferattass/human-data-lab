@@ -19,7 +19,11 @@ export interface LoadedCorpus {
 
 const DATA = new URL('../data/', import.meta.url);
 
+/** Corpus adı yalnız harf, rakam, '-' ve '_': dizin ayracı veya '..' ile data/ dışına çıkılmaz. */
+export const isCorpusName = (name: string) => /^[A-Za-z0-9_-]+$/.test(name);
+
 export function readCorpusFile(name = 'human-text'): CorpusFile {
+  if (!isCorpusName(name)) throw new Error(`geçersiz corpus adı: ${JSON.stringify(name)} (yalnız harf, rakam, '-', '_')`);
   const raw = JSON.parse(readFileSync(new URL(`${name}.json`, DATA), 'utf8'));
   validateCorpus(raw);
   const c = raw as CorpusFile;

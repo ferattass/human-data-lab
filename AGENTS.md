@@ -44,6 +44,9 @@ npx hdl mcp --allow-run   # + hdl_run (gerçek koşu). Operatör izni; ajan kend
 | `hdl_plan_export` `{runDir, includeEvidence?}` | yok | paylaşım paketine girecek/girmeyecek dosyalar ve nedenleri |
 | `hdl_run` `{configPath, corpusSet?, artifactsDir?, reproduce?, shrink?}` | **Chromium** | RunView. Yalnız `--allow-run`; seri; yapılandırma dosyası import edilir (kod çalışır) |
 
+Yol kuralı: `runDir`, `configPath` ve `artifactsDir` sunucu kökünün (`hdl mcp --root <dizin>`, varsayılan başlatıldığı dizin) **içinde** olmalı;
+gerçek yol (symlink çözülmüş) denetlenir, UNC yolu reddedilir. Kök dışı istek `-32602` ile döner. `file` bir corpus **adıdır**, yol değil.
+
 Kaynaklar: `hdl://schema/<fixture|corpus|contract|trial-result|finding|manifest>` (JSON Schema), `hdl://docs/agents`, `hdl://docs/contracts`, `hdl://docs/adapter-guide`.
 Protokol: stdio, JSON-RPC 2.0, satır başına bir mesaj; sürümler 2024-11-05 … 2025-11-25. Bağımlılık yok (`packages/mcp`).
 

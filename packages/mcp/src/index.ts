@@ -5,15 +5,15 @@
 // Koşu başlatma (hdl_run) hedef uygulamada kayıt yaratır ve siler; bu yüzden yalnız operatör sunucuyu --allow-run ile
 // başlattıysa açıktır (§30). stdout protokole aittir; günlük stderr'e gider.
 import { createInterface } from 'node:readline';
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { existsSync, readFileSync, readdirSync, realpathSync } from 'node:fs';
+import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   KNOWN_RULES, PRESERVATION_RULES, SchemaError, classifyDifference, codePoints, describeDifference, escaped,
   firstDifference, measures, validateContract,
 } from '../../core/src/index.ts';
 import type { PreservationRuleId } from '../../core/src/index.ts';
-import { loadCorpus } from '../../corpus/src/index.ts';
+import { isCorpusName, loadCorpus } from '../../corpus/src/index.ts';
 import { compactRun, planShare, readRun } from '../../store/src/index.ts';
 import { TOOL, loadConfigFile, runRoundtrip } from '../../playwright/src/index.ts';
 
@@ -50,7 +50,23 @@ const RESOURCE_NOT_FOUND = -32002;
 
 // ---------- Araçlar ----------
 
-interface ServeContext { allowRun: boolean; log: (l: string) => void; running: boolean }
+interface ServeContext { allowRun: boolean; log: (l: string) => void; running: boolean; root: string }
+
+/**
+ * Ajanın verdiği yol sunucu kökünün (`--root`, varsayılan çalışma dizini) içinde kalmalı (§30): koşu dizini, yapılandırma
+ * dosyası ve artifact dizini. Gerçek yol (realpath) ile denetlenir; sembolik bağlantıyla kök dışına çıkılamaz. UNC yolu reddedilir.
+ */
+function within(ctx: ServeContext, p: string, what: string): string {
+  if (/^[\\/]{2}/.test(p)) throw new RpcError(INVALID_PARAMS, `${what}: UNC yolu kabul edilmez`);
+  const abs = resolve(ctx.root, p);
+  // Var olmayan hedefte (ör. yeni artifact dizini) en yakın var olan üst dizinin gerçek yolu alınır.
+  let probe = abs; const rest: string[] = [];
+  while (!existsSync(probe)) { const up = dirname(probe); if (up === probe) break; rest.unshift(probe.slice(up.length + 1)); probe = up; }
+  const real = join(realpathSync(probe), ...rest);
+  const rel = relative(realpathSync(ctx.root), real);
+  if (rel.startsWith('..') || isAbsolute(rel)) throw new RpcError(INVALID_PARAMS, `${what}: yol sunucu kökünün dışında (${ctx.root}); hdl mcp --root ile kökü değiştirin`);
+  return abs;
+}
 
 interface ToolDef {
   name: string;
@@ -124,7 +140,9 @@ export const TOOLS: ToolDef[] = [
       const set = str(a, 'set', false) ?? 'smoke';
       const family = str(a, 'family', false);
       const property = str(a, 'property', false);
-      const c = loadCorpus(set, str(a, 'file', false) ?? 'human-text');
+      const file = str(a, 'file', false) ?? 'human-text';
+      if (!isCorpusName(file)) throw new RpcError(INVALID_PARAMS, 'file: yalnız harf, rakam, "-" ve "_" (corpus dosya adı, yol değil)');
+      const c = loadCorpus(set, file);
       const fixtures = c.fixtures
         .filter((f) => !family || f.id.split('.')[0] === family)
         .filter((f) => !property || f.properties.includes(property))
@@ -152,10 +170,10 @@ export const TOOLS: ToolDef[] = [
     description: 'Bir koşu dizinini (run-<id>/) okur: bütünlük denetimi (eksik dosya, digest uyuşmazlığı), manifest özeti, bulgular, bütün denemeler ve ' +
       'aşama gözlemleri (authored/injected/submitted/readback, kaçışlı). Yeni karar üretmez; kayıtlı sonucu düzenler. ' +
       'complete=false ise "tüm kontroller geçti" sonucu çıkarılamaz. exitCode anlamı exitMeaning alanındadır.',
-    inputSchema: { type: 'object', additionalProperties: false, required: ['runDir'], properties: { runDir: { type: 'string', description: 'run-<id> dizini (mutlak veya sunucunun çalışma dizinine göre)' } } },
+    inputSchema: { type: 'object', additionalProperties: false, required: ['runDir'], properties: { runDir: { type: 'string', description: 'run-<id> dizini; sunucu kökünün (--root, varsayılan çalışma dizini) içinde' } } },
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
-    async run(a) {
-      const dir = resolve(str(a, 'runDir')!);
+    async run(a, ctx) {
+      const dir = within(ctx, str(a, 'runDir')!, 'runDir');
       if (!existsSync(dir)) throw new RpcError(INVALID_PARAMS, `koşu dizini yok: ${dir}`);
       return compactRun(readRun(dir));
     },
@@ -165,10 +183,10 @@ export const TOOLS: ToolDef[] = [
     title: 'Paylaşım paketini planla',
     description: 'hdl export için kuru çalışma: koşu dizininde hangi dosyaların paylaşım paketine girip (allowlist) hangilerinin dışarıda kalacağını ' +
       '(auth/storageState/trace/cookie, sembolik bağlantı, allowlist dışı) nedenleriyle listeler. Hiçbir dosya yazmaz.',
-    inputSchema: { type: 'object', additionalProperties: false, required: ['runDir'], properties: { runDir: { type: 'string' }, includeEvidence: { type: 'boolean', default: false } } },
+    inputSchema: { type: 'object', additionalProperties: false, required: ['runDir'], properties: { runDir: { type: 'string', description: 'run-<id> dizini; sunucu kökünün içinde' }, includeEvidence: { type: 'boolean', default: false } } },
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
-    async run(a) {
-      const dir = resolve(str(a, 'runDir')!);
+    async run(a, ctx) {
+      const dir = within(ctx, str(a, 'runDir')!, 'runDir');
       if (!existsSync(dir)) throw new RpcError(INVALID_PARAMS, `koşu dizini yok: ${dir}`);
       return planShare(dir, { includeEvidence: bool(a, 'includeEvidence') ?? false });
     },
@@ -178,7 +196,7 @@ export const TOOLS: ToolDef[] = [
     title: 'Roundtrip koşusu başlat',
     description: 'roundtrip.config.ts ile gerçek Chromium\'da koşu yapar: her fixture için hedef uygulamada kayıt yaratır, bağımsız taze okuma yapar, kuralla karşılaştırır, ' +
       'sahipli kaynakları temizler ve kanıt paketi (run-<id>/) yazar. Hedef uygulamada YAZMA yapar; yalnız yerel/izinli test ortamı. ' +
-      'Sunucu --allow-run ile başlatılmadıysa reddedilir. Yapılandırma dosyası import edilir (kod çalışır): yalnız gözden geçirdiğiniz dosyayı verin. ' +
+      'Sunucu --allow-run ile başlatılmadıysa reddedilir. Yapılandırma dosyası import edilir (kod çalışır): yalnız gözden geçirdiğiniz dosyayı verin; configPath ve artifactsDir sunucu kökünün içinde olmalı. ' +
       'Seri çalışır; aynı anda ikinci koşu reddedilir. Sonuç hdl_read_run ile aynı görünümdür.',
     inputSchema: {
       type: 'object', additionalProperties: false, required: ['configPath'],
@@ -194,12 +212,14 @@ export const TOOLS: ToolDef[] = [
     async run(a, ctx) {
       if (!ctx.allowRun) throw new Error('hdl_run kapalı: sunucu --allow-run olmadan başlatıldı. Araç hedef uygulamada kayıt yaratır ve siler; operatör `hdl mcp --allow-run` ile açıkça izin vermeli.');
       if (ctx.running) throw new Error('başka bir koşu sürüyor; koşular seri yürütülür (veri izolasyonu, §26). Bitmesini bekleyin.');
-      const configPath = str(a, 'configPath')!;
+      const configPath = within(ctx, str(a, 'configPath')!, 'configPath');
+      const artifactsArg = str(a, 'artifactsDir', false);
+      const artifactsDir = within(ctx, artifactsArg ?? (await loadConfigFile(configPath)).artifactsDir ?? 'runs', 'artifactsDir');
       ctx.running = true;
       try {
         const config = await loadConfigFile(configPath);
         const out = await runRoundtrip({
-          config, configPath, corpusSet: str(a, 'corpusSet', false), artifactsDir: str(a, 'artifactsDir', false) ?? config.artifactsDir,
+          config, configPath, corpusSet: str(a, 'corpusSet', false), artifactsDir,
           reproduce: bool(a, 'reproduce'), shrink: bool(a, 'shrink'), log: (l) => ctx.log(l),
         });
         return compactRun(readRun(out.runDir));
@@ -237,6 +257,8 @@ function resources(): ResourceDef[] {
 
 export interface ServeOptions {
   allowRun?: boolean;
+  /** Ajanın verebileceği yolların kökü (koşu dizini, yapılandırma, artifact). Varsayılan: çalışma dizini. */
+  root?: string;
   input?: NodeJS.ReadableStream;
   output?: NodeJS.WritableStream;
   log?: (line: string) => void;
@@ -256,7 +278,9 @@ const INSTRUCTIONS = [
 export async function serveStdio(o: ServeOptions = {}): Promise<void> {
   const input = o.input ?? process.stdin;
   const output = o.output ?? process.stdout;
-  const ctx: ServeContext = { allowRun: !!o.allowRun, log: o.log ?? ((l) => process.stderr.write(l + '\n')), running: false };
+  const root = resolve(o.root ?? process.cwd());
+  if (!existsSync(root)) throw new Error(`mcp: kök dizin yok: ${root}`);
+  const ctx: ServeContext = { allowRun: !!o.allowRun, log: o.log ?? ((l) => process.stderr.write(l + '\n')), running: false, root };
   const send = (msg: Json) => { output.write(JSON.stringify(msg) + '\n'); };
   const ok = (id: Req['id'], result: unknown) => send({ jsonrpc: '2.0', id: id ?? null, result });
   const fail = (id: Req['id'], e: unknown) => {
@@ -276,7 +300,7 @@ export async function serveStdio(o: ServeOptions = {}): Promise<void> {
             protocolVersion: version,
             capabilities: { tools: { listChanged: false }, resources: { subscribe: false, listChanged: false } },
             serverInfo: { name: TOOL.name, title: 'Human Data Lab', version: TOOL.version },
-            instructions: INSTRUCTIONS + (ctx.allowRun ? '\nhdl_run açık (--allow-run).' : '\nhdl_run kapalı: operatör sunucuyu --allow-run ile başlatmadı.'),
+            instructions: INSTRUCTIONS + `\nYol kökü: ${ctx.root} (runDir, configPath ve artifactsDir bunun içinde olmalı).` + (ctx.allowRun ? '\nhdl_run açık (--allow-run).' : '\nhdl_run kapalı: operatör sunucuyu --allow-run ile başlatmadı.'),
           });
         }
         case 'notifications/initialized': case 'notifications/cancelled': case 'notifications/roots/list_changed': return;

@@ -125,6 +125,13 @@ test('MCP protokolü: initialize, tools/list, salt okunur araçlar, kaynaklar, h
     assert.equal((await c.request('tools/call', { name: 'hdl_describe_difference', arguments: { expected: 1, actual: 'a' } })).error!.code, -32602);
     assert.equal((await c.request('tools/call', { name: 'hdl_nope', arguments: {} })).error!.code, -32602);
     assert.equal((await c.request('tools/call', { name: 'hdl_read_run', arguments: { runDir: join(root, 'yok-boyle-dizin') } })).error!.code, -32602);
+    // Kök dışı yol (yol geçişi): var olan bir dizin bile olsa reddedilir; UNC ve corpus adı olarak yol da.
+    const outside = await c.request('tools/call', { name: 'hdl_read_run', arguments: { runDir: tmp('hdl-outside-') } });
+    assert.equal(outside.error!.code, -32602);
+    assert.match(outside.error!.message, /kökünün dışında/);
+    assert.equal((await c.request('tools/call', { name: 'hdl_plan_export', arguments: { runDir: join(root, '..') } })).error!.code, -32602);
+    assert.equal((await c.request('tools/call', { name: 'hdl_read_run', arguments: { runDir: '\\\\server\\share\\run' } })).error!.code, -32602);
+    assert.equal((await c.request('tools/call', { name: 'hdl_list_fixtures', arguments: { set: 'smoke', file: '../../../package' } })).error!.code, -32602);
     assert.equal((await c.request('nope/method')).error!.code, -32601);
     c.raw('{bozuk json');
     c.raw('{"jsonrpc":"2.0","id":"s1"}');
@@ -163,6 +170,9 @@ export default defineConfig({
     try {
       const init = (await c.request('initialize', INIT)).result;
       assert.match(init.instructions, /hdl_run açık/);
+      // --allow-run açıkken bile kök dışı yapılandırma dosyası çalıştırılmaz.
+      const esc = (await c.request('tools/call', { name: 'hdl_run', arguments: { configPath: join(root, 'examples/profile-demo/roundtrip.config.ts') } })).error;
+      assert.equal(esc?.code, -32602);
       c.notify('notifications/initialized');
       const r = (await c.call('hdl_run', { configPath: cfg, reproduce: false, shrink: false })).structuredContent;
       assert.equal(r.complete, true);
