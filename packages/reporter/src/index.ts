@@ -3,7 +3,7 @@
 // renk yanında her durumda metin etiketi; uzun metin kısaltılınca tam değer <details> ile erişilebilir.
 import { writeFileSync, renameSync } from 'node:fs';
 import { join } from 'node:path';
-import { codePoints, escaped, measures, truncateForDisplay } from '../../core/src/index.ts';
+import { EXIT_MEANING, codePoints, escaped, firstObservedDivergence, measures, truncateForDisplay } from '../../core/src/index.ts';
 import type { AssertionResult, Finding, Observation, TrialResult } from '../../core/src/index.ts';
 import { readRun } from '../../store/src/index.ts';
 import type { LoadedRun } from '../../store/src/index.ts';
@@ -53,16 +53,11 @@ function stagesTable(obs: TrialResult['observations'], assertion?: AssertionResu
 }
 
 function divergence(obs: TrialResult['observations']) {
-  const order = ['authored', 'injected', 'submitted', 'readback'] as const;
-  let prev: { b: string; v: string } | null = null;
-  const unobserved: string[] = [];
-  for (const b of order) {
-    const o = obs[b];
-    if (!o || o.status !== 'observed' || typeof o.value !== 'string') { unobserved.push(b); continue; }
-    if (prev && prev.v !== o.value) return `İlk gözlenen sapma: <strong>${esc(b)}</strong> (önceki gözlem: ${esc(prev.b)}).${unobserved.length ? ` Gözlenmeyen: ${esc(unobserved.join(', '))}.` : ''} Bu bir kök neden iddiası değildir.`;
-    prev = { b, v: o.value };
-  }
-  return `Gözlenen sınırlarda sapma yok.${unobserved.length ? ` Gözlenmeyen: ${esc(unobserved.join(', '))}.` : ''}`;
+  // Aynı mantık çekirdekte (core/evaluate.ts); rapor ikinci bir oracle yazmaz.
+  const d = firstObservedDivergence(obs);
+  const un = d.unobserved.length ? ` Gözlenmeyen: ${esc(d.unobserved.join(', '))}.` : '';
+  if (d.at) return `İlk gözlenen sapma: <strong>${esc(d.at)}</strong> (önceki gözlem: ${esc(d.from)}).${un} Bu bir kök neden iddiası değildir.`;
+  return `Gözlenen sınırlarda sapma yok.${un}`;
 }
 
 function findingSection(f: Finding, run: LoadedRun) {
@@ -124,7 +119,6 @@ export function renderReport(run: LoadedRun): string {
   const pv = m?.provenance;
   const rules = ((run.contract as { contract?: { preservation?: Array<{ id: string; rule: string; required: boolean }> } })?.contract?.preservation ?? []).map((p) => `${p.id}=${p.rule}${p.required ? '' : ' (tanısal)'}`).join(' · ');
   const contractId = (run.contract as { contract?: { id?: string } })?.contract?.id ?? '?';
-  const exitMeaning: Record<number, string> = { 0: 'gerekli kontroller tamamlandı; ihlal veya çözümsüz durum yok', 1: 'en az bir required ihlal', 2: 'yapılandırma, yürütme, eksik kanıt veya belirsiz sonuç', 3: 'cleanup doğrulanamadı', 130: 'kullanıcı iptali' };
   const card = (n: number | string, label: string, tone = '') => `<div class="card ${tone}"><div class="n">${esc(n)}</div><div class="l">${esc(label)}</div></div>`;
 
   return `<!doctype html>
@@ -202,7 +196,7 @@ ${s ? `<div class="cards">
   ${card(`${s.cleanup.verified}/${Object.values(s.cleanup).reduce((a, b) => a + b, 0)}`, 'temizlik doğrulandı (tüm denemeler)', s.cleanup.failed + s.cleanup.pending ? 'bad' : '')}
   ${card(s.findings, 'bulgu')}
 </div>
-<p><strong>Çıkış kodu ${esc(m?.exitCode ?? '?')}</strong> — ${esc(exitMeaning[m?.exitCode ?? -1] ?? 'bilinmiyor')}. "${s.selected} deneme" sayısı uygulamanın her durumda doğru olduğunu göstermez; yürütülen örneklerin kapsamını anlatır.</p>` : '<p>Özet yok: koşu preflight aşamasında durmuş olabilir.</p>'}
+<p><strong>Çıkış kodu ${esc(m?.exitCode ?? '?')}</strong> — ${esc(m?.exitCode === undefined ? 'bilinmiyor' : EXIT_MEANING[m.exitCode])}. "${s.selected} deneme" sayısı uygulamanın her durumda doğru olduğunu göstermez; yürütülen örneklerin kapsamını anlatır.</p>` : '<p>Özet yok: koşu preflight aşamasında durmuş olabilir.</p>'}
 ${s?.outOfScope.length ? `<details><summary>Kapsam dışı ${s.outOfScope.length} fixture (raporun yeşil kısmına katılmaz)</summary><ul class="small">${s.outOfScope.map((o) => `<li class="mono">${esc(o.fixtureId)} — ${esc(o.reason)}</li>`).join('')}</ul></details>` : ''}
 </section>
 

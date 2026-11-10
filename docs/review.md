@@ -1,7 +1,7 @@
 # Teknik review: rapor §45 soruları, kod ve testle
 
 "Testler geçti" tek başına cevap değildir. Her soru için davranışı belirleyen kod ve onu doğrulayan test kimliği.
-Doğrulama komutu: `npm test` (59 test; 6 Kasım 2026 itibarıyla hepsi geçiyor: yerelde Windows 11 + Node 24.14 + Chromium 156, Linux konteynerinde ve CI'da Linux/Windows/macOS × Node 22/24).
+Doğrulama komutu: `npm test` (61 test; 10 Kasım 2026 itibarıyla hepsi geçiyor: yerelde Windows 11 + Node 24.14 + Chromium 156, Linux konteynerinde ve CI'da Linux/Windows/macOS × Node 22/24).
 
 | Soru | Cevap | Kod | Test |
 |---|---|---|---|
@@ -21,6 +21,7 @@ Doğrulama komutu: `npm test` (59 test; 6 Kasım 2026 itibarıyla hepsi geçiyor
 | HTML raw metni kod olarak çalıştırabilir mi? Auth/trace paylaşılıyor mu? | Tüm veri escape'li, script yok, CSP `default-src 'none'`. Paylaşım allowlist; sırlar redakte. | `reporter`, `store.planShare`, `redactMessage` | C08, C10, C12 |
 | Repro hangi sürüme ve hangi somut fixture'a bağlı? | Manifest: corpus digest, sözleşme/akış digest'i, adapter sürümü, hedef build, Chromium, Node/ICU, locale/TZ. Replay saklı değeri kullanır; uyuşmazlık işaretlenir. | `store` manifest, `cli replay` | C01, C02 |
 | Test, uygulamadaki aynı yanlış normalizer'ı oracle diye kullanıyor mu? | Hayır. Demo uygulaması kendi dönüşümlerini sunucuda yapar; oracle yalnız `===` ve `normalize('NFC')`. Testler beklenen değeri elle yazılmış kaçışlı literal ile verir. | `test/core.test.ts` | A01–A07 |
+| Bir ajan MCP üzerinden koşu başlatıp hedefte yazabilir mi? | Yalnız operatör sunucuyu `--allow-run` ile açtıysa; varsayılan salt okunur. Koşular seri; yapılandırma yolu ajandan gelir ama dosya yerel ve import edilir (CLI ile aynı güven modeli). Sunucu ikinci oracle yazmaz. | `packages/mcp` | `test/mcp.test.ts` |
 
 ## Review sırasında bulunan ve düzeltilen hatalar
 
@@ -39,5 +40,6 @@ Doğrulama komutu: `npm test` (59 test; 6 Kasım 2026 itibarıyla hepsi geçiyor
 - Kullanıcı pilotu yok; kurulum süresi ve tekrar kullanım ölçülmedi ([`pilot.md`](pilot.md)).
 - Rakip karşılaştırması yapılmadı ([`benchmark.md`](benchmark.md)).
 - macOS ve Firefox/WebKit denenmedi.
-- npm kayıt defterine yayımlanmadı (paket adı ve yayın kararı bekliyor). Derlenmiş paket `npm pack` ile üretilip boş projeye kuruluyor ve demo oradan çalıştırılıyor (`test/package.test.ts`).
+- npm'de ilk yayın bekliyor: paket yayımlanabilir hale getirildi ve `release.yml` etiketle provenance'lı yayın yapar; npm tarafında trusted publishing bağlanmalı ([`release.md`](release.md)). Derlenmiş paket `npm pack` ile üretilip boş projeye kuruluyor ve demo oradan çalıştırılıyor (`test/package.test.ts`).
+- MCP sunucusu el yazımı protokol uygulamasıdır (bağımlılık yok); protokol sürümleri 2024-11-05 … 2025-11-25. Protokol değişirse bakım maliyeti ADR 0010'daki geri dönüşü tetikler.
 - Redaction bilinen kalıplara dayanır; kusursuz değildir.

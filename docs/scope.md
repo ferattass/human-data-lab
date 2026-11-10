@@ -19,7 +19,9 @@ kritik testler gerçekten çalıştığında verilir; yol haritası bugünün ö
 | Paralellik | **Kapalı (1 worker)** | Veri izolasyonu kanıtlanmadan artırılmaz. | `Budgets.workers: 1` |
 | Arama / CSV export | **Sonraki faz** | İndeks gecikmesi ve parser semantiği ayrı tasarlanır. `research/` altındaki araçlar deneyseldir. | — |
 | Tarih / sayı / zengin metin | **Sonraki faz** | Ayrı veri tipi ve koruma kuralı gerekir. | — |
-| Otomatik recorder / AI | **Yok, zorunlu değil** | `hdl init` yalnız incelenebilir taslak üretir; siteyi keşfetmez. | — |
+| MCP sunucusu (ajan erişimi) | **Destekleniyor (salt okunur varsayılan)** | `hdl mcp`: oracle, corpus, sözleşme doğrulama, koşu okuma, paylaşım planı. `hdl_run` yalnız `--allow-run`. Çekirdekte model çağrısı yok. | `test/mcp.test.ts` · [ADR 0010](adr/0010-mcp-server.md) |
+| Makine okunur çıktı | **Destekleniyor** | `hdl report --json` = MCP `RunView`; şemalar `schema/`. | `test/mcp.test.ts`, şema testi |
+| Otomatik recorder / AI | **Yok, zorunlu değil** | `hdl init` yalnız incelenebilir taslak üretir; siteyi keşfetmez. Ajanlar aracı MCP ile **kullanır**, kararını vermez. | — |
 
 ## Bilinen sınırlar
 

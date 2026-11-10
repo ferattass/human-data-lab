@@ -1,0 +1,63 @@
+name: Fixture önerisi
+description: Corpus'a yeni sentetik metin davranışı eklemek. Gerçek kişi verisi veya saldırı payload'ı GÖNDERMEYİN.
+labels: [corpus]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Fixture bir **metin davranışını** sınar (normalleştirme, boşluk, yön, uzunluk birimi, görünmez karakter…), ülke veya kişi değil.
+        Kabul politikasını fixture değil akış sözleşmesi belirler; `defaultExpectation` her zaman `unspecified` kalır.
+  - type: input
+    id: value
+    attributes:
+      label: Değer (kaçışlı)
+      description: ASCII dışı her karakter `\uXXXX` biçiminde; örn. `İpek Çağlar`
+    validations: { required: true }
+  - type: input
+    id: family
+    attributes:
+      label: Aile ve önerilen kimlik
+      description: Mevcut aileler: latin, tr-i, combining, compat, punct, space, length, script, emoji, newline, control. Biçim `aile.ad.NNN`.
+    validations: { required: true }
+  - type: textarea
+    id: behaviour
+    attributes:
+      label: Hangi davranışı sınıyor, neyi iddia etmiyor
+      description: Bu değer hangi bozulmayı görünür kılar (ör. `marks-stripped`, `compatibility-folded`)? Hangi sonuç bu fixture'dan çıkarılamaz?
+    validations: { required: true }
+  - type: input
+    id: properties
+    attributes:
+      label: Özellikler
+      description: Sözleşmelerin bağlanacağı özellik etiketleri; örn. `nfc-sensitive, rtl`
+    validations: { required: true }
+  - type: dropdown
+    id: controls
+    attributes:
+      label: Uygulanabilir kontroller
+      options:
+        - input-text
+        - textarea
+        - input-text ve textarea
+    validations: { required: true }
+  - type: dropdown
+    id: provenance
+    attributes:
+      label: Köken
+      description: Üçüncü taraf içerikte kaynak ve lisans zorunludur; lisans korunur, yeniden lisanslanmaz.
+      options:
+        - Sentetik, bu öneri için yazıldı
+        - Üçüncü taraf (kaynak ve lisansı aşağıda)
+    validations: { required: true }
+  - type: textarea
+    id: source
+    attributes:
+      label: Kaynak ve lisans (üçüncü taraf ise)
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Onay
+      options:
+        - label: Gerçek kişi bilgisi, müşteri verisi veya saldırı payload'ı içermiyor
+          required: true
+        - label: Bu yazı sistemini bilen bir reviewer önerebilirim veya inceleme isterim

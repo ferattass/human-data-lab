@@ -4,6 +4,24 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Sürümleme: [
 
 ## [Yayımlanmamış]
 
+## [0.6.0] — 2026-11-10
+
+### Eklendi
+- **MCP sunucusu** (`hdl mcp`, `packages/mcp`, dışa aktarım `human-data-lab/mcp`): stdio üzerinden, bağımlılıksız. Salt okunur araçlar
+  `hdl_describe_difference`, `hdl_list_fixtures`, `hdl_validate_contract`, `hdl_read_run`, `hdl_plan_export`; JSON Schema ve belge kaynakları.
+  `hdl_run` yalnız `--allow-run` ile açılır ve seri çalışır ([ADR 0010](docs/adr/0010-mcp-server.md)).
+- `hdl report --json`: makine okunur koşu görünümü (`RunView`, `store.compactRun`); MCP ile aynı biçim.
+- `AGENTS.md`: kod ajanları için sözleşme (komutlar, çıkış kodlarının okunması, RunView, yapılmayacak iddialar). Pakete dahil.
+- `README.en.md`: İngilizce README; iki README birbirine bağlı.
+- Açık kaynak altyapısı: `release.yml` (etiketle test → GitHub Release + npm trusted publishing, provenance), `codeql.yml`,
+  Dependabot, PR şablonu, fixture ve özellik issue şablonları, `CITATION.cff`, `.editorconfig`, `.nvmrc`, [`docs/release.md`](docs/release.md).
+- `loadConfigFile` (`human-data-lab/playwright`): CLI ve MCP aynı yükleyiciyi kullanır.
+
+### Değiştirildi
+- Paket artık yayımlanabilir (`private` kaldırıldı, `publishConfig: { access: public, provenance: true }`); `npm pack` içeriği değişmedi.
+- `TOOL.version` tek kaynaktan (`package.json`) okunur; ikinci sürüm sabiti yok.
+- Rapor, çıkış kodu anlamını ve ilk gözlenen sapmayı çekirdekten alır (yinelenen tanım kaldırıldı).
+
 ### Güvenlik
 - `hdl export` sembolik bağlantıları ve junction'ları izlemez. Başkasından gelen bir koşu dizinindeki bağlantı
   (ör. `report.html → ~/.ssh/id_rsa`) hedefin içeriğini paylaşım paketine taşıyamaz.

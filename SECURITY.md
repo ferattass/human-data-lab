@@ -21,6 +21,10 @@ Bu araç hedef uygulamada **yazma işlemi yapar** (kayıt oluşturur, temizler).
 - HTML rapor script çalıştırmaz, dış kaynak yüklemez (CSP `default-src 'none'`), tüm veri escape edilir.
 - Artifact yolları koşu dizini dışına çıkamaz; `hdl export` yalnız allowlist dosyalarını kopyalar.
 - Özel adapter ve comparator kodu **güvenilen yerel proje kodudur**; sandbox edilmiş gibi sunulmaz.
+- **MCP sunucusu** (`hdl mcp`) varsayılan salt okunurdur: oracle, corpus, sözleşme doğrulama, koşu okuma ve paylaşım planı.
+  Koşu başlatan `hdl_run` yalnız operatör sunucuyu `--allow-run` ile başlattıysa açıktır; bir ajan bu kapıyı kendi açamaz.
+  `hdl_run` yapılandırma dosyasını import eder (kod çalıştırır): yalnız gözden geçirilmiş yerel dosya verilmelidir. Sunucu stdio
+  üzerinden konuşur, ağ dinlemez; günlük stderr'e gider.
 
 Bu sınırlardan birini aşan davranış güvenlik açığıdır; lütfen bildirin.
 

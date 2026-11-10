@@ -31,7 +31,7 @@ Başlık: Georgia · Gövde ve arayüz: Segoe UI · Teknik değerler: Consolas. 
 | Dosya | Kullanım |
 |---|---|
 | `readme-hero-tr-1600x600.webp` | README üst görseli (Türkçe) |
-| `readme-hero-light-1600x600.webp` | README üst görseli (İngilizce) |
+| `readme-hero-light-1600x600.webp` | `README.en.md` üst görseli (İngilizce) |
 | `logo-horizontal-ink.webp` | Açık zeminde yatay logo |
 | `logo-horizontal-dark.webp` | Koyu tema için mürekkep zeminli yatay logo (opak; şeffaf değil) |
 | `mark-color-master-256.png`, `mark-color-master-64.png` | Sembol |

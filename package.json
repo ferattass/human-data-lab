@@ -1,9 +1,8 @@
 {
   "name": "human-data-lab",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Checks that human text your app accepts survives the save → fresh re-read journey, in a real browser.",
   "type": "module",
-  "private": true,
   "license": "Apache-2.0",
   "bin": {
     "hdl": "bin/hdl.mjs"
@@ -21,7 +20,8 @@
     "test:browser": "node --test --test-concurrency=1 test/acceptance.test.ts test/playwright-integration.test.ts",
     "build": "node scripts/build.mjs",
     "prepack": "node scripts/build.mjs",
-    "test:package": "node --test test/package.test.ts"
+    "test:package": "node --test test/package.test.ts",
+    "mcp": "node bin/hdl.mjs mcp"
   },
   "keywords": [
     "unicode",
@@ -29,8 +29,13 @@
     "testing",
     "playwright",
     "turkish",
-    "collation",
-    "data-integrity"
+    "normalization",
+    "nfc",
+    "round-trip",
+    "data-integrity",
+    "e2e",
+    "mcp",
+    "agents"
   ],
   "devDependencies": {
     "@playwright/test": "^1.64.1",
@@ -42,6 +47,8 @@
     "dist",
     "schema",
     "README.md",
+    "README.en.md",
+    "AGENTS.md",
     "LICENSE",
     "NOTICE",
     "CHANGELOG.md"
@@ -75,6 +82,10 @@
       "types": "./dist/packages/reporter/src/index.d.ts",
       "default": "./dist/packages/reporter/src/index.js"
     },
+    "./mcp": {
+      "types": "./dist/packages/mcp/src/index.d.ts",
+      "default": "./dist/packages/mcp/src/index.js"
+    },
     "./schema/*": "./schema/*",
     "./package.json": "./package.json"
   },
@@ -89,5 +100,10 @@
   "homepage": "https://github.com/ferattass/human-data-lab#readme",
   "bugs": {
     "url": "https://github.com/ferattass/human-data-lab/issues"
+  },
+  "author": "Ferat TAŞ",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   }
 }

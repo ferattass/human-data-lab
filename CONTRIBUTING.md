@@ -20,7 +20,8 @@ Kod Node'un tip silme (type stripping) özelliğiyle çalışır: yalnız **sili
 
 - `packages/core` Playwright'a, dosya sistemine veya React'e bağımlı olamaz (`test/architecture.test.ts` denetler).
 - `packages/reporter` yalnız sonuç dosyalarını okur; tarayıcı veya uygulama üzerinde yazma yapmaz.
-- CLI ikinci bir oracle yaratmaz; çekirdeğin sonucunu serileştirir.
+- CLI ve MCP sunucusu (`packages/mcp`) ikinci bir oracle yaratmaz; çekirdeğin sonucunu serileştirir (`store.compactRun`).
+- Kod ajanlarıyla çalışıyorsanız depo kuralları [`AGENTS.md`](AGENTS.md) içinde; aynı kurallar insan katkıcı için de geçerlidir.
 
 ## Yeni fixture eklemek
 
@@ -52,6 +53,14 @@ Değiştirmek için kısa bir ADR açın: sorun, alternatif, karar, geri dönü�
 Issue şablonunu kullanın. **Gerçek müşteri verisi göndermeyin**; sorunu sentetik küçük bir örneğe çevirin
 (`hdl export` ile paylaşım paketi yalnız allowlist dosyalarını içerir, yine de göndermeden önce içeriğe bakın).
 Güvenlik sorunları için [`SECURITY.md`](SECURITY.md).
+
+## Dil
+
+Belgeler Türkçe yazılıyor; kod, tanımlayıcılar, şema ve JSON çıktıları dilden bağımsızdır. İngilizce katkı ve çeviri (`README.en.md`) memnuniyetle kabul edilir.
+
+## Sürüm ve yayın
+
+[`docs/release.md`](docs/release.md): sürüm numarası yalnız `package.json`'da; etiket public dalın commit'ine konur; GitHub Release ve npm yayını iş akışıyla yapılır.
 
 ## Lisans
 

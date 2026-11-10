@@ -32,7 +32,7 @@ Durum: **✓ uygulandı ve test edildi** · **◐ kısmen / bilinçli sapma** ·
 | 25 | Küçültme | ✓ | grafem/kod noktası indirgeme, aynı imza, bütçe, son onay; C04–C06 |
 | 26 | Kararsızlık ve kirli ortam | ✓ | `unstable`, `pending`, seri koşu; B12, C03 |
 | 27 | Kanıt paketi | ✓ | `packages/store`; atomik manifest, digest, path safety; C07, C09, C11 · [ADR 0006](adr/0006-artifact-model.md) |
-| 28 | CLI ve entegrasyon | ✓ | `demo/init/run/replay/report/cleanup` (+ `export`, `lab`), exit 0/1/2/3/130, Playwright Test fixture |
+| 28 | CLI ve entegrasyon | ✓ | `demo/init/run/replay/report/cleanup` (+ `export`, `lab`, `mcp`, `report --json`), exit 0/1/2/3/130, Playwright Test fixture, MCP sunucusu ([ADR 0010](adr/0010-mcp-server.md)) |
 | 29 | HTML raporu | ✓ | escape, CSP, uzak kaynak yok, klavye odağı, metin etiketleri, paydalar, kısaltma + tam değer; C08, C12 |
 | 30 | Güvenlik ve gizlilik | ✓ | origin allowlist (gezinme + API, yönlendirme yok), redaction, paylaşım allowlist'i; B14, C10 · `SECURITY.md` |
 | 31 | Benchmark tasarımı | ○ | `docs/benchmark.md` (yürütülmedi) |
@@ -43,10 +43,10 @@ Durum: **✓ uygulandı ve test edildi** · **◐ kısmen / bilinçli sapma** ·
 | 36 | Performans bütçesi | ✓ | `DEFAULT_BUDGETS`; ölçüm `docs/performance.md` |
 | 37 | Depo ve paket sınırları | ◐ | `packages/{core,corpus,playwright,store,reporter,cli}`, `examples/{profile-demo,existing-test}`, `schema/`, `docs/`. Sapma: fixture verisi `packages/corpus/data` altında (ayrı `fixtures/` yok); `store` paketi eklendi; npm workspaces kullanılmadı ([ADR 0007](adr/0007-typescript-no-build.md)) |
 | 38 | Geliştirme sırası ve kapılar | ◐ | Faz 0–4 tamamlandı (sözleşme, çekirdek, gerçek akış, kanıt, küçültme). Faz 5 pilot ve faz 6 beta açık |
-| 39 | Karar günlüğü | ✓ | `docs/adr/` (9 kayıt) |
+| 39 | Karar günlüğü | ✓ | `docs/adr/` (10 kayıt) |
 | 40 | Pilot | ○ | `docs/pilot.md` (başlamadı) |
 | 41 | Dağıtım | ◐ | Tek komut demo, JSON+HTML örnek, entegrasyon rehberi var. Kısa video yok |
-| 42 | Açık kaynak sözleşmesi | ✓ | Apache-2.0, NOTICE, köken kaydı, CONTRIBUTING, SECURITY, issue şablonu |
+| 42 | Açık kaynak sözleşmesi | ✓ | Apache-2.0, NOTICE, köken kaydı, CONTRIBUTING, SECURITY, issue/PR şablonları, CITATION, CodeQL, Dependabot, yayın iş akışı, İngilizce README, AGENTS.md |
 | 43 | Uzun vadeli yön | — | Arama/export/tarih/sayı/IME: sonraki fazlar; `research/` deneyleri |
 | 44 | Uygulama başlangıç brifi | ✓ | Çalışma sırası izlendi; kararlar ADR ile |
 | 45 | Teknik review soruları | ✓ | `docs/review.md` |
@@ -64,7 +64,7 @@ Durum: **✓ uygulandı ve test edildi** · **◐ kısmen / bilinçli sapma** ·
 | Küçültme | ✓ Aynı imza, yeni fixture, bütçe, kararsızlık koruması |
 | Artifact | ✓ Eksik koşu, bozuk dosya, hassas içerik davranışları sınandı |
 | Platform | ✓ CI: Linux, Windows, macOS × Node 22/24, Chromium. Firefox/WebKit kapsam dışı |
-| Dokümantasyon | ✓ API, sınırlar, güvenlik, adapter rehberi, hata şablonu |
+| Dokümantasyon | ✓ API, sınırlar, güvenlik, adapter rehberi, hata şablonu, ajan rehberi, İngilizce README, yayın akışı |
 | Pilot | ○ Yöntem var, gözlem yok |
 
-Beta yayımlanmadan önce kalan: npm paket adı ve yayın kararı, pilot.
+Beta yayımlanmadan önce kalan: npm'de ilk yayın (trusted publishing bağlantısı, `docs/release.md`), pilot.
