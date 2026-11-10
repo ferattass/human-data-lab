@@ -197,6 +197,17 @@ export default defineConfig({
       assert.ok(!plan.included.some((f: string) => f.startsWith('evidence/')), 'kanıt görselleri varsayılan dışarıda');
 
       assert.ok(c.stderr.some((l) => /exit 1/.test(l)), `koşu günlüğü stderr'e gitmeli:\n${c.stderr.join('\n')}`);
+
+      // Seri kilit: aynı anda gönderilen ikinci koşu, ilki yapılandırmayı yüklerken bile reddedilir (TOCTOU yok).
+      const [runA, runB] = await Promise.all([
+        c.request('tools/call', { name: 'hdl_run', arguments: { configPath: cfg, corpusSet: 'demo-a', reproduce: false, shrink: false } }),
+        c.request('tools/call', { name: 'hdl_run', arguments: { configPath: cfg, corpusSet: 'demo-a', reproduce: false, shrink: false } }),
+      ]);
+      const results = [runA.result, runB.result];
+      assert.equal(results.filter((x) => x.isError).length, 1, JSON.stringify(results.map((x) => x.isError)));
+      assert.match(results.find((x) => x.isError)!.content[0].text, /başka bir koşu sürüyor/);
+      assert.equal(results.find((x) => !x.isError)!.structuredContent.exitCode, 1);
+      assert.equal(d.stats.creates, 6, 'kilit: reddedilen koşu hiç kayıt yaratmadı (3 + 3)');
     } finally { await c.close(); }
   });
 });

@@ -212,12 +212,12 @@ export const TOOLS: ToolDef[] = [
     async run(a, ctx) {
       if (!ctx.allowRun) throw new Error('hdl_run kapalı: sunucu --allow-run olmadan başlatıldı. Araç hedef uygulamada kayıt yaratır ve siler; operatör `hdl mcp --allow-run` ile açıkça izin vermeli.');
       if (ctx.running) throw new Error('başka bir koşu sürüyor; koşular seri yürütülür (veri izolasyonu, §26). Bitmesini bekleyin.');
-      const configPath = within(ctx, str(a, 'configPath')!, 'configPath');
-      const artifactsArg = str(a, 'artifactsDir', false);
-      const artifactsDir = within(ctx, artifactsArg ?? (await loadConfigFile(configPath)).artifactsDir ?? 'runs', 'artifactsDir');
+      // Kilit denetimden hemen sonra, ilk await'ten ÖNCE alınır: iki eşzamanlı çağrı kapıyı birlikte geçemez.
       ctx.running = true;
       try {
+        const configPath = within(ctx, str(a, 'configPath')!, 'configPath');
         const config = await loadConfigFile(configPath);
+        const artifactsDir = within(ctx, str(a, 'artifactsDir', false) ?? config.artifactsDir ?? 'runs', 'artifactsDir');
         const out = await runRoundtrip({
           config, configPath, corpusSet: str(a, 'corpusSet', false), artifactsDir,
           reproduce: bool(a, 'reproduce'), shrink: bool(a, 'shrink'), log: (l) => ctx.log(l),
